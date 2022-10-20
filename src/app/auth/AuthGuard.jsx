@@ -15,7 +15,6 @@ import { Navigate, useLocation } from 'react-router-dom';
 // };
 
 const AuthGuard = ({ children }) => {
-  console.log(children);
   let {
     isAuthenticated,
     // user
