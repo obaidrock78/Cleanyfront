@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { ReactComponent as Profile } from '../../../assets/profile-new.svg';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import ProfileSubForm from './ProfileSubForm/ProfileSubForm';
+import { useLocation } from 'react-router-dom';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -59,25 +60,27 @@ const JWTProfile = styled(JustifyBox)(() => ({
 }));
 
 // inital login credentials
-const initialValues = {
-  first_name: '',
-  last_name: '',
-  gender: 'male',
-  language: 'english',
-};
 
 // form field validation schema
-const validationSchema = Yup.object().shape({
-  first_name: Yup.string().required('First name is required!'),
-  last_name: Yup.string().required('Last name is required!'),
-  gender: Yup.string().required('Gender is required!'),
-  language: Yup.string().required('Language is required!'),
-});
 
 const NewProfile = () => {
+  const { state } = useLocation();
+  const initialValues = {
+    first_name: '',
+    last_name: '',
+    gender: 'male',
+    language: 'english',
+    email: state?.email,
+  };
   const [secondForm, setSecondForm] = useState(false);
   const [formData, setFormData] = useState(initialValues);
 
+  const validationSchema = Yup.object().shape({
+    first_name: Yup.string().required('First name is required!'),
+    last_name: Yup.string().required('Last name is required!'),
+    gender: Yup.string().required('Gender is required!'),
+    language: Yup.string().required('Language is required!'),
+  });
   const handleFormSubmit = (values) => {
     setFormData({ ...values });
     setSecondForm(true);

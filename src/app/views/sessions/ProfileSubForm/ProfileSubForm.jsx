@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { Box, Button, MenuItem, styled, TextField } from '@mui/material';
-import _ from 'lodash';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { USER_SIGNUP_PROFILE } from 'app/api';
+import axios from '../../../../axios';
+import useAuth from 'app/hooks/useAuth';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -19,13 +23,17 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-function ProfileSubForm({ setSecondForm, setFormData, formData, secondForm }) {
+function ProfileSubForm({ setSecondForm, formData }) {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+
+  const [loading, setLoading] = useState(false);
   const initialValues = {
     address: '',
     city: '',
     zip_code: null,
     state: 'Florida',
-    phone_no: '',
+    phone_number: '',
     country: 'United States',
   };
 
@@ -38,14 +46,38 @@ function ProfileSubForm({ setSecondForm, setFormData, formData, secondForm }) {
       .required('Zip Code is required!')
       .nullable(),
     state: Yup.string().required('State is required!'),
-    phone_no: Yup.string()
+    phone_number: Yup.string()
       .matches(/^[0-9]+$/, 'Must be only digits')
       .required('Phone no is required!'),
     country: Yup.string().required('Country is required!'),
   });
 
   const handleFormSubmit = (values) => {
+    setLoading(true);
     const obj = { ...formData, ...values };
+    toast.promise(
+      axios.post(`${USER_SIGNUP_PROFILE}`, obj, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
+      {
+        loading: () => {
+          return `Submitting data!`;
+        },
+        success: (res) => {
+          setLoading(false);
+          setTimeout(() => {
+            register(res.data);
+            navigate('/');
+          }, 1000);
+
+          return res?.data?.message;
+        },
+        error: (err) => {
+          setLoading(false);
+          return err?.message;
+        },
+      }
+    );
   };
 
   const handlePrevious = () => {
@@ -124,14 +156,14 @@ function ProfileSubForm({ setSecondForm, setFormData, formData, secondForm }) {
               fullWidth
               size="small"
               type="text"
-              name="phone_no"
+              name="phone_number"
               label="Phone"
               variant="outlined"
               onBlur={handleBlur}
-              value={values.phone_no}
+              value={values.phone_number}
               onChange={handleChange}
-              helperText={touched.phone_no && errors.phone_no}
-              error={Boolean(errors.phone_no && touched.phone_no)}
+              helperText={touched.phone_number && errors.phone_number}
+              error={Boolean(errors.phone_number && touched.phone_number)}
               sx={{ mb: 2 }}
             />
             <TextField
@@ -168,7 +200,7 @@ function ProfileSubForm({ setSecondForm, setFormData, formData, secondForm }) {
                 >
                   Previous
                 </Button>
-                <LoadingButton type="submit" color="primary" loading={false} variant="contained">
+                <LoadingButton type="submit" color="primary" loading={loading} variant="contained">
                   Submit
                 </LoadingButton>
               </Box>
@@ -176,6 +208,7 @@ function ProfileSubForm({ setSecondForm, setFormData, formData, secondForm }) {
           </form>
         )}
       </Formik>
+      <Toaster position="top-right" />
     </>
   );
 }

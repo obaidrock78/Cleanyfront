@@ -9,6 +9,7 @@ export const navigations = [
       { name: 'Sign up', iconText: 'SU', path: '/session/signup' },
       { name: 'Forgot Password', iconText: 'FP', path: '/session/forgot-password' },
       { name: 'Error', iconText: '404', path: '/session/404' },
+      { name: 'Profile Sign Up', iconText: '404', path: '/session/new-profile' },
     ],
   },
   { label: 'Components', type: 'label' },

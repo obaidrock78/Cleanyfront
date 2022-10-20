@@ -59,7 +59,6 @@ const reducer = (state, action) => {
     }
     case 'REGISTER': {
       const { user } = action.payload;
-
       return {
         ...state,
         isAuthenticated: true,
@@ -100,16 +99,10 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  const register = async (email, username, password) => {
-    const response = await axios.post('/api/auth/register', {
-      email,
-      username,
-      password,
-    });
-
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
+  const register = (response) => {
+    const { access_token } = response.data;
+    const user = response.data;
+    setSession(access_token);
 
     dispatch({
       type: 'REGISTER',

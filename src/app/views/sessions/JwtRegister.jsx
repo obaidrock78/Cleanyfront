@@ -3,12 +3,15 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Checkbox, Grid, TextField } from '@mui/material';
 import { Box, styled } from '@mui/system';
 import { Paragraph } from 'app/components/Typography';
-import useAuth from 'app/hooks/useAuth';
+import axios from '../../../axios';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import logo from '../../../assets/logo.png';
+import toast, { Toaster } from 'react-hot-toast';
+
+import { USER_REGISTRATION } from 'app/api';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
 
@@ -55,21 +58,37 @@ const validationSchema = Yup.object().shape({
 
 const JwtRegister = () => {
   const theme = useTheme();
-  const { register } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = async (values) => {
     setLoading(true);
+    toast.promise(
+      axios.post(`${USER_REGISTRATION}`, values, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
+      {
+        loading: () => {
+          return `Registering User`;
+        },
+        success: (res) => {
+          setLoading(false);
+          setTimeout(() => {
+            navigate('/session/new-profile', { state: { email: values.email } });
+          }, 1000);
 
-    try {
-      register(values.email, values.username, values.password);
-      navigate('/session/new-profile');
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-    }
+          return res?.data?.message;
+        },
+        error: (err) => {
+          setLoading(false);
+          if (err.status_code === 400) {
+            return 'User with this email already exists!';
+          } else {
+            return err?.message.email[0];
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -111,6 +130,7 @@ const JwtRegister = () => {
                       sx={{ mb: 2 }}
                     />
                     <TextField
+                      autoComplete="off"
                       fullWidth
                       size="small"
                       name="password"
@@ -125,6 +145,7 @@ const JwtRegister = () => {
                       sx={{ mb: 2 }}
                     />
                     <TextField
+                      autoComplete="off"
                       fullWidth
                       size="small"
                       name="confirmPassword"
@@ -184,6 +205,7 @@ const JwtRegister = () => {
           </Grid>
         </Grid>
       </Card>
+      <Toaster position="top-right" />
     </JWTRegister>
   );
 };
