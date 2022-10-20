@@ -6,7 +6,11 @@ import useAuth from 'app/hooks/useAuth';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import InputAdornment from '@mui/material/InputAdornment';
 import * as Yup from 'yup';
+import logo from '../../../assets/logo.png';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
 
@@ -15,8 +19,13 @@ const JustifyBox = styled(FlexBox)(() => ({ justifyContent: 'center' }));
 const ContentBox = styled(Box)(() => ({
   height: '100%',
   padding: '32px',
+  paddingTop: '20px !important',
   position: 'relative',
   background: 'rgba(0, 0, 0, 0.01)',
+  '& .logoImg': { width: '200px', marginBottom: '12px' },
+  '& .password-icon': {
+    cursor: 'pointer',
+  },
 }));
 
 const JWTRoot = styled(JustifyBox)(() => ({
@@ -42,7 +51,7 @@ const initialValues = {
 // form field validation schema
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(6, 'Password must be 6 character length')
+    .min(8, 'Password must be 8 character length')
     .required('Password is required!'),
   email: Yup.string().email('Invalid Email address').required('Email is required!'),
 });
@@ -51,6 +60,7 @@ const JwtLogin = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login } = useAuth();
 
@@ -76,6 +86,7 @@ const JwtLogin = () => {
 
           <Grid item sm={6} xs={12}>
             <ContentBox>
+              <img src={logo} alt="Cleany" className="logoImg" />
               <Formik
                 onSubmit={handleFormSubmit}
                 initialValues={initialValues}
@@ -102,7 +113,7 @@ const JwtLogin = () => {
                       fullWidth
                       size="small"
                       name="password"
-                      type="password"
+                      type={showPassword ? 'text' : 'password'}
                       label="Password"
                       variant="outlined"
                       onBlur={handleBlur}
@@ -110,7 +121,29 @@ const JwtLogin = () => {
                       onChange={handleChange}
                       helperText={touched.password && errors.password}
                       error={Boolean(errors.password && touched.password)}
-                      sx={{ mb: 1.5 }}
+                      sx={{
+                        mb: 1.5,
+                        '& .MuiOutlinedInput-root': {
+                          paddingRight: '5px !important',
+                        },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="start">
+                            {showPassword ? (
+                              <VisibilityOffOutlinedIcon
+                                className="password-icon"
+                                onClick={() => setShowPassword(false)}
+                              />
+                            ) : (
+                              <VisibilityOutlinedIcon
+                                className="password-icon"
+                                onClick={() => setShowPassword(true)}
+                              />
+                            )}
+                          </InputAdornment>
+                        ),
+                      }}
                     />
 
                     <FlexBox justifyContent="space-between">
