@@ -1,5 +1,6 @@
 import Loadable from 'app/components/Loadable';
 import { lazy } from 'react';
+import { Navigate } from 'react-router-dom';
 
 const NotFound = Loadable(lazy(() => import('./NotFound')));
 const ForgotPassword = Loadable(lazy(() => import('./ForgotPassword')));
@@ -13,6 +14,7 @@ const sessionRoutes = [
   { path: '/session/forgot-password', element: <ForgotPassword /> },
   { path: '/session/new-profile', element: <NewProfile /> },
   { path: '/session/404', element: <NotFound /> },
+  { path: '/', element: <Navigate replace to="/session/signin" /> },
 ];
 
 export default sessionRoutes;

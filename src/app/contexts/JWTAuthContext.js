@@ -43,7 +43,6 @@ const reducer = (state, action) => {
     }
     case 'LOGIN': {
       const { user } = action.payload;
-
       return {
         ...state,
         isAuthenticated: true,
@@ -82,15 +81,11 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const login = async (email, password) => {
-    const response = await axios.post('/api/auth/login', {
-      email,
-      password,
-    });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
-
+  const login = (response) => {
+    const { access_token } = response.data;
+    const user = response.data;
+    setSession(access_token);
+    localStorage.setItem('user', JSON.stringify(user));
     dispatch({
       type: 'LOGIN',
       payload: {
@@ -102,6 +97,8 @@ export const AuthProvider = ({ children }) => {
   const register = (response) => {
     const { access_token } = response.data;
     const user = response.data;
+    localStorage.setItem('user', JSON.stringify(user));
+
     setSession(access_token);
 
     dispatch({
@@ -114,6 +111,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setSession(null);
+    localStorage.removeItem('user');
     dispatch({ type: 'LOGOUT' });
   };
 
@@ -121,12 +119,9 @@ export const AuthProvider = ({ children }) => {
     (async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
-
+        const user = JSON.parse(window.localStorage.getItem('user'));
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          const response = await axios.get('/api/auth/profile');
-          const { user } = response.data;
-
           dispatch({
             type: 'INIT',
             payload: {

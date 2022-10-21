@@ -65,8 +65,8 @@ function ProfileSubForm({ setSecondForm, formData }) {
         },
         success: (res) => {
           setLoading(false);
+          register(res.data);
           setTimeout(() => {
-            register(res.data);
             navigate('/');
           }, 1000);
 

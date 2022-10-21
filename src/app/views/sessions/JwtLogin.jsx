@@ -11,6 +11,9 @@ import * as Yup from 'yup';
 import logo from '../../../assets/logo.png';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import { USER_LOGIN } from 'app/api';
+import toast, { Toaster } from 'react-hot-toast';
+import axios from '../../../axios';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
 
@@ -43,15 +46,15 @@ const JWTRoot = styled(JustifyBox)(() => ({
 
 // inital login credentials
 const initialValues = {
-  email: 'jason@ui-lib.com',
-  password: 'dummyPass',
+  email: '',
+  password: '',
   remember: true,
 };
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(8, 'Password must be 8 character length')
+    .min(5, 'Password must be 5 character length')
     .required('Password is required!'),
   email: Yup.string().email('Invalid Email address').required('Email is required!'),
 });
@@ -66,12 +69,34 @@ const JwtLogin = () => {
 
   const handleFormSubmit = async (values) => {
     setLoading(true);
-    try {
-      await login(values.email, values.password);
-      navigate('/');
-    } catch (e) {
-      setLoading(false);
-    }
+    toast.promise(
+      axios.post(`${USER_LOGIN}`, values, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
+      {
+        loading: () => {
+          return `Login`;
+        },
+        success: (res) => {
+          setLoading(false);
+
+          login(res?.data);
+          setTimeout(() => {
+            navigate('/dashboard/default');
+          }, 1000);
+
+          return res?.data?.message;
+        },
+        error: (err) => {
+          setLoading(false);
+          if (err.status_code === 400) {
+            return err?.message.non_field_errors[0];
+          } else {
+            return err?.message.non_field_errors[0];
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -193,6 +218,7 @@ const JwtLogin = () => {
           </Grid>
         </Grid>
       </Card>
+      <Toaster position="top-right" />
     </JWTRoot>
   );
 };

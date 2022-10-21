@@ -29,9 +29,9 @@ const AuthGuard = ({ children }) => {
   // // IF YOU NEED ROLE BASED AUTHENTICATION,
   // // UNCOMMENT ABOVE LINES
   // // AND COMMENT OUT BELOW authenticated VARIABLE
-
+  const token = localStorage.getItem('accessToken');
   let authenticated = isAuthenticated;
-
+  console.log(authenticated);
   return (
     <>
       {authenticated ? (
