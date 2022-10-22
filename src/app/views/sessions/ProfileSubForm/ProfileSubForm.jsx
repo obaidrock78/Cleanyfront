@@ -47,7 +47,7 @@ function ProfileSubForm({ setSecondForm, formData }) {
       .nullable(),
     state: Yup.string().required('State is required!'),
     phone_number: Yup.string()
-      .matches(/^[0-9]+$/, 'Must be only digits')
+      .matches(/^\+[0-9]+$/, 'Must be only digits')
       .required('Phone no is required!'),
     country: Yup.string().required('Country is required!'),
   });
@@ -123,7 +123,7 @@ function ProfileSubForm({ setSecondForm, formData }) {
             <TextField
               fullWidth
               size="small"
-              type="number"
+              type="text"
               name="zip_code"
               label="Zip Code"
               variant="outlined"

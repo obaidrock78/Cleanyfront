@@ -1,3 +1,9 @@
 export const USER_REGISTRATION = '/user_module/user_email_signup';
 export const USER_SIGNUP_PROFILE = '/user_module/user_information_signup';
 export const USER_LOGIN = '/user_module/user_login';
+export const MAKE_COMPANY_PROFILE = '/booking/create_company';
+export const COMPANY_PROFILE_DATA = '/booking/get_company';
+export const UPDATE_COMPANY_PROFILE = '/booking/update_company';
+export const GET_TAX_LIST = '/booking/get_tax';
+export const CREATE_TAX = '/booking/create_tax';
+export const UPDATE_TAX = '/booking/update_tax';
