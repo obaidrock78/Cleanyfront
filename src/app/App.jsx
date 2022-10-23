@@ -15,6 +15,7 @@ import NotFound from 'app/views/sessions/NotFound';
 import sessionRoutes from 'app/views/sessions/SessionRoutes';
 import { Navigate } from 'react-router-dom';
 import MatxLayout from './components/MatxLayout/MatxLayout';
+import servicesRoutes from './views/services/Servicesroutes';
 
 const App = () => {
   const token = localStorage.getItem('accessToken');
@@ -25,7 +26,13 @@ const App = () => {
           <MatxLayout />
         </AuthGuard>
       ),
-      children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes, ...settings],
+      children: [
+        ...dashboardRoutes,
+        ...chartsRoute,
+        ...materialRoutes,
+        ...settings,
+        ...servicesRoutes,
+      ],
     },
     {
       path: '/',

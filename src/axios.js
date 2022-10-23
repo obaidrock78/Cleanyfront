@@ -10,11 +10,11 @@ axiosInstance.interceptors.response.use(
     return Promise.resolve(response);
   },
   (error) => {
-    if (error != null && error.response.status == 401) {
+    if (error !== null && error.response.status === 401) {
       const { logout } = useAuth();
       logout();
     }
-    if (error != null && error.response.status == 403) {
+    if (error !== null && error.response.status === 403) {
     }
     return Promise.reject((error.response && error.response.data) || 'Something went wrong!');
   }

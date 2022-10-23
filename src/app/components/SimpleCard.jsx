@@ -9,14 +9,25 @@ const CardRoot = styled(Card)(() => ({
 const CardTitle = styled('div')(({ subtitle }) => ({
   fontSize: '1rem',
   fontWeight: '500',
-  textTransform: 'capitalize',
   marginBottom: !subtitle && '16px',
 }));
 
-const SimpleCard = ({ children, title, subtitle, icon }) => {
+const SimpleCard = ({ children, title, subtitle, icon, padding }) => {
   return (
     <CardRoot elevation={6}>
-      <CardTitle subtitle={subtitle}>{title}</CardTitle>
+      <CardTitle
+        style={
+          padding
+            ? {
+                paddingLeft: '10px',
+                paddingRight: '10px',
+              }
+            : {}
+        }
+        subtitle={subtitle}
+      >
+        {title}
+      </CardTitle>
       {subtitle && <Box sx={{ mb: 2 }}>{subtitle}</Box>}
       {children}
     </CardRoot>

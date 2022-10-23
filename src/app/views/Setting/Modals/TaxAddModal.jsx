@@ -154,7 +154,7 @@ function TaxAdd({ open, handleClose, taxListAPI, editData }) {
                     size="small"
                     fullWidth
                     type="text"
-                    label="company*"
+                    label="Company*"
                     select
                     {...getFieldProps('company')}
                     error={Boolean(touched.company && errors.company)}

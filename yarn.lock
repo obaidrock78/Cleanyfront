@@ -1506,6 +1506,11 @@
   "resolved" "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-10.1.0.tgz"
   "version" "10.1.0"
 
+"@ctrl/tinycolor@^3.4.1":
+  "integrity" "sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw=="
+  "resolved" "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz"
+  "version" "3.4.1"
+
 "@dabh/diagnostics@^2.0.2":
   "integrity" "sha512-+A1YivoVDNNVCdfozHSR8v/jyuuLTMXwjWuxPFlFlUapXoGc+Gj9mDlTDDfrwl7rXCl2tNZ0kE8sIBO6YOn96Q=="
   "resolved" "https://registry.npmjs.org/@dabh/diagnostics/-/diagnostics-2.0.2.tgz"
@@ -13409,6 +13414,19 @@
   "integrity" "sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A=="
   "resolved" "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
   "version" "2.0.0"
+
+"mui-color-input@^1.0.2":
+  "integrity" "sha512-4ubeQjJJCuzQf1MbcSUeZPgStwc+z1n6e8h7Ti5EN54GzD92sBUwSjfhmxzt5xC3YeL2MzeOVhSXwD7vhWijaw=="
+  "resolved" "https://registry.npmjs.org/mui-color-input/-/mui-color-input-1.0.2.tgz"
+  "version" "1.0.2"
+  dependencies:
+    "@ctrl/tinycolor" "^3.4.1"
+    "@emotion/react" "^11.5.0"
+    "@emotion/styled" "^11.3.0"
+    "@mui/material" "^5.0.0"
+    "@types/react" "^17.0.0 || ^18.0.0"
+    "react" "^17.0.0 || ^18.0.0"
+    "react-dom" "^17.0.0 || ^18.0.0"
 
 "multicast-dns-service-types@^1.1.0":
   "integrity" "sha512-cnAsSVxIDsYt0v7HmC0hWZFwwXSh+E6PgCrREDuN/EsjgLwA5XRmlMHhSiDPrt6HxY1gTivEa/Zh7GtODoLevQ=="
