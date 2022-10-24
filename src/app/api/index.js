@@ -14,3 +14,6 @@ export const RETRIEVE_SERVICE = '/booking/retrieve_service';
 export const DELETE_PACKAGE = '/booking/delete_package';
 export const UPDATE_SERVICE_STATUS = '/booking/update_service_status';
 export const UPDATE_SERVICE = '/booking/update_service';
+export const DELETE_EXTRAS = '/booking/delete_extras';
+export const CREATE_EXTRA = '/booking/create_extras';
+export const UPDATE_EXTRA = '/booking/update_extras';

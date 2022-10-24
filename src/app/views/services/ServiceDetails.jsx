@@ -13,6 +13,7 @@ import DeletePackage from './Modals/DeletePackages';
 import DeleteExtra from './Modals/DeleteExtraModal';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import UpdateServiceModal from './Modals/UpdateService';
+import CreateExtraModal from './Modals/CreateExtra';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -83,6 +84,7 @@ function ServiceDetails() {
   const [selectedExtra, setSelectedExtra] = useState({});
   const [serviceStatus, setserviceStatus] = useState(false);
   const [updateServiceDataModal, setUpdateServiceDataModal] = useState(false);
+  const [createExtraModal, setCreateExtraModal] = useState(false);
 
   useEffect(() => {
     retrieveService();
@@ -253,7 +255,15 @@ function ServiceDetails() {
         const index = item.api.getRowIndex(item.row.id);
         return (
           <Box display={'flex'} alignItems="center">
-            <Button sx={{ marginRight: '10px' }} variant="outlined" color="info">
+            <Button
+              sx={{ marginRight: '10px' }}
+              variant="outlined"
+              color="info"
+              onClick={() => {
+                setSelectedExtra(item?.row);
+                setCreateExtraModal(true);
+              }}
+            >
               View
             </Button>
             <Box>
@@ -312,6 +322,7 @@ function ServiceDetails() {
           return res?.data?.message;
         },
         error: (err) => {
+          setserviceStatus(!event.target.checked);
           return err?.message;
         },
       }
@@ -329,7 +340,15 @@ function ServiceDetails() {
         <StyledButton startIcon={<AddIcon />} variant="contained" color="primary">
           Package
         </StyledButton>
-        <StyledButton startIcon={<AddIcon />} variant="contained" color="primary">
+        <StyledButton
+          startIcon={<AddIcon />}
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setCreateExtraModal(true);
+            setSelectedExtra({});
+          }}
+        >
           Extra
         </StyledButton>
       </Box>
@@ -497,6 +516,13 @@ function ServiceDetails() {
         handleClose={() => setUpdateServiceDataModal(false)}
         serviceData={serviceData}
         retrieveService={retrieveService}
+      />
+      <CreateExtraModal
+        open={createExtraModal}
+        handleClose={() => setCreateExtraModal(false)}
+        serviceData={serviceData}
+        retrieveService={retrieveService}
+        selectedExtra={selectedExtra}
       />
     </Container>
   );

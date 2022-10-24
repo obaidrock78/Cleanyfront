@@ -127,7 +127,7 @@ function Services() {
       renderCell: (item) => {
         return (
           <Box sx={{ background: `${item.value} !important`, width: '100%', pl: 2 }}>
-            <TableHeading style={{ color: '#565656' }}>{item?.value}</TableHeading>
+            <TableHeading style={{ color: '#c8cdcc' }}>{item?.value}</TableHeading>
           </Box>
         );
       },

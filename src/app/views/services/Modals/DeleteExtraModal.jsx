@@ -7,36 +7,36 @@ import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import { Box } from '@mui/system';
 import axios from '../../../../axios';
-import { DELETE_PACKAGE } from 'app/api';
+import { DELETE_EXTRAS } from 'app/api';
 
 function DeleteExtra({ open, handleClose, id, retrieveService }) {
   const [loading, setLoading] = useState(false);
 
   const handleDelete = () => {
     setLoading(true);
-    // toast.promise(
-    //   axios.delete(`${DELETE_PACKAGE}/${id}`, {
-    //     headers: { 'Content-Type': 'application/json' },
-    //   }),
-    //   {
-    //     loading: () => {
-    //       return `Deleting Extra`;
-    //     },
-    //     success: (res) => {
-    //       setLoading(false);
-    //       retrieveService();
-    //       setTimeout(() => {
-    //         handleClose();
-    //       }, 500);
+    toast.promise(
+      axios.delete(`${DELETE_EXTRAS}/${id}`, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
+      {
+        loading: () => {
+          return `Deleting Extra`;
+        },
+        success: (res) => {
+          setLoading(false);
+          retrieveService();
+          setTimeout(() => {
+            handleClose();
+          }, 500);
 
-    //       return res?.data?.message;
-    //     },
-    //     error: (err) => {
-    //       setLoading(false);
-    //       return err?.message;
-    //     },
-    //   }
-    // );
+          return res?.data?.message;
+        },
+        error: (err) => {
+          setLoading(false);
+          return err?.message;
+        },
+      }
+    );
   };
   return (
     <Dialog
