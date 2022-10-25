@@ -14,6 +14,7 @@ import DeleteExtra from './Modals/DeleteExtraModal';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import UpdateServiceModal from './Modals/UpdateService';
 import CreateExtraModal from './Modals/CreateExtra';
+import CreatePackageModal from './Modals/CreatePackage';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -85,6 +86,7 @@ function ServiceDetails() {
   const [serviceStatus, setserviceStatus] = useState(false);
   const [updateServiceDataModal, setUpdateServiceDataModal] = useState(false);
   const [createExtraModal, setCreateExtraModal] = useState(false);
+  const [createPackageModal, setCreatePackageModal] = useState(false);
 
   useEffect(() => {
     retrieveService();
@@ -337,7 +339,15 @@ function ServiceDetails() {
       </Box>
 
       <Box display={'flex'} justifyContent={'end'} gap={2}>
-        <StyledButton startIcon={<AddIcon />} variant="contained" color="primary">
+        <StyledButton
+          startIcon={<AddIcon />}
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setCreatePackageModal(true);
+            setselectedPackage({});
+          }}
+        >
           Package
         </StyledButton>
         <StyledButton
@@ -520,6 +530,13 @@ function ServiceDetails() {
       <CreateExtraModal
         open={createExtraModal}
         handleClose={() => setCreateExtraModal(false)}
+        serviceData={serviceData}
+        retrieveService={retrieveService}
+        selectedExtra={selectedExtra}
+      />
+      <CreatePackageModal
+        open={createPackageModal}
+        handleClose={() => setCreatePackageModal(false)}
         serviceData={serviceData}
         retrieveService={retrieveService}
         selectedExtra={selectedExtra}

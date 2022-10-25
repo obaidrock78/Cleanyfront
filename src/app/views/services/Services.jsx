@@ -194,7 +194,11 @@ function Services() {
                   border: '1px solid #dfd9d9',
                 },
               }}
-              onClick={() => handleUpdate(item?.row)}
+              onClick={() =>
+                navigate(`/dashboard/services/details/${item?.row?.slug}`, {
+                  state: item?.row,
+                })
+              }
             >
               <BorderColorOutlinedIcon style={{ fontSize: '20px', color: '#817272' }} />
             </Button>
@@ -203,9 +207,7 @@ function Services() {
       },
     },
   ];
-  const handleUpdate = (item) => {
-    setEditData(item);
-  };
+
   const handleDelete = (item) => {
     setDeleteID(item.id);
     setDeleteOpen(true);

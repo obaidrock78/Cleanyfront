@@ -111,7 +111,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setSession(null);
-    localStorage.removeItem('user');
+    window.localStorage.removeItem('user');
     dispatch({ type: 'LOGOUT' });
   };
 
