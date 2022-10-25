@@ -536,7 +536,7 @@ function ServiceDetails() {
       />
       <CreatePackageModal
         open={createPackageModal}
-        handleClose={() => setCreatePackageModal(false)}
+        handleClosePackage={() => setCreatePackageModal(false)}
         serviceData={serviceData}
         retrieveService={retrieveService}
         selectedExtra={selectedExtra}

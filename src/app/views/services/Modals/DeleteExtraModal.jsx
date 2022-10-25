@@ -27,7 +27,7 @@ function DeleteExtra({ open, handleClose, id, retrieveService }) {
           retrieveService();
           setTimeout(() => {
             handleClose();
-          }, 500);
+          }, 200);
 
           return res?.data?.message;
         },

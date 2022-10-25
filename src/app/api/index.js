@@ -17,3 +17,7 @@ export const UPDATE_SERVICE = '/booking/update_service';
 export const DELETE_EXTRAS = '/booking/delete_extras';
 export const CREATE_EXTRA = '/booking/create_extras';
 export const UPDATE_EXTRA = '/booking/update_extras';
+export const CREATE_PACKAGE = '/booking/create_package';
+export const CREATE_ITEM = '/booking/create_item';
+export const DELETE_ITEM = '/booking/delete_item';
+export const UPDATE_ITEM = '/booking/update_item';
