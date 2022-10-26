@@ -21,3 +21,4 @@ export const CREATE_PACKAGE = '/booking/create_package';
 export const CREATE_ITEM = '/booking/create_item';
 export const DELETE_ITEM = '/booking/delete_item';
 export const UPDATE_ITEM = '/booking/update_item';
+export const UPDATE_PACKAGE = '/booking/update_package';

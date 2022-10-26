@@ -15,6 +15,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import UpdateServiceModal from './Modals/UpdateService';
 import CreateExtraModal from './Modals/CreateExtra';
 import CreatePackageModal from './Modals/CreatePackage';
+import UpdatePackageModal from './Modals/UpdatePackage';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -87,6 +88,8 @@ function ServiceDetails() {
   const [updateServiceDataModal, setUpdateServiceDataModal] = useState(false);
   const [createExtraModal, setCreateExtraModal] = useState(false);
   const [createPackageModal, setCreatePackageModal] = useState(false);
+  const [updatePackageModal, setUpdatePackageModal] = useState(false);
+  const [selectedPackageData, setSelectedPackageData] = useState({});
 
   useEffect(() => {
     retrieveService();
@@ -173,6 +176,10 @@ function ServiceDetails() {
               '&:hover': {
                 textDecoration: 'underline',
               },
+            }}
+            onClick={() => {
+              setSelectedPackageData(item?.row);
+              setUpdatePackageModal(true);
             }}
           >
             View
@@ -539,7 +546,13 @@ function ServiceDetails() {
         handleClosePackage={() => setCreatePackageModal(false)}
         serviceData={serviceData}
         retrieveService={retrieveService}
-        selectedExtra={selectedExtra}
+      />
+      <UpdatePackageModal
+        open={updatePackageModal}
+        handleClosePackage={() => setUpdatePackageModal(false)}
+        serviceData={serviceData}
+        retrieveService={retrieveService}
+        selectedPackageData={selectedPackageData}
       />
     </Container>
   );
