@@ -234,6 +234,7 @@ function Services() {
       <SimpleCard>
         <DataTableBox>
           <DataGrid
+            getRowHeight={() => 'auto'}
             disableColumnMenu={true}
             rows={serviceList}
             columns={columns}
