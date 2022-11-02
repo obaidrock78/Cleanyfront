@@ -113,8 +113,7 @@ function Company() {
       );
     },
   });
-  const { errors, touched, handleBlur, setFieldValue, resetForm, handleSubmit, getFieldProps } =
-    formik;
+  const { errors, touched, setFieldValue, handleSubmit, getFieldProps } = formik;
 
   useEffect(() => {
     setFieldValue('id', formData[0]?.id);

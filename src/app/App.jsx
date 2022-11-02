@@ -16,6 +16,8 @@ import sessionRoutes from 'app/views/sessions/SessionRoutes';
 import { Navigate } from 'react-router-dom';
 import MatxLayout from './components/MatxLayout/MatxLayout';
 import servicesRoutes from './views/services/Servicesroutes';
+import servicesProviderRoutes from './views/ServiceProvider/ProviderRoutes';
+import Booking from './views/booking/Booking';
 
 const App = () => {
   const token = localStorage.getItem('accessToken');
@@ -32,8 +34,10 @@ const App = () => {
         ...materialRoutes,
         ...settings,
         ...servicesRoutes,
+        ...servicesProviderRoutes,
       ],
     },
+    { path: '/booking/:slug', element: <Booking /> },
     {
       path: '/',
 

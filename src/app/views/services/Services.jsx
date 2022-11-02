@@ -67,7 +67,6 @@ const TableHeading = styled('p')(() => ({
 function Services() {
   const navigate = useNavigate();
   const [serviceList, setServiceList] = useState([]);
-  const [editData, setEditData] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteID, setDeleteID] = useState(null);
   useEffect(() => {
@@ -142,16 +141,19 @@ function Services() {
           <Button
             variant="text"
             sx={{
-              fontWeight: '400',
-              fontSize: '16px',
-              color: 'black',
-              '&:hover': {
-                textDecoration: 'underline',
+              '& a': {
+                fontWeight: '400',
+                fontSize: '16px',
+                color: 'black',
+                '&:hover': {
+                  textDecoration: 'underline',
+                },
               },
             }}
-            // onClick={() => handleUpdate(item?.row)}
           >
-            Visit Page
+            <a href={`/booking/${item?.row?.slug}`} target="blank">
+              Visit Page
+            </a>
           </Button>
         );
       },

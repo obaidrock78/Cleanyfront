@@ -10,6 +10,13 @@ export const navigations = [
       { name: 'Tax', iconText: 'T', path: '/dashboard/tax' },
     ],
   },
+  {
+    name: 'Service Provider',
+    icon: 'engineering_icon',
+    children: [
+      { name: 'All Service Providers', iconText: 'CP', path: '/dashboard/service-providers' },
+    ],
+  },
   { label: 'Components', type: 'label' },
   {
     name: 'Components',

@@ -22,3 +22,6 @@ export const CREATE_ITEM = '/booking/create_item';
 export const DELETE_ITEM = '/booking/delete_item';
 export const UPDATE_ITEM = '/booking/update_item';
 export const UPDATE_PACKAGE = '/booking/update_package';
+export const GET_BOOKING_DATA = '/booking/service_booking';
+export const GET_SERVICE_PROVIDER_LIST = '/service_provider/cleaner_list';
+export const CREATE_SERVICE_PROVIDER = '/service_provider/create_cleaner';
