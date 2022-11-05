@@ -7,12 +7,9 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import axios from '../../../../axios';
-import { CREATE_SERVICE_PROVIDER } from 'app/api';
+import { UPDATE_SERVICE_PROVIDER } from 'app/api';
 import { ImageUpload } from 'app/components/DropZone/ImageUpload';
 import createNFTUpload from '../../../../assets/createNFTUpload.png';
-import Dropzone from '../../../components/DropZone/Dropzone';
-import createNftDocuments from '../../../../assets/createNftDocuments.png';
-import ImageBox from '../../../components/DropZone/ImageBox';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Container = styled('div')(({ theme }) => ({
@@ -68,7 +65,6 @@ function UpdateProvider() {
         return true;
       }),
     time_zone: Yup.string().required('Timezone is required'),
-    document: Yup.array().min(1, 'Document is required!').required('Document is required!'),
   });
 
   const formik = useFormik({
@@ -84,7 +80,6 @@ function UpdateProvider() {
       zip_code: '',
       gender: 'male',
       language: 'english',
-      document: null,
       profile_picture: '',
       time_zone: '-6',
     },
@@ -101,19 +96,22 @@ function UpdateProvider() {
       formData.append('zip_code', values?.zip_code);
       formData.append('gender', values?.gender);
       formData.append('language', values?.language);
-      formData.append('document', values?.document[0]);
-      formData.append('profile_picture', values?.profile_picture);
+      console.log(typeof values?.profile_picture);
+      if (typeof values?.profile_picture !== 'string') {
+        formData.append('profile_picture', values?.profile_picture);
+      }
+
       formData.append('time_zone', values?.time_zone);
       formData.append('id', state?.user_profile?.id);
       formData.append('user', state?.user_profile?.user);
       setLoading(true);
       toast.promise(
-        axios.post(`${CREATE_SERVICE_PROVIDER}`, formData, {
+        axios.put(`${UPDATE_SERVICE_PROVIDER}`, formData, {
           headers: { 'Content-Type': 'application/json' },
         }),
         {
           loading: () => {
-            return `Updating Company Profile`;
+            return `Updating Service Provider!`;
           },
           success: (res) => {
             setLoading(false);
@@ -121,7 +119,7 @@ function UpdateProvider() {
               navigate('/dashboard/service-providers', { replace: true });
             }, 1000);
 
-            return 'Service Provider Created Successfully!';
+            return 'Service Provider Updated Successfully!';
           },
           error: (err) => {
             setLoading(false);
@@ -145,7 +143,6 @@ function UpdateProvider() {
   useEffect(() => {
     setFieldValue('first_name', state?.user_profile?.first_name);
     setFieldValue('last_name', state?.user_profile?.last_name);
-    setFieldValue('password', state?.user_profile?.password);
     setFieldValue('email', state?.email);
     setFieldValue('phone', state?.user_profile?.phone_number);
     setFieldValue('address', state?.user_profile?.address);
@@ -154,7 +151,6 @@ function UpdateProvider() {
     setFieldValue('zip_code', state?.user_profile?.zip_code);
     setFieldValue('gender', state?.user_profile?.gender);
     setFieldValue('language', state?.user_profile?.language);
-    // setFieldValue('document', state?.user_profile?.document);
     setFieldValue('profile_picture', state?.user_profile?.profile_picture);
     setFieldValue('time_zone', state?.user_profile?.time_zone);
   }, []);
@@ -309,9 +305,9 @@ function UpdateProvider() {
                     helperText={touched.gender && errors.gender}
                     error={Boolean(errors.gender && touched.gender)}
                   >
-                    <MenuItem value={'male'}>Male</MenuItem>
-                    <MenuItem value={'female'}>Female</MenuItem>
-                    <MenuItem value={'unspecified'}>Unspecified</MenuItem>
+                    <MenuItem value={'Male'}>Male</MenuItem>
+                    <MenuItem value={'Female'}>Female</MenuItem>
+                    <MenuItem value={'Unspecified'}>Unspecified</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -328,8 +324,8 @@ function UpdateProvider() {
                     helperText={touched.language && errors.language}
                     error={Boolean(errors.language && touched.language)}
                   >
-                    <MenuItem value={'english'}>English</MenuItem>
-                    <MenuItem value={'french'}>French</MenuItem>
+                    <MenuItem value={'English'}>English</MenuItem>
+                    <MenuItem value={'French'}>French</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -369,22 +365,6 @@ function UpdateProvider() {
                     helperText={touched.profile_picture && errors.profile_picture}
                   />
                 </Grid>
-                <Grid item lg={6} md={6} sm={12} xs={12}>
-                  <Typography gutterBottom variant="h6" component="div">
-                    Document
-                  </Typography>
-                  <Typography variant="subtitle1">
-                    File types supported: All supported formats. Max size: 5 MB
-                  </Typography>
-                  <Dropzone
-                    setFieldValue={(acceptedFiles) => setFieldValue('document', acceptedFiles)}
-                    error={touched.document && Boolean(errors.document)}
-                    helperText={touched.document && errors.document}
-                    uploadedFiles={values.document}
-                  >
-                    <ImageBox src={createNftDocuments} className="h-[249px] w-full" />
-                  </Dropzone>
-                </Grid>
               </Grid>
 
               <LoadingButton
@@ -395,7 +375,7 @@ function UpdateProvider() {
                 sx={{ mb: 2, mt: 3 }}
                 fullWidth
               >
-                Create
+                Update
               </LoadingButton>
             </Form>
           </FormikProvider>

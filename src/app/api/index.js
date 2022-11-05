@@ -25,3 +25,7 @@ export const UPDATE_PACKAGE = '/booking/update_package';
 export const GET_BOOKING_DATA = '/booking/service_booking';
 export const GET_SERVICE_PROVIDER_LIST = '/service_provider/cleaner_list';
 export const CREATE_SERVICE_PROVIDER = '/service_provider/create_cleaner';
+export const UPDATE_SERVICE_PROVIDER = '/service_provider/update_cleaner';
+export const GET_PROVIDER_WORK_LIST = '/service_provider/list_leaves';
+export const CREATE_PROVIDER_LEAVE = '/service_provider/create_leave';
+export const DELETE_PROVIDER_LEAVE = '/service_provider/delete_leave';

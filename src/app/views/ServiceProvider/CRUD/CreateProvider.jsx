@@ -110,7 +110,7 @@ function CreateProvider() {
         }),
         {
           loading: () => {
-            return `Updating Company Profile`;
+            return `Creating Service Provider!`;
           },
           success: (res) => {
             setLoading(false);
@@ -288,9 +288,9 @@ function CreateProvider() {
                     helperText={touched.gender && errors.gender}
                     error={Boolean(errors.gender && touched.gender)}
                   >
-                    <MenuItem value={'male'}>Male</MenuItem>
-                    <MenuItem value={'female'}>Female</MenuItem>
-                    <MenuItem value={'unspecified'}>Unspecified</MenuItem>
+                    <MenuItem value={'Male'}>Male</MenuItem>
+                    <MenuItem value={'Female'}>Female</MenuItem>
+                    <MenuItem value={'Unspecified'}>Unspecified</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
@@ -307,8 +307,8 @@ function CreateProvider() {
                     helperText={touched.language && errors.language}
                     error={Boolean(errors.language && touched.language)}
                   >
-                    <MenuItem value={'english'}>English</MenuItem>
-                    <MenuItem value={'french'}>French</MenuItem>
+                    <MenuItem value={'English'}>English</MenuItem>
+                    <MenuItem value={'French'}>French</MenuItem>
                   </TextField>
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>

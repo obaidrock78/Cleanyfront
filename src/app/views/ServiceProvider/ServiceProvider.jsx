@@ -134,14 +134,24 @@ function ServiceProvider() {
       flex: 1,
       sortable: false,
       renderCell: (item) => {
-        console.log(item);
         return (
-          <Box>
-            <TableHeading style={{ fontWeight: 'bold' }}>
-              {item?.value?.first_name} {item?.value?.last_name}
-            </TableHeading>
-            <TableHeading>{item?.row?.email}</TableHeading>
-            <TableHeading>{item?.value?.phone_number} items</TableHeading>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{ borderRadius: '4px', height: '40px', width: '40px', background: '#e0e2e5' }}>
+              {item?.row?.user_profile?.profile_picture && (
+                <img
+                  style={{ width: '100%', height: '100%' }}
+                  src={`https://api-cleany-backend.herokuapp.com${item?.row?.user_profile?.profile_picture}`}
+                  alt="photo"
+                />
+              )}
+            </Box>
+            <Box>
+              <TableHeading style={{ fontWeight: 'bold' }}>
+                {item?.value?.first_name} {item?.value?.last_name}
+              </TableHeading>
+              <TableHeading>{item?.row?.email}</TableHeading>
+              <TableHeading>{item?.value?.phone_number} items</TableHeading>
+            </Box>
           </Box>
         );
       },
@@ -170,7 +180,7 @@ function ServiceProvider() {
       field: 'is_active',
       headerName: 'Status',
       flex: 1,
-      sortable: true,
+      sortable: false,
       renderCell: (item) => {
         return (
           <TableHeading>
@@ -209,6 +219,7 @@ function ServiceProvider() {
       field: 'email',
       headerName: '',
       flex: 1,
+      sortable: false,
       renderCell: (item) => {
         const index = item.api.getRowIndex(item.row.id);
         return (
@@ -235,13 +246,15 @@ function ServiceProvider() {
                 open={Boolean(anchorEls[index])}
                 onClose={() => closeDropdown(index)}
               >
-                {/* <MenuItem
+                <MenuItem
                   onClick={() => {
-                    closeDropdown(index);
+                    navigate(`/dashboard/service-providers/${item?.row?.id}/work_calendar/`, {
+                      state: item?.row,
+                    });
                   }}
                 >
-                  Add to Project
-                </MenuItem> */}
+                  Work Calendar
+                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     closeDropdown(index);
