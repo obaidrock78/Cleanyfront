@@ -3,11 +3,15 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Checkbox, Grid, TextField } from '@mui/material';
 import { Box, styled } from '@mui/system';
 import { Paragraph } from 'app/components/Typography';
-import useAuth from 'app/hooks/useAuth';
+import axios from '../../../axios';
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import logo from '../../../assets/logo.png';
+import toast, { Toaster } from 'react-hot-toast';
+
+import { USER_REGISTRATION } from 'app/api';
 
 const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
 
@@ -30,41 +34,61 @@ const JWTRegister = styled(JustifyBox)(() => ({
     borderRadius: 12,
     alignItems: 'center',
   },
+  '& .logoImg': { width: '200px', marginBottom: '12px' },
 }));
 
 // inital login credentials
 const initialValues = {
   email: '',
   password: '',
-  username: '',
+  confirmPassword: '',
   remember: true,
 };
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(6, 'Password must be 6 character length')
+    .min(8, 'Password must be 8 character length')
     .required('Password is required!'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm password is required!'),
   email: Yup.string().email('Invalid Email address').required('Email is required!'),
 });
 
 const JwtRegister = () => {
   const theme = useTheme();
-  const { register } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = async (values) => {
     setLoading(true);
+    toast.promise(
+      axios.post(`${USER_REGISTRATION}`, values, {
+        headers: { 'Content-Type': 'application/json' },
+      }),
+      {
+        loading: () => {
+          return `Registering User`;
+        },
+        success: (res) => {
+          setLoading(false);
+          setTimeout(() => {
+            navigate('/session/new-profile', { state: { email: values.email } });
+          }, 1000);
 
-    try {
-      register(values.email, values.username, values.password);
-      navigate('/');
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-    }
+          return res?.data?.message;
+        },
+        error: (err) => {
+          setLoading(false);
+          if (err.status_code === 400) {
+            return 'User with this email already exists!';
+          } else {
+            return err?.message.email[0];
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -83,6 +107,7 @@ const JwtRegister = () => {
 
           <Grid item sm={6} xs={12}>
             <Box p={4} height="100%">
+              <img src={logo} alt="Cleany" className="logoImg" />
               <Formik
                 onSubmit={handleFormSubmit}
                 initialValues={initialValues}
@@ -90,21 +115,6 @@ const JwtRegister = () => {
               >
                 {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
                   <form onSubmit={handleSubmit}>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      type="text"
-                      name="username"
-                      label="Username"
-                      variant="outlined"
-                      onBlur={handleBlur}
-                      value={values.username}
-                      onChange={handleChange}
-                      helperText={touched.username && errors.username}
-                      error={Boolean(errors.username && touched.username)}
-                      sx={{ mb: 3 }}
-                    />
-
                     <TextField
                       fullWidth
                       size="small"
@@ -117,9 +127,10 @@ const JwtRegister = () => {
                       onChange={handleChange}
                       helperText={touched.email && errors.email}
                       error={Boolean(errors.email && touched.email)}
-                      sx={{ mb: 3 }}
+                      sx={{ mb: 2 }}
                     />
                     <TextField
+                      autoComplete="off"
                       fullWidth
                       size="small"
                       name="password"
@@ -133,6 +144,21 @@ const JwtRegister = () => {
                       error={Boolean(errors.password && touched.password)}
                       sx={{ mb: 2 }}
                     />
+                    <TextField
+                      autoComplete="off"
+                      fullWidth
+                      size="small"
+                      name="confirmPassword"
+                      type="password"
+                      label="Confirm password"
+                      variant="outlined"
+                      onBlur={handleBlur}
+                      value={values.confirmPassword}
+                      onChange={handleChange}
+                      helperText={touched.confirmPassword && errors.confirmPassword}
+                      error={Boolean(errors.confirmPassword && touched.confirmPassword)}
+                      sx={{ mb: 2 }}
+                    />
 
                     <FlexBox gap={1} alignItems="center">
                       <Checkbox
@@ -144,7 +170,10 @@ const JwtRegister = () => {
                       />
 
                       <Paragraph fontSize={13}>
-                        I have read and agree to the terms of service.
+                        I have read and agree to the{' '}
+                        <a href="#" style={{ color: '#1a569d', cursor: 'pointer' }}>
+                          terms and policy.
+                        </a>
                       </Paragraph>
                     </FlexBox>
 
@@ -154,8 +183,10 @@ const JwtRegister = () => {
                       loading={loading}
                       variant="contained"
                       sx={{ mb: 2, mt: 3 }}
+                      fullWidth
+                      disabled={!values.remember}
                     >
-                      Regiser
+                      Create new account
                     </LoadingButton>
 
                     <Paragraph>
@@ -174,6 +205,7 @@ const JwtRegister = () => {
           </Grid>
         </Grid>
       </Card>
+      <Toaster position="top-right" />
     </JWTRegister>
   );
 };

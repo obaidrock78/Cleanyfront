@@ -29,9 +29,7 @@ const AuthGuard = ({ children }) => {
   // // IF YOU NEED ROLE BASED AUTHENTICATION,
   // // UNCOMMENT ABOVE LINES
   // // AND COMMENT OUT BELOW authenticated VARIABLE
-
   let authenticated = isAuthenticated;
-
   return (
     <>
       {authenticated ? (
