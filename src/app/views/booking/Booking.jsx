@@ -81,7 +81,9 @@ function Booking() {
   useEffect(async () => {
     await axios
       .get(`${GET_BOOKING_DATA}/${params?.slug}`)
-      .then((res) => setBookingData(res?.data?.data))
+      .then((res) => {
+        setBookingData(res?.data?.data);
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -169,7 +171,7 @@ function Booking() {
                           value={selectedItems[index]}
                           onChange={(e) => handleSelectPackageData(e.target.value, index)}
                         >
-                          <MenuItem value={0}>None</MenuItem>
+                          <MenuItem value={null}>None</MenuItem>
                           {data?.item?.length > 0 &&
                             data?.item?.map((item) => (
                               <MenuItem value={item}>
@@ -184,9 +186,33 @@ function Booking() {
                 <Typography variant="h6" className="subHeadings">
                   Extras
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" style={{ paddingBottom: '1rem' }}>
                   Select the extras you require for your booking. Price per cleaning:
                 </Typography>
+                <Grid container spacing={5} sx={{ paddinTop: '1rem' }}>
+                  {/* {bookingData?.extras?.length > 0 &&
+                    bookingData?.extras.map((data, index) => (
+                      <Grid item xs={4}>
+                        <Box sx={{ width: '100%', height: '100%' }}>
+                          <Box
+                            sx={{
+                              width: '100%',
+                              height: '150px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              color: '#212529',
+                              backgroundColor: '#dae0e5',
+                              borderColor: '#d3d9df',
+                              borderRadius: '5px',
+                            }}
+                          ></Box>
+                        </Box>
+                      </Grid>
+                    ))} */}
+                </Grid>
+
                 <Divider sx={{ marginTop: '2rem' }} />
                 <Typography variant="h6" className="subHeadings">
                   Choose your frequency

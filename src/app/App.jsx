@@ -17,6 +17,7 @@ import { Navigate } from 'react-router-dom';
 import MatxLayout from './components/MatxLayout/MatxLayout';
 import servicesRoutes from './views/services/Servicesroutes';
 import servicesProviderRoutes from './views/ServiceProvider/ProviderRoutes';
+import customerRoutes from './views/customers/CustomerRoutes';
 import Booking from './views/booking/Booking';
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
         ...settings,
         ...servicesRoutes,
         ...servicesProviderRoutes,
+        ...customerRoutes,
       ],
     },
     { path: '/booking/:slug', element: <Booking /> },
