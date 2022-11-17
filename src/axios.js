@@ -3,6 +3,7 @@ import useAuth from 'app/hooks/useAuth';
 
 const axiosInstance = axios.create({
   baseURL: 'https://api-cleany-backend.herokuapp.com',
+  // baseURL: 'https://ff95-103-152-101-133.in.ngrok.io',
 });
 
 axiosInstance.interceptors.response.use(

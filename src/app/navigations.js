@@ -1,7 +1,11 @@
 export const navigations = [
   { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
   { label: 'PAGES', type: 'label' },
-
+  {
+    name: 'Bookings',
+    icon: 'import_contacts_outlined_icon',
+    children: [{ name: 'Booking Orders', iconText: 'CP', path: '/dashboard/booking-orders' }],
+  },
   {
     name: 'Customers',
     icon: 'sensor_occupied_outlined_icon',

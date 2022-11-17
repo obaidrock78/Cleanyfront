@@ -10,6 +10,8 @@
     "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "^5.0.6",
     "@mui/x-data-grid": "^5.17.8",
+    "@stripe/react-stripe-js": "^1.15.0",
+    "@stripe/stripe-js": "^1.44.1",
     "autosuggest-highlight": "^3.2.0",
     "axios": "^0.24.0",
     "babel-polyfill": "^6.26.0",

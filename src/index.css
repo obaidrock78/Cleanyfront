@@ -4,3 +4,15 @@ body,
 p {
   font-family: 'Inter', sans-serif !important;
 }
+.StripeElement {
+  margin: 15px auto;
+  padding: 0px 2rem;
+  color: #32325d;
+  background-color: white;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
