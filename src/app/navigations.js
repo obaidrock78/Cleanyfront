@@ -4,7 +4,9 @@ export const navigations = [
   {
     name: 'Bookings',
     icon: 'import_contacts_outlined_icon',
-    children: [{ name: 'Booking Orders', iconText: 'CP', path: '/dashboard/booking-orders' }],
+    children: [
+      { name: 'Booking Appointments', iconText: 'CP', path: '/dashboard/booking-appointments' },
+    ],
   },
   {
     name: 'Customers',

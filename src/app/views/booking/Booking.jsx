@@ -210,6 +210,7 @@ function Booking() {
       .get(`${GET_BOOKING_DATA}/${params?.slug}`)
       .then((res) => {
         setBookingData(res?.data?.data);
+        debugger;
       })
       .catch((err) => console.log(err));
   }, []);
@@ -229,10 +230,10 @@ function Booking() {
   const handleExtrasClick = (data, index) => {
     const dupArr = [...selectedExtras];
     if (selectedExtras[index]?.quantity) {
-      dupArr.splice(index, 1);
+      dupArr[index] = undefined;
       setSelectedExtras(dupArr);
     } else {
-      dupArr[index] = { extra_id: data.id, quantity: 1 };
+      dupArr[index] = { extra_id: data.id, quantity: 1, price: data?.price };
       setSelectedExtras(dupArr);
     }
   };
@@ -342,8 +343,8 @@ function Booking() {
         </Container>
       </Box>
       <Container maxWidth="lg" className="contentMain">
-        <Grid container columnSpacing={5}>
-          <Grid item xs={9}>
+        <Grid container columnSpacing={4}>
+          <Grid item xs={8}>
             <Box
               sx={{
                 background: 'white',
@@ -497,7 +498,7 @@ function Booking() {
                     marginTop: '1.5rem',
                     '& button': {
                       borderRadius: ' 15px 0px',
-                      padding: '1rem 1.5rem',
+                      padding: '1rem 1.3rem',
                       fontSize: '1rem',
                       '&:hover': {
                         background: '#1976d2',
@@ -505,7 +506,7 @@ function Booking() {
                       },
                     },
                   }}
-                  gap={4}
+                  gap={3}
                 >
                   {btnArray.map((data, index) => (
                     <Button
@@ -1078,8 +1079,144 @@ function Booking() {
               </Accordion>
             </Box>
           </Grid>
-          <Grid item xs={3}>
-            <Box sx={{ position: 'sticky', top: '8rem' }}>dfg</Box>
+          <Grid item xs={4}>
+            <Box sx={{ position: 'sticky', top: '8rem' }}>
+              <Box
+                sx={{
+                  width: '100%',
+                  background: 'white',
+                  padding: '1rem',
+                  paddingTop: '1rem',
+                  paddingBottom: '1rem',
+                  border: '1px solid #dddada',
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  style={{ paddingBottom: '0.2rem' }}
+                  className="subHeadings"
+                >
+                  {frequency === 'once' && 'One Time Cleaning Plan'}
+                  {frequency === 'weekly' && 'Weekly Cleaning Plan'}
+                  {frequency === 'biweekly' && 'Biweekly Cleaning Plan'}
+                  {frequency === 'monthly' && 'Daily Cleaning Plan'}
+                </Typography>
+                {frequency !== 'once' && (
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    6 Months
+                  </Typography>
+                )}
+                <Divider sx={{ marginTop: '1rem', marginBottom: '1rem' }} />
+                <Box
+                  display={'flex'}
+                  alignItems="center"
+                  justifyContent={'space-between'}
+                  paddingBottom="1rem"
+                >
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    Per cleaning
+                  </Typography>
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    $
+                    {_.compact(selectedItems)
+                      .map((item) => {
+                        return parseFloat(item?.price).toFixed(2);
+                      })
+                      .reduce((accumulator, value) => {
+                        return +accumulator + +value;
+                      }, 0)}
+                  </Typography>
+                </Box>
+                <Box
+                  display={'flex'}
+                  alignItems="center"
+                  justifyContent={'space-between'}
+                  paddingBottom="1rem"
+                >
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    Discounts
+                  </Typography>
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    $
+                    {_.compact(selectedItems)
+                      .map((item) => {
+                        const percent = (item?.discount_percent * +item?.price) / 100;
+                        return percent;
+                      })
+                      .reduce((accumulator, value) => {
+                        return +accumulator + +value;
+                      }, 0)}
+                  </Typography>
+                </Box>
+                <Box
+                  display={'flex'}
+                  alignItems="center"
+                  justifyContent={'space-between'}
+                  paddingBottom="1rem"
+                >
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    Extras
+                  </Typography>
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    $
+                    {_.compact(selectedExtras)
+                      .map((item) => {
+                        const price = parseFloat(item?.price) * item?.quantity;
+                        return price.toFixed(2);
+                      })
+                      .reduce((accumulator, value) => {
+                        return +accumulator + +value;
+                      }, 0)}
+                  </Typography>
+                </Box>
+                <Box
+                  display={'flex'}
+                  alignItems="center"
+                  justifyContent={'space-between'}
+                  paddingBottom="1rem"
+                >
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    Estimated Tax
+                  </Typography>
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    ${bookingData?.tax?.[0]?.tax_rate}
+                  </Typography>
+                </Box>
+                <Divider sx={{ marginTop: '1rem', marginBottom: '1rem' }} />
+                <Box display={'flex'} alignItems="center" justifyContent={'space-between'}>
+                  <Typography variant="h6" className="subHeadings" style={{ paddingTop: 'unset' }}>
+                    TODAY'S TOTAL
+                  </Typography>
+                  <Typography variant="body1" style={{ fontSize: '1rem' }}>
+                    $
+                    {+bookingData?.tax?.[0]?.tax_rate +
+                      _.compact(selectedExtras)
+                        .map((item) => {
+                          const price = parseFloat(item?.price) * item?.quantity;
+                          return price.toFixed(2);
+                        })
+                        .reduce((accumulator, value) => {
+                          return +accumulator + +value;
+                        }, 0) +
+                      _.compact(selectedItems)
+                        .map((item) => {
+                          return parseFloat(item?.price).toFixed(2);
+                        })
+                        .reduce((accumulator, value) => {
+                          return +accumulator + +value;
+                        }, 0) -
+                      _.compact(selectedItems)
+                        .map((item) => {
+                          const percent = (item?.discount_percent * +item?.price) / 100;
+                          return percent;
+                        })
+                        .reduce((accumulator, value) => {
+                          return +accumulator + +value;
+                        }, 0)}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       </Container>

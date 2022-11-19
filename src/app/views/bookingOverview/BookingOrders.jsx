@@ -154,18 +154,17 @@ function BookingOrders() {
           <Box>
             <Box display={'flex'} alignItems="center">
               <CalendarMonthOutlinedIcon sx={{ paddingRight: '5px' }} />
-              <TableHeading>{item?.row?.bod?.start_time}</TableHeading>
+              <TableHeading>{item?.row?.bod?.frequency?.start_date}</TableHeading>
             </Box>
 
             <Box display={'flex'} alignItems="center">
               <AccessTimeOutlinedIcon sx={{ paddingRight: '5px' }} />
               <TableHeading>
-                ({moment(item?.row?.appointment_date_time).format('LT')}) Total hours:{' '}
-                {item?.value?.bod?.total_hours}
+                {moment(item?.row?.bod?.start_time).format('')} - ({item?.row?.bod?.total_hours}hrs)
               </TableHeading>
             </Box>
 
-            <TableHeading>B-245353</TableHeading>
+            <TableHeading>B-{item?.row?.id}</TableHeading>
           </Box>
         );
       },
@@ -197,8 +196,9 @@ function BookingOrders() {
             <TableHeading>{item?.row?.bod?.bod_service_location?.street_address}</TableHeading>
 
             <TableHeading>
-              {item?.row?.bod?.bod_service_location?.state}{' '}
               {item?.row?.bod?.bod_service_location?.city}
+              {', '}
+              {item?.row?.bod?.bod_service_location?.state}
             </TableHeading>
 
             <TableHeading>{item?.row?.bod?.bod_service_location?.zip_code}</TableHeading>
@@ -218,7 +218,9 @@ function BookingOrders() {
           <Box display={'flex'} alignItems="center" gap={1}>
             <Button
               variant="outlined"
-              onClick={() => navigate(`/dashboard/booking-orders/${item?.row?.bod?.id}/details/`)}
+              onClick={() =>
+                navigate(`/dashboard/booking-appointments/${item?.row?.bod?.id}/details/`)
+              }
             >
               View
             </Button>
@@ -237,8 +239,8 @@ function BookingOrders() {
       <Box className="breadcrumb">
         <Breadcrumb
           routeSegments={[
-            { name: 'Bookings', path: '/dashboard/booking-orders' },
-            { name: 'Booking Orders' },
+            { name: 'Bookings', path: '/dashboard/booking-appointments' },
+            { name: 'Booking Appointments' },
           ]}
         />
       </Box>
