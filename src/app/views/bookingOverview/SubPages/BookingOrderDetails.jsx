@@ -29,6 +29,8 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+import RescheduleAppointment from '../Modals/Reappointment';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -51,6 +53,8 @@ function BookingOrderDetails() {
   const params = useParams();
   const [value, setValue] = useState(0);
   const [bookindDetails, setBookindDetails] = useState(null);
+  const [openRescheduleAppointment, setOpenRescheduleAppointment] = useState(false);
+
   useEffect(() => {
     getEventList();
   }, []);
@@ -776,6 +780,86 @@ function BookingOrderDetails() {
                           <p>Yes</p>
                         </Box>
                       </Box>
+                      <Grid container spacing={2} sx={{ marginTop: '0.5rem', fontSize: '1rem' }}>
+                        <Grid item xs={6}>
+                          Recipent
+                        </Grid>
+                        <Grid item xs={6}>
+                          Dates
+                        </Grid>
+                      </Grid>
+                      <Divider />
+                      <Grid
+                        container
+                        columnSpacing={1}
+                        sx={{ fontSize: 'x-small', marginTop: '5px' }}
+                      >
+                        <Grid item xs={2}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: 'blue',
+                              padding: '2px 5px',
+                              color: 'white',
+                              borderRadius: '25px',
+                              '& p': {
+                                padding: 'unset !important',
+                              },
+                            }}
+                          >
+                            <EmailOutlinedIcon sx={{ fontSize: '14px' }} />
+                            <p>SA</p>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={5}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              backgroundColor: 'red',
+                              padding: '2px 5px',
+                              color: 'white',
+                              borderRadius: '25px',
+                              '& p': {
+                                padding: 'unset !important',
+                              },
+                            }}
+                          >
+                            <Box display="flex" alignItems={'center'} justifyContent="center">
+                              <PermIdentityOutlinedIcon sx={{ fontSize: '14px' }} />
+                              <p>Grismary Alejandra</p>
+                            </Box>
+                            grisrivero87@gmail.com
+                          </Box>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexDirection: 'column',
+                              backgroundColor: 'green',
+                              padding: '2px 5px',
+                              color: 'white',
+                              borderRadius: '25px',
+                              '& p': {
+                                padding: 'unset !important',
+                              },
+                            }}
+                          >
+                            <p>Sent: Feb 7, 2022</p>
+                            <p>11:23</p>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={1}>
+                          dfg
+                        </Grid>
+                      </Grid>
                     </Box>
                   </Grid>
                 </Grid>
@@ -843,7 +927,11 @@ function BookingOrderDetails() {
                 <Button fullWidth variant="contained">
                   Edit
                 </Button>
-                <Button fullWidth variant="contained">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => setOpenRescheduleAppointment(true)}
+                >
                   Reschedule Booking
                 </Button>
                 <Button fullWidth variant="contained">
@@ -960,6 +1048,11 @@ function BookingOrderDetails() {
           </Grid>
         </Grid>
       </Container>
+      <RescheduleAppointment
+        open={openRescheduleAppointment}
+        handleClose={() => setOpenRescheduleAppointment(false)}
+        bookindDetails={bookindDetails}
+      />
     </>
   );
 }
