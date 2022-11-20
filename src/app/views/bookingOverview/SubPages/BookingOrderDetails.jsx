@@ -4,7 +4,7 @@ import { Box, Button, Divider, Grid, styled, Tab, Tabs, Typography } from '@mui/
 import { Breadcrumb } from 'app/components';
 import { useParams } from 'react-router-dom';
 import axios from '../../../../axios';
-import { GET_PROVIDER_WORK_LIST } from 'app/api';
+import { BOOKING_APPOINTMENT_DETAILS, GET_PROVIDER_WORK_LIST } from 'app/api';
 import toast from 'react-hot-toast';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -50,16 +50,19 @@ const Container = styled('div')(({ theme }) => ({
 function BookingOrderDetails() {
   const params = useParams();
   const [value, setValue] = useState(0);
+  const [bookindDetails, setBookindDetails] = useState(null);
   useEffect(() => {
     getEventList();
   }, []);
   const getEventList = async () => {
     await axios
-      .get(`${GET_PROVIDER_WORK_LIST}?service_provider=${params?.id}`)
-      .then((res) => {})
+      .get(`${BOOKING_APPOINTMENT_DETAILS}/${params?.id}`)
+      .then((res) => {
+        setBookindDetails(res?.data?.data);
+      })
       .catch((err) => console.log(err));
   };
-  const steps = ['Call in', 'Unscheduled', 'Scheduled', 'Dispatched', 'Complete'];
+  const steps = ['Unscheduled', 'Scheduled', 'Dispatched', 'Complete', 'cancelled'];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -72,7 +75,7 @@ function BookingOrderDetails() {
           <Breadcrumb
             routeSegments={[
               { name: 'Bookings', path: '/dashboard/booking-orders' },
-              { name: 'Booking Orders', path: '/dashboard/booking-orders' },
+              { name: 'Booking Appointments', path: '/dashboard/booking-orders' },
               { name: 'Booking Overview' },
             ]}
           />
@@ -92,7 +95,22 @@ function BookingOrderDetails() {
                     borderRadius: '4px',
                   }}
                 >
-                  <Stepper activeStep={2} alternativeLabel>
+                  <Stepper
+                    activeStep={
+                      bookindDetails?.bod?.status === 'unscheduled'
+                        ? 0
+                        : bookindDetails?.bod?.status === 'scheduled'
+                        ? 1
+                        : bookindDetails?.bod?.status === 'dispatched'
+                        ? 2
+                        : bookindDetails?.bod?.status === 'complete'
+                        ? 3
+                        : bookindDetails?.bod?.status === 'complete'
+                        ? 4
+                        : null
+                    }
+                    alternativeLabel
+                  >
                     {steps.map((label) => (
                       <Step key={label}>
                         <StepLabel>{label}</StepLabel>
@@ -133,7 +151,7 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <TodayOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>Oct. 2, 2022, 3:26 a.m.</p>
+                        <p>{moment(bookindDetails?.appointment_date_time).format('lll')}</p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -142,7 +160,7 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <AccessTimeOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>11:00 - 5.00 (hrs)</p>
+                        <p>11:00 - {bookindDetails?.total_hours} (hrs)</p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -151,7 +169,7 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <PentagonOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>B-1</p>
+                        <p>B-{bookindDetails?.id}</p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -422,7 +440,10 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <AccountCircleOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p style={{ fontSize: '1.25rem' }}>Obaid Test</p>
+                        <p style={{ fontSize: '1.25rem' }}>
+                          {bookindDetails?.bod?.bod_contact_info?.first_name}{' '}
+                          {bookindDetails?.bod?.bod_contact_info?.last_name}
+                        </p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -431,7 +452,7 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <EmailOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>Test@test.com</p>
+                        <p>{bookindDetails?.bod?.bod_contact_info?.email}</p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -440,7 +461,7 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <LocalPhoneOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>1346546564</p>
+                        <p>{bookindDetails?.bod?.bod_contact_info?.phone}</p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -449,7 +470,7 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <HomeOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>1245 Main Street</p>
+                        <p>{bookindDetails?.bod?.bod_service_location?.street_address}</p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -458,7 +479,10 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <LocationOnOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>From: USA,FLorida</p>
+                        <p>
+                          From: {bookindDetails?.bod?.bod_service_location?.city},{' '}
+                          {bookindDetails?.bod?.bod_service_location?.state}
+                        </p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -467,7 +491,12 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <EventOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>Since:</p>
+                        <p>
+                          Since:{' '}
+                          {moment(bookindDetails?.bod?.bod_contact_info?.created_at).format(
+                            'MMM DD YYYY, h:mm a'
+                          )}
+                        </p>
                       </Box>
                     </Box>
                   </Grid>
@@ -502,7 +531,16 @@ function BookingOrderDetails() {
                         <AutorenewIcon sx={{ fontSize: '3rem' }} />
                         <Box>
                           <h3>
-                            <span style={{ fontWeight: '400' }}>Frequency: </span>Every 2 Weeks
+                            <span style={{ fontWeight: '400' }}>Frequency: </span>
+                            {bookindDetails?.bod?.frequency?.type === 'weekly'
+                              ? 'Every week'
+                              : bookindDetails?.bod?.frequency?.type === 'once'
+                              ? 'One Time'
+                              : bookindDetails?.bod?.frequency?.type === 'biweekly'
+                              ? 'Biweekly'
+                              : bookindDetails?.bod?.frequency?.type === 'monthly'
+                              ? 'Every Month'
+                              : '-'}
                           </h3>
                           <Box display={'flex'} alignItems="center">
                             <AccessTimeIcon sx={{ paddingRight: '5px' }} />
@@ -511,13 +549,25 @@ function BookingOrderDetails() {
                           <Box display={'flex'} alignItems="center">
                             <TodayOutlinedIcon sx={{ paddingRight: '5px' }} />
                             <p>
-                              Start <span style={{ fontWeight: 'bold' }}>January 8, 2022</span>
+                              Start{' '}
+                              <span style={{ fontWeight: 'bold' }}>
+                                {moment(
+                                  new Date(bookindDetails?.bod?.frequency?.start_date)
+                                ).format('ll')}
+                              </span>
                             </p>
                           </Box>
                           <Box display={'flex'} alignItems="center">
                             <TodayOutlinedIcon sx={{ paddingRight: '5px' }} />
                             <p>
-                              <span style={{ fontWeight: 'bold' }}>End No end date</span>
+                              End{' '}
+                              <span style={{ fontWeight: 'bold' }}>
+                                {bookindDetails?.bod?.frequency?.recur_end_date === null
+                                  ? 'No end date'
+                                  : moment(
+                                      new Date(bookindDetails?.bod?.frequency?.recur_end_date)
+                                    ).format('ll')}
+                              </span>
                             </p>
                           </Box>
                         </Box>
@@ -551,19 +601,84 @@ function BookingOrderDetails() {
                           aria-label="person"
                         />
                       </Tabs>
-                      <Grid container sx={{ paddingTop: '10px' }}>
-                        <Grid item xs={2} textAlign="center">
-                          <Box display="flex" alignItems={'center'}>
-                            <BookOutlinedIcon sx={{ marginRight: '10px' }} /> <span> 1</span>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={8} textAlign="center">
-                          <span>Oct. 2, 2022, 11 a.m.</span>
-                        </Grid>
-                        <Grid item xs={2} textAlign="center">
-                          <span>11:00</span>
-                        </Grid>
-                      </Grid>
+                      <Box
+                        sx={{
+                          maxHeight: '20rem',
+                          overflow: 'auto',
+                          width: '100%',
+                          '&::-webkit-scrollbar': {
+                            width: '5px',
+                          },
+                          '&::-webkit-scrollbar-track': {
+                            backgroundColor: 'transparent',
+                          },
+                          '&::-webkit-scrollbar-thumb ': {
+                            boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
+                            borderRadius: '4px',
+                          },
+                        }}
+                      >
+                        {value === 0 &&
+                          !!bookindDetails?.bookings?.length &&
+                          bookindDetails?.bookings
+                            ?.filter((data) => data?.status === 'scheduled')
+                            ?.map((item, index) => (
+                              <Grid container key={index} sx={{ paddingTop: '10px' }}>
+                                <Grid item xs={2} textAlign="center">
+                                  <Box display="flex" alignItems={'center'}>
+                                    <BookOutlinedIcon sx={{ marginRight: '10px' }} />{' '}
+                                    <span> {index + 1}</span>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={8} textAlign="center">
+                                  <span>{moment(item?.appointment_date_time).format('lll')}</span>
+                                </Grid>
+                                <Grid item xs={2} textAlign="center">
+                                  <span>{item?.start_time}</span>
+                                </Grid>
+                              </Grid>
+                            ))}
+                        {value === 1 &&
+                          !!bookindDetails?.bookings?.length &&
+                          bookindDetails?.bookings
+                            ?.filter((data) => data?.status === 'unscheduled')
+                            ?.map((item, index) => (
+                              <Grid container key={index} sx={{ paddingTop: '10px' }}>
+                                <Grid item xs={2} textAlign="center">
+                                  <Box display="flex" alignItems={'center'}>
+                                    <BookOutlinedIcon sx={{ marginRight: '10px' }} />{' '}
+                                    <span> {index + 1}</span>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={8} textAlign="center">
+                                  <span>{moment(item?.appointment_date_time).format('lll')}</span>
+                                </Grid>
+                                <Grid item xs={2} textAlign="center">
+                                  <span>{item?.start_time}</span>
+                                </Grid>
+                              </Grid>
+                            ))}
+                        {value === 2 &&
+                          !!bookindDetails?.bookings?.length &&
+                          bookindDetails?.bookings
+                            ?.filter((data) => data?.status === 'completed')
+                            ?.map((item, index) => (
+                              <Grid container key={index} sx={{ paddingTop: '10px' }}>
+                                <Grid item xs={2} textAlign="center">
+                                  <Box display="flex" alignItems={'center'}>
+                                    <BookOutlinedIcon sx={{ marginRight: '10px' }} />{' '}
+                                    <span> {index + 1}</span>
+                                  </Box>
+                                </Grid>
+                                <Grid item xs={8} textAlign="center">
+                                  <span>{moment(item?.appointment_date_time).format('lll')}</span>
+                                </Grid>
+                                <Grid item xs={2} textAlign="center">
+                                  <span>{item?.start_time}</span>
+                                </Grid>
+                              </Grid>
+                            ))}
+                      </Box>
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={12}>
@@ -716,6 +831,60 @@ function BookingOrderDetails() {
                 '& p': {
                   margin: 'unset',
                 },
+                '& button': {
+                  fontWeight: '500',
+                },
+              }}
+            >
+              <Typography variant="h3" className="headingSubTxt">
+                Actions
+              </Typography>
+              <Box display={'flex'} alignItems={'center'} flexDirection={'column'} gap={1}>
+                <Button fullWidth variant="contained">
+                  Edit
+                </Button>
+                <Button fullWidth variant="contained">
+                  Reschedule Booking
+                </Button>
+                <Button fullWidth variant="contained">
+                  Raise Problem
+                </Button>
+                <Button fullWidth variant="contained">
+                  Attach File
+                </Button>
+                <Button fullWidth variant="contained" color="success">
+                  Charge Customer
+                </Button>
+                <Button fullWidth variant="contained">
+                  Mark Complete
+                </Button>
+                <Button fullWidth variant="contained">
+                  Generate Invoice
+                </Button>
+                <Button fullWidth variant="contained" color="success">
+                  Charge Tip
+                </Button>
+                <Button fullWidth variant="contained" color="warning">
+                  Cancel Booking
+                </Button>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                border: ' 1px solid rgba(98,105,118,.16)',
+                background: '#fff',
+                borderTop: ' 5px solid #1976d2',
+                padding: ' 1rem 1rem',
+                borderRadius: '4px',
+                '& .headingSubTxt': {
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  paddingBottom: '1rem',
+                },
+                '& p': {
+                  margin: 'unset',
+                },
               }}
             >
               <Typography variant="h3" className="headingSubTxt">
@@ -748,66 +917,7 @@ function BookingOrderDetails() {
                 <Typography variant="body1">$0.0</Typography>
               </Box>
             </Box>
-            <Box
-              sx={{
-                boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
-                border: ' 1px solid rgba(98,105,118,.16)',
-                background: '#fff',
-                borderTop: ' 5px solid #1976d2',
-                padding: ' 1rem 1rem',
-                borderRadius: '4px',
-                '& .headingSubTxt': {
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                  paddingBottom: '1rem',
-                },
-                '& p': {
-                  margin: 'unset',
-                },
-                '& button': {
-                  fontWeight: '500',
-                },
-              }}
-            >
-              <Typography variant="h3" className="headingSubTxt">
-                Actions
-              </Typography>
-              <Box display={'flex'} alignItems={'center'} flexDirection={'column'} gap={1}>
-                <Button fullWidth variant="contained">
-                  Refresh
-                </Button>
-                <Button fullWidth variant="contained">
-                  Edit
-                </Button>
-                <Button fullWidth variant="contained">
-                  Reschedule Booking
-                </Button>
-                <Button fullWidth variant="contained">
-                  Manual Dispatch
-                </Button>
-                <Button fullWidth variant="contained">
-                  Raise Problem
-                </Button>
-                <Button fullWidth variant="contained">
-                  Attach File
-                </Button>
-                <Button fullWidth variant="contained" color="success">
-                  Charge Customer
-                </Button>
-                <Button fullWidth variant="contained">
-                  Mark Complete
-                </Button>
-                <Button fullWidth variant="contained">
-                  Generate Invoice
-                </Button>
-                <Button fullWidth variant="contained" color="success">
-                  Charge Tip
-                </Button>
-                <Button fullWidth variant="contained" color="warning">
-                  Cancel Booking
-                </Button>
-              </Box>
-            </Box>
+
             <Box
               sx={{
                 boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',

@@ -31,3 +31,4 @@ export const GET_PROVIDER_WORK_LIST = '/service_provider/list_leaves';
 export const CREATE_PROVIDER_LEAVE = '/service_provider/create_leave';
 export const DELETE_PROVIDER_LEAVE = '/service_provider/delete_leave';
 export const LIST_BOOKING = '/booking/booking_list';
+export const BOOKING_APPOINTMENT_DETAILS = '/booking/booking_details';

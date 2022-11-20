@@ -1,13 +1,11 @@
-import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Pagination, TextField, Typography } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import axios from '../../../axios';
 import { LIST_BOOKING } from 'app/api';
-import { DataGrid, GridToolbarQuickFilter, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useNavigate } from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
@@ -72,20 +70,24 @@ const TableHeading = styled('p')(() => ({
 function BookingOrders() {
   const navigate = useNavigate();
   const [bookingList, setBookingList] = useState([]);
-  const [editData, setEditData] = useState(null);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteID, setDeleteID] = useState(null);
+  const [dateChange, setDateChange] = useState('month');
+  const [statusChange, setStatusChange] = useState('scheduled');
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
   useEffect(() => {
     serviceListAPI();
-  }, []);
+  }, [dateChange, statusChange, page, perPage]);
 
   const serviceListAPI = async () => {
     await axios
-      .get(`${LIST_BOOKING}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
+      .get(
+        `${LIST_BOOKING}?booking_status=${statusChange}&date_filter=${dateChange}&page=${page}&per_page=${perPage}`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
       .then((res) => {
-        setBookingList(res?.data?.data);
+        setBookingList(res?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -160,7 +162,7 @@ function BookingOrders() {
             <Box display={'flex'} alignItems="center">
               <AccessTimeOutlinedIcon sx={{ paddingRight: '5px' }} />
               <TableHeading>
-                {moment(item?.row?.bod?.start_time).format('')} - ({item?.row?.bod?.total_hours}hrs)
+                {item?.row?.bod?.start_time} - ({item?.row?.bod?.total_hours}hrs)
               </TableHeading>
             </Box>
 
@@ -214,13 +216,12 @@ function BookingOrders() {
       minWidth: 90,
       maxWidth: 90,
       renderCell: (item) => {
+        console.log(item.row);
         return (
           <Box display={'flex'} alignItems="center" gap={1}>
             <Button
               variant="outlined"
-              onClick={() =>
-                navigate(`/dashboard/booking-appointments/${item?.row?.bod?.id}/details/`)
-              }
+              onClick={() => navigate(`/dashboard/booking-appointments/${item?.row?.id}/details/`)}
             >
               View
             </Button>
@@ -230,10 +231,6 @@ function BookingOrders() {
     },
   ];
 
-  const handleDelete = (item) => {
-    setDeleteID(item.id);
-    setDeleteOpen(true);
-  };
   return (
     <Container>
       <Box className="breadcrumb">
@@ -259,6 +256,56 @@ function BookingOrders() {
       </Box>
 
       <SimpleCard>
+        <Box
+          display="flex"
+          alignItems={'center'}
+          justifyContent="space-between"
+          paddingBottom={'1rem'}
+        >
+          <Box
+            display="flex"
+            alignItems={'center'}
+            gap={2}
+            sx={{
+              '& p': {
+                fontWeight: 'bold',
+                fontSize: '1rem',
+              },
+            }}
+          >
+            <Typography variant="body1">Scheduled for</Typography>
+            <TextField
+              size="small"
+              id="outlined-select-currency"
+              select
+              value={dateChange}
+              onChange={(e) => {
+                setPage(1);
+                setDateChange(e.target.value);
+              }}
+            >
+              <MenuItem value={'week'}>This Week</MenuItem>
+              <MenuItem value={'month'}>This Month</MenuItem>
+            </TextField>
+            <Typography variant="body1">Booking Status</Typography>
+            <TextField
+              size="small"
+              id="outlined-select-currency"
+              select
+              value={statusChange}
+              onChange={(e) => {
+                setPage(1);
+                setStatusChange(e.target.value);
+              }}
+            >
+              <MenuItem value={'scheduled'}>Scheduled</MenuItem>
+              <MenuItem value={'unscheduled'}>Unscheduled</MenuItem>
+              <MenuItem value={'dispatched'}>Dispatched</MenuItem>
+              <MenuItem value={'complete'}>Complete</MenuItem>
+              <MenuItem value={'cancelled'}>Cancelled</MenuItem>
+            </TextField>
+          </Box>
+        </Box>
         <DataTableBox>
           <DataGrid
             sx={{
@@ -268,7 +315,7 @@ function BookingOrders() {
             }}
             getRowHeight={() => 'auto'}
             disableColumnMenu={true}
-            rows={bookingList}
+            rows={bookingList?.data || []}
             columns={columns}
             autoHeight={true}
             hideFooter={true}
@@ -276,6 +323,38 @@ function BookingOrders() {
             disableSelectionOnClick
           />
         </DataTableBox>
+        {!!bookingList?.data?.length && (
+          <Box display="flex" alignItems={'center'} gap={3}>
+            <Pagination
+              sx={{
+                '& .Mui-selected': {
+                  background: '#1976d2 !important',
+                  color: 'white',
+                },
+              }}
+              count={bookingList?.total_page}
+              page={page}
+              onChange={(event, value) => setPage(value)}
+              variant="contained"
+              color="primary"
+              shape="rounded"
+            />
+            <Box>Rows per page </Box>
+            <TextField
+              sx={{ width: '6rem' }}
+              size="small"
+              type={'number'}
+              inputProps={{ min: 0 }}
+              placeholder="Enter rows"
+              id="outlined-select-currency"
+              value={perPage}
+              onChange={(e) => {
+                setPage(1);
+                setPerPage(e.target.value);
+              }}
+            />
+          </Box>
+        )}
       </SimpleCard>
     </Container>
   );
