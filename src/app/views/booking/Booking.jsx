@@ -210,7 +210,6 @@ function Booking() {
       .get(`${GET_BOOKING_DATA}/${params?.slug}`)
       .then((res) => {
         setBookingData(res?.data?.data);
-        debugger;
       })
       .catch((err) => console.log(err));
   }, []);

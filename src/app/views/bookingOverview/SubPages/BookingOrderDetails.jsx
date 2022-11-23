@@ -2,9 +2,9 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import moment from 'moment';
 import { Box, Button, Divider, Grid, styled, Tab, Tabs, Typography } from '@mui/material';
 import { Breadcrumb } from 'app/components';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../../../axios';
-import { BOOKING_APPOINTMENT_DETAILS, GET_PROVIDER_WORK_LIST } from 'app/api';
+import { BOOKING_APPOINTMENT_DETAILS, GET_BOOKING_PROBLEMS, GET_PROVIDER_WORK_LIST } from 'app/api';
 import toast from 'react-hot-toast';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -31,6 +31,8 @@ import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
 import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import RescheduleAppointment from '../Modals/Reappointment';
+import RaiseBookingProblem from '../Modals/RaiseBookingProblem';
+import EditBookingModal from '../Modals/EditBookingModal';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -50,10 +52,14 @@ const Container = styled('div')(({ theme }) => ({
 }));
 
 function BookingOrderDetails() {
+  const navigate = useNavigate();
   const params = useParams();
   const [value, setValue] = useState(0);
   const [bookindDetails, setBookindDetails] = useState(null);
   const [openRescheduleAppointment, setOpenRescheduleAppointment] = useState(false);
+  const [openRaiseProblemModal, setOpenRaiseProblemModal] = useState(false);
+  const [editBookingModal, setEditBookingModal] = useState(false);
+  const [bookingProblems, setBookingProblems] = useState(null);
 
   useEffect(() => {
     getEventList();
@@ -63,6 +69,12 @@ function BookingOrderDetails() {
       .get(`${BOOKING_APPOINTMENT_DETAILS}/${params?.id}`)
       .then((res) => {
         setBookindDetails(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+    await axios
+      .get(`${GET_BOOKING_PROBLEMS}/${params?.id}`)
+      .then((res) => {
+        setBookingProblems(res?.data?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -78,9 +90,9 @@ function BookingOrderDetails() {
         <Box className="breadcrumb">
           <Breadcrumb
             routeSegments={[
-              { name: 'Bookings', path: '/dashboard/booking-orders' },
-              { name: 'Booking Appointments', path: '/dashboard/booking-orders' },
-              { name: 'Booking Overview' },
+              { name: 'Bookings', path: '/dashboard/booking-appointments' },
+              { name: 'Booking Appointments', path: '/dashboard/booking-appointments' },
+              { name: `B-${bookindDetails?.id || 'Booking Details'}` },
             ]}
           />
           <h3>Booking Overview</h3>
@@ -155,7 +167,7 @@ function BookingOrderDetails() {
                         fontWeight={'bold'}
                       >
                         <TodayOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>{moment(bookindDetails?.appointment_date_time).format('lll')}</p>
+                        <p>{moment.utc(bookindDetails?.appointment_date_time).format('lll')}</p>
                       </Box>
                       <Box
                         display={'flex'}
@@ -924,7 +936,7 @@ function BookingOrderDetails() {
                 Actions
               </Typography>
               <Box display={'flex'} alignItems={'center'} flexDirection={'column'} gap={1}>
-                <Button fullWidth variant="contained">
+                <Button fullWidth variant="contained" onClick={() => setEditBookingModal(true)}>
                   Edit
                 </Button>
                 <Button
@@ -934,10 +946,22 @@ function BookingOrderDetails() {
                 >
                   Reschedule Booking
                 </Button>
-                <Button fullWidth variant="contained">
-                  Raise Problem
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => setOpenRaiseProblemModal(true)}
+                >
+                  {bookingProblems === null ? 'Raise Problem' : 'Problem Check!'}
                 </Button>
-                <Button fullWidth variant="contained">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/booking-appointments/${bookindDetails?.id}/details/booking-attachments`
+                    )
+                  }
+                >
                   Attach File
                 </Button>
                 <Button fullWidth variant="contained" color="success">
@@ -1052,6 +1076,20 @@ function BookingOrderDetails() {
         open={openRescheduleAppointment}
         handleClose={() => setOpenRescheduleAppointment(false)}
         bookindDetails={bookindDetails}
+        getEventList={getEventList}
+      />
+      <RaiseBookingProblem
+        open={openRaiseProblemModal}
+        handleClose={() => setOpenRaiseProblemModal(false)}
+        bookindDetails={bookindDetails}
+        bookingProblems={bookingProblems}
+        getEventList={getEventList}
+      />
+      <EditBookingModal
+        open={editBookingModal}
+        handleClose={() => setEditBookingModal(false)}
+        bookindDetails={bookindDetails}
+        getEventList={getEventList}
       />
     </>
   );

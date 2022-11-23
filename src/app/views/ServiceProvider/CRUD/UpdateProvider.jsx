@@ -151,7 +151,10 @@ function UpdateProvider() {
     setFieldValue('zip_code', state?.user_profile?.zip_code);
     setFieldValue('gender', state?.user_profile?.gender);
     setFieldValue('language', state?.user_profile?.language);
-    setFieldValue('profile_picture', state?.user_profile?.profile_picture);
+    setFieldValue(
+      'profile_picture',
+      `https://api-cleany-backend.herokuapp.com${state?.user_profile?.profile_picture}`
+    );
     setFieldValue('time_zone', state?.user_profile?.time_zone);
   }, []);
 

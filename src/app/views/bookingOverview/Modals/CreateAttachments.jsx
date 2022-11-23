@@ -9,40 +9,47 @@ import { Box } from '@mui/system';
 import axios from '../../../../axios';
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { Checkbox, FormControlLabel, FormGroup, Grid, TextField } from '@mui/material';
-import { UPDATE_BOOKING_APPOINTMENT } from 'app/api';
-import moment from 'moment';
+import { Checkbox, FormControlLabel, FormGroup, Grid, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import Dropzone from '../../../components/DropZone/Dropzone';
+import createNftDocuments from '../../../../assets/createNftDocuments.png';
+import ImageBox from '../../../components/DropZone/ImageBox';
+import { CREATE_BOOKING_ATTACHMENTS } from 'app/api';
 
-function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList }) {
+function CreateAttachments({ open, handleClose, serviceListAPI }) {
   const [loading, setLoading] = useState(false);
+  const params = useParams();
+  let formData = new FormData();
 
   const schema = Yup.object().shape({
-    time: Yup.string().required('Start date and time is required!'),
+    file: Yup.array().min(1, 'Attachment is required!').required('Attachment is required!'),
   });
   const formik = useFormik({
     initialValues: {
-      time: '',
-      is_all: '',
-      id: null,
+      share_with_customer: false,
+      share_with_cleaner: false,
+      booking: null,
+      file: null,
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      const dupObj = { ...values };
+      formData.append('share_with_customer', values?.share_with_customer ? 'True' : 'False');
+      formData.append('share_with_cleaner', values?.share_with_cleaner ? 'True' : 'False');
+      formData.append('booking', values?.booking);
+      formData.append('file', values?.file[0]);
       setLoading(true);
-      const Date = moment(values.time).format('YYYY-MM-DD HH:mm:ss');
-      dupObj.time = Date;
       toast.promise(
-        axios.put(`${UPDATE_BOOKING_APPOINTMENT}`, dupObj, {
+        axios.post(`${CREATE_BOOKING_ATTACHMENTS}`, formData, {
           headers: { 'Content-Type': 'application/json' },
         }),
         {
           loading: () => {
-            return `Rescheduling Booking!`;
+            return `Creating Attachment!`;
           },
           success: (res) => {
             setLoading(false);
             resetForm();
-            getEventList();
+            serviceListAPI();
             setTimeout(() => {
               handleClose();
             }, 200);
@@ -60,9 +67,8 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
 
   const { errors, touched, resetForm, setFieldValue, handleSubmit, getFieldProps, values } = formik;
   useEffect(() => {
-    setFieldValue('id', bookindDetails?.id);
-    setFieldValue('time', bookindDetails?.appointment_date_time.slice(0, 16));
-  }, [bookindDetails, open]);
+    setFieldValue('booking', +params?.id);
+  }, []);
 
   return (
     <>
@@ -78,27 +84,27 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
         aria-describedby="package-item-description"
       >
         <DialogTitle id="package-item" style={{ fontSize: '1.5rem' }}>
-          Do you want to Reschedule Booking ?
+          New Attachments
         </DialogTitle>
         <DialogContent>
-          Reschedule Booking
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
               <Grid container spacing={2} sx={{ marginTop: '2px' }}>
                 <Grid item sm={12} xs={12}>
-                  <TextField
-                    id="datetime-local"
-                    label="Start Date and Time"
-                    type="datetime-local"
-                    inputProps={{ min: moment(new Date()).format().slice(0, 16) }}
-                    {...getFieldProps('time')}
-                    sx={{ width: '100%' }}
-                    error={Boolean(touched.time && errors.time)}
-                    helperText={touched.time && errors.time}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
+                  <Typography gutterBottom variant="h6" component="div">
+                    Attachment
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    File types supported: All supported formats. Max size: 5 MB
+                  </Typography>
+                  <Dropzone
+                    setFieldValue={(acceptedFiles) => setFieldValue('file', acceptedFiles)}
+                    error={touched.file && Boolean(errors.file)}
+                    helperText={touched.file && errors.file}
+                    uploadedFiles={values.file}
+                  >
+                    <ImageBox src={createNftDocuments} className="h-[249px] w-full" />
+                  </Dropzone>
                 </Grid>
                 <Grid item sm={12} xs={12}>
                   <FormGroup
@@ -111,13 +117,30 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
                     <FormControlLabel
                       control={
                         <Checkbox
-                          checked={values.is_all === 'on' ? true : false}
-                          onChange={(e) =>
-                            setFieldValue('is_all', e.target.checked === true ? 'on' : null)
-                          }
+                          checked={values.share_with_customer}
+                          onChange={(e) => setFieldValue('share_with_customer', e.target.checked)}
                         />
                       }
-                      label="Would you like to update all future recurrences?"
+                      label="Show Attachments to Company *"
+                    />
+                  </FormGroup>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <FormGroup
+                    sx={{
+                      '& label': {
+                        width: 'fit-content',
+                      },
+                    }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={values.share_with_cleaner}
+                          onChange={(e) => setFieldValue('share_with_cleaner', e.target.checked)}
+                        />
+                      }
+                      label="Show Attachments to Cleaner *"
                     />
                   </FormGroup>
                 </Grid>
@@ -141,7 +164,7 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
                   Cancel
                 </Button>
                 <LoadingButton type="submit" color="primary" loading={loading} variant="contained">
-                  Change Now
+                  Create
                 </LoadingButton>
               </Box>
             </Form>
@@ -153,4 +176,4 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
   );
 }
 
-export default RescheduleAppointment;
+export default CreateAttachments;

@@ -156,7 +156,9 @@ function BookingOrders() {
           <Box>
             <Box display={'flex'} alignItems="center">
               <CalendarMonthOutlinedIcon sx={{ paddingRight: '5px' }} />
-              <TableHeading>{item?.row?.bod?.frequency?.start_date}</TableHeading>
+              <TableHeading>
+                {moment.utc(item?.row?.appointment_date_time).format('YYYY-MM-DD')}
+              </TableHeading>
             </Box>
 
             <Box display={'flex'} alignItems="center">
@@ -216,7 +218,6 @@ function BookingOrders() {
       minWidth: 90,
       maxWidth: 90,
       renderCell: (item) => {
-        console.log(item.row);
         return (
           <Box display={'flex'} alignItems="center" gap={1}>
             <Button

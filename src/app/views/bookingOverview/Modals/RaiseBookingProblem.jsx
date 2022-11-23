@@ -9,35 +9,36 @@ import { Box } from '@mui/system';
 import axios from '../../../../axios';
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { Checkbox, FormControlLabel, FormGroup, Grid, TextField } from '@mui/material';
-import { UPDATE_BOOKING_APPOINTMENT } from 'app/api';
-import moment from 'moment';
+import { Grid, MenuItem, TextField } from '@mui/material';
+import { CREATE_BOOKING_PROBLEMS } from 'app/api';
 
-function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList }) {
+function RaiseBookingProblem({ open, handleClose, bookindDetails, bookingProblems, getEventList }) {
   const [loading, setLoading] = useState(false);
 
   const schema = Yup.object().shape({
-    time: Yup.string().required('Start date and time is required!'),
+    description: Yup.string().required('Problem description is required!'),
   });
   const formik = useFormik({
     initialValues: {
-      time: '',
-      is_all: '',
-      id: null,
+      description: '',
+      id: bookindDetails?.id,
+      status: '',
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      const dupObj = { ...values };
+      const obj = {
+        message: values?.description,
+        booking: values?.id,
+        status: values?.status,
+      };
       setLoading(true);
-      const Date = moment(values.time).format('YYYY-MM-DD HH:mm:ss');
-      dupObj.time = Date;
       toast.promise(
-        axios.put(`${UPDATE_BOOKING_APPOINTMENT}`, dupObj, {
+        axios.post(`${CREATE_BOOKING_PROBLEMS}`, obj, {
           headers: { 'Content-Type': 'application/json' },
         }),
         {
           loading: () => {
-            return `Rescheduling Booking!`;
+            return `Creating Problem!`;
           },
           success: (res) => {
             setLoading(false);
@@ -61,14 +62,17 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
   const { errors, touched, resetForm, setFieldValue, handleSubmit, getFieldProps, values } = formik;
   useEffect(() => {
     setFieldValue('id', bookindDetails?.id);
-    setFieldValue('time', bookindDetails?.appointment_date_time.slice(0, 16));
-  }, [bookindDetails, open]);
+    if (bookingProblems != null) {
+      setFieldValue('description', bookingProblems?.message);
+      setFieldValue('status', bookingProblems?.status);
+    }
+  }, [bookingProblems, bookindDetails, open]);
 
   return (
     <>
       <Dialog
         open={open}
-        maxWidth={'sm'}
+        maxWidth={'md'}
         PaperProps={{
           sx: {
             width: '100%',
@@ -78,48 +82,58 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
         aria-describedby="package-item-description"
       >
         <DialogTitle id="package-item" style={{ fontSize: '1.5rem' }}>
-          Do you want to Reschedule Booking ?
+          {bookingProblems === null ? 'Arise Booking Problem' : 'Update Booking Problem'}
         </DialogTitle>
         <DialogContent>
-          Reschedule Booking
+          Information:
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-              <Grid container spacing={2} sx={{ marginTop: '2px' }}>
-                <Grid item sm={12} xs={12}>
+              <Grid container spacing={4} sx={{ marginTop: '2px' }}>
+                <Grid item xs={3}>
+                  Booking Id <span style={{ color: 'red' }}>*</span>
+                </Grid>
+                <Grid item sm={9} xs={9}>
                   <TextField
-                    id="datetime-local"
-                    label="Start Date and Time"
-                    type="datetime-local"
-                    inputProps={{ min: moment(new Date()).format().slice(0, 16) }}
-                    {...getFieldProps('time')}
+                    size="small"
+                    type="text"
+                    inputProps={{ readOnly: true }}
+                    {...getFieldProps('id')}
                     sx={{ width: '100%' }}
-                    error={Boolean(touched.time && errors.time)}
-                    helperText={touched.time && errors.time}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
+                    error={Boolean(touched.id && errors.id)}
+                    helperText={touched.id && errors.id}
                   />
                 </Grid>
-                <Grid item sm={12} xs={12}>
-                  <FormGroup
-                    sx={{
-                      '& label': {
-                        width: 'fit-content',
-                      },
-                    }}
+                <Grid item xs={3}>
+                  Problem Description <span style={{ color: 'red' }}>*</span>
+                </Grid>
+                <Grid item sm={9} xs={9}>
+                  <TextField
+                    id="datetime-local"
+                    type="text"
+                    multiline
+                    rows={5}
+                    {...getFieldProps('description')}
+                    sx={{ width: '100%' }}
+                    error={Boolean(touched.description && errors.description)}
+                    helperText={touched.description && errors.description}
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  Status <span style={{ color: 'red' }}>*</span>
+                </Grid>
+                <Grid item sm={9} xs={9}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    select
+                    {...getFieldProps('status')}
+                    sx={{ width: '100%' }}
+                    error={Boolean(touched.status && errors.status)}
+                    helperText={touched.status && errors.status}
                   >
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={values.is_all === 'on' ? true : false}
-                          onChange={(e) =>
-                            setFieldValue('is_all', e.target.checked === true ? 'on' : null)
-                          }
-                        />
-                      }
-                      label="Would you like to update all future recurrences?"
-                    />
-                  </FormGroup>
+                    <MenuItem value={'active'}>Active</MenuItem>
+                    <MenuItem value={'solved'}>Solved</MenuItem>
+                  </TextField>
                 </Grid>
               </Grid>
 
@@ -141,7 +155,7 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
                   Cancel
                 </Button>
                 <LoadingButton type="submit" color="primary" loading={loading} variant="contained">
-                  Change Now
+                  {bookingProblems === null ? 'Create' : 'Make Changes'}
                 </LoadingButton>
               </Box>
             </Form>
@@ -153,4 +167,4 @@ function RescheduleAppointment({ open, handleClose, bookindDetails, getEventList
   );
 }
 
-export default RescheduleAppointment;
+export default RaiseBookingProblem;
