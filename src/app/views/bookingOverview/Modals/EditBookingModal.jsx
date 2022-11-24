@@ -9,30 +9,35 @@ import { Box } from '@mui/system';
 import axios from '../../../../axios';
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { Divider, Grid, MenuItem, TextField, Typography } from '@mui/material';
+import {
+  Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { GET_BOOKING_DATA } from 'app/api';
+import { UPDATE_BOOKING } from 'app/api';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import * as _ from 'lodash';
 
-function EditBookingModal({ open, handleClose, serviceListAPI, bookindDetails }) {
+function EditBookingModal({
+  open,
+  handleClose,
+  getEventList,
+  bookindDetails,
+  bookingData,
+  getBookingData,
+}) {
   const [loading, setLoading] = useState(false);
-  const [bookingData, setBookingData] = useState({});
+
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedExtras, setSelectedExtras] = useState([]);
   const params = useParams();
-
-  useEffect(async () => {
-    if (open) {
-      await axios
-        .get(`${GET_BOOKING_DATA}/${bookindDetails?.service?.slug}`)
-        .then((res) => {
-          setBookingData(res?.data?.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [bookindDetails, open]);
 
   const schema = Yup.object().shape({
     package_selection: Yup.string().required('Select minimum 1 package!'),
@@ -43,46 +48,61 @@ function EditBookingModal({ open, handleClose, serviceListAPI, bookindDetails })
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      const itemMapData = _.compact(selectedItems).map((item) => {
-        return { item_id: item?.id, package: item?.packageData };
+      let itemMapData = [];
+      bookingData?.packages?.forEach((a, index) => {
+        if (a?.item?.length > 0) {
+          a?.item?.forEach((b) => {
+            _.compact(selectedItems)?.forEach((c) => {
+              if (c === b.id) {
+                itemMapData?.push({ item_id: c, package: a.id });
+              }
+            });
+          });
+        }
       });
-      const extras = _.compact(selectedExtras);
-      debugger;
-      //   setLoading(true);
-      //   toast.promise(
-      //     axios.post(`${CREATE_BOOKING_ATTACHMENTS}`, formData, {
-      //       headers: { 'Content-Type': 'application/json' },
-      //     }),
-      //     {
-      //       loading: () => {
-      //         return `Creating Attachment!`;
-      //       },
-      //       success: (res) => {
-      //         setLoading(false);
-      //         resetForm();
-      //         serviceListAPI();
-      //         setTimeout(() => {
-      //           handleClose();
-      //         }, 200);
 
-      //         return res?.data?.message;
-      //       },
-      //       error: (err) => {
-      //         setLoading(false);
-      //         return err?.message;
-      //       },
-      //     }
-      //   );
+      const extras = _.compact(selectedExtras);
+      const formData = {
+        booking: bookindDetails?.id,
+        service_id: bookingData?.id,
+        item: itemMapData,
+        extra: extras,
+      };
+
+      setLoading(true);
+      toast.promise(
+        axios.put(`${UPDATE_BOOKING}`, formData, {
+          headers: { 'Content-Type': 'application/json' },
+        }),
+        {
+          loading: () => {
+            return `Updating Booking!`;
+          },
+          success: (res) => {
+            setLoading(false);
+            resetForm();
+            getEventList();
+            getBookingData();
+            setTimeout(() => {
+              handleClose();
+            }, 200);
+
+            return res?.data?.message;
+          },
+          error: (err) => {
+            setLoading(false);
+            return err?.message;
+          },
+        }
+      );
     },
   });
 
   const handleSelectPackageData = (value, index, packageData) => {
     const dupArr = [...selectedItems];
     dupArr[index] = value;
-
     if (value !== null) {
-      dupArr[index].packageData = packageData?.id;
-      setFieldValue('package_selection', value.title);
+      setFieldValue('package_selection', value);
     } else if (!dupArr.some((iData) => iData?.id)) {
       setFieldValue('package_selection', '');
     }
@@ -115,6 +135,34 @@ function EditBookingModal({ open, handleClose, serviceListAPI, bookindDetails })
   useEffect(() => {
     setFieldValue('booking', +params?.id);
   }, []);
+  useEffect(() => {
+    const dupItems = [...selectedItems];
+    const dupExtras = [...selectedExtras];
+    bookingData?.packages?.forEach((a, index) => {
+      if (a?.item?.length > 0) {
+        a?.item?.forEach((b) => {
+          bookindDetails?.items?.forEach((c) => {
+            if (c.id === b.id) {
+              dupItems[index] = c.id;
+            }
+          });
+        });
+      } else {
+        dupItems[index] = null;
+      }
+    });
+    setSelectedItems(dupItems);
+    if (!!bookingData?.extras?.length) {
+      bookingData?.extras?.forEach((a, index) => {
+        bookindDetails?.extras?.forEach((b) => {
+          if (a.id === b.id) {
+            dupExtras[index] = { extra_id: b.id, quantity: 1, price: b?.price };
+          }
+        });
+      });
+      setSelectedExtras(dupExtras);
+    }
+  }, [bookingData, open]);
 
   return (
     <>
@@ -141,26 +189,35 @@ function EditBookingModal({ open, handleClose, serviceListAPI, bookindDetails })
               <Grid container spacing={3}>
                 {bookingData?.packages?.length > 0 &&
                   bookingData?.packages?.map((data, index) => (
-                    <Grid item xs={12} md={6} lg={4}>
-                      <TextField
-                        fullWidth
-                        type="text"
-                        label={`${data?.title}*`}
-                        select
-                        value={selectedItems[index]}
-                        onChange={(e) => handleSelectPackageData(e.target.value, index, data)}
-                        name="package_selection"
-                        error={Boolean(touched.package_selection && errors.package_selection)}
-                        helperText={touched.package_selection && errors.package_selection}
-                      >
-                        <MenuItem value={null}>None</MenuItem>
-                        {data?.item?.length > 0 &&
-                          data?.item?.map((item) => (
-                            <MenuItem value={item}>
-                              {item?.title} ${item?.price}
-                            </MenuItem>
-                          ))}
-                      </TextField>
+                    <Grid key={index} item xs={12} md={6} lg={4}>
+                      <FormControl fullWidth>
+                        <InputLabel
+                          id={`demo-simple-select-label${index}`}
+                        >{`${data?.title}*`}</InputLabel>
+                        <Select
+                          fullWidth
+                          labelId={`demo-simple-select-label${index}`}
+                          id={`demo-simple-select${index}`}
+                          label={`${data?.title}*`}
+                          value={selectedItems[index]}
+                          onChange={(e) => {
+                            handleSelectPackageData(e.target.value, index, data);
+                          }}
+                          error={Boolean(touched.package_selection && errors.package_selection)}
+                          helperText={touched.package_selection && errors.package_selection}
+                        >
+                          <MenuItem value={null}>None</MenuItem>
+                          {data?.item?.length > 0 &&
+                            data?.item?.map((item) => (
+                              <MenuItem value={item.id}>
+                                {item?.title} ${item?.price}
+                              </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText sx={{ color: 'rgb(244, 67, 54)' }}>
+                          {touched.package_selection && errors.package_selection}
+                        </FormHelperText>
+                      </FormControl>
                     </Grid>
                   ))}
               </Grid>
@@ -187,8 +244,8 @@ function EditBookingModal({ open, handleClose, serviceListAPI, bookindDetails })
                             color: '#212529',
                             backgroundColor: selectedExtras[index]?.quantity
                               ? '#d3d9df'
-                              : '#f8f9fa',
-                            borderColor: selectedExtras[index]?.quantity ? '#d3d9df' : '#f8f9fa',
+                              : '#c7c8c8',
+                            borderColor: selectedExtras[index]?.quantity ? '#d3d9df' : '#c7c8c8',
                             borderRadius: '5px',
                             cursor: 'pointer',
                             '&:hover': {

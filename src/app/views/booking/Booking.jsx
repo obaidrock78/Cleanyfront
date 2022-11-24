@@ -128,6 +128,7 @@ function Booking() {
       .required('Zip Code is required!')
       .nullable(),
     additional_info: Yup.string().required('Additional information is required!'),
+    customer_notes: Yup.string().required('Customer notes are required!'),
     how_to_enter_on_premise: Yup.string().required('This field is required!'),
     card_token: Yup.string().required('Card details are required!'),
     package_selection: Yup.string().required('Select minimum 1 package!'),
@@ -152,6 +153,7 @@ function Booking() {
       how_to_enter_on_premise: '',
       card_token: '',
       package_selection: '',
+      customer_notes: '',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -183,6 +185,7 @@ function Booking() {
         start_date: values?.start_date,
         additional_info: values?.additional_info,
         card_token: values?.card_token,
+        customer_notes: values?.customer_notes,
       };
       toast.promise(
         axios.post(`${CREATE_BOOKING}/${bookingData?.id}`, objToSend, {
@@ -781,6 +784,26 @@ function Booking() {
                           {...getFieldProps('additional_info')}
                           error={Boolean(touched.additional_info && errors.additional_info)}
                           helperText={touched.additional_info && errors.additional_info}
+                        />
+                      </Grid>
+                    </Grid>
+                    <Divider sx={{ marginTop: '2rem' }} />
+
+                    <Grid container rowSpacing={2} columnSpacing={5}>
+                      <Grid item sm={12} xs={12}>
+                        <h3 style={{ marginTop: '1rem', marginBottom: '5px' }}>
+                          Customer Notes<span style={{ color: 'red' }}>*</span>
+                        </h3>
+                        <TextField
+                          size="small"
+                          multiline
+                          rows={5}
+                          fullWidth
+                          type="text"
+                          inputProps={{ placeholder: 'Customer notes...' }}
+                          {...getFieldProps('customer_notes')}
+                          error={Boolean(touched.customer_notes && errors.customer_notes)}
+                          helperText={touched.customer_notes && errors.customer_notes}
                         />
                       </Grid>
                     </Grid>

@@ -8,6 +8,7 @@ export const navigations = [
       { name: 'Booking Appointments', iconText: 'CP', path: '/dashboard/booking-appointments' },
     ],
   },
+  { name: 'Dispatcher', path: '/dashboard/dispatcher', icon: 'format_list_bulleted_outlined_icon' },
   {
     name: 'Customers',
     icon: 'sensor_occupied_outlined_icon',

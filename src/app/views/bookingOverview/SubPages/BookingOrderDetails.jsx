@@ -4,7 +4,12 @@ import { Box, Button, Divider, Grid, styled, Tab, Tabs, Typography } from '@mui/
 import { Breadcrumb } from 'app/components';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../../../axios';
-import { BOOKING_APPOINTMENT_DETAILS, GET_BOOKING_PROBLEMS, GET_PROVIDER_WORK_LIST } from 'app/api';
+import {
+  BOOKING_APPOINTMENT_DETAILS,
+  GET_BOOKING_DATA,
+  GET_BOOKING_PROBLEMS,
+  GET_PROVIDER_WORK_LIST,
+} from 'app/api';
 import toast from 'react-hot-toast';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -60,10 +65,25 @@ function BookingOrderDetails() {
   const [openRaiseProblemModal, setOpenRaiseProblemModal] = useState(false);
   const [editBookingModal, setEditBookingModal] = useState(false);
   const [bookingProblems, setBookingProblems] = useState(null);
+  const [bookingData, setBookingData] = useState({});
 
   useEffect(() => {
     getEventList();
   }, []);
+  useEffect(() => {
+    if (!!bookindDetails) {
+      getBookingData();
+    }
+  }, [bookindDetails]);
+  const getBookingData = async () => {
+    await axios
+      .get(`${GET_BOOKING_DATA}/${bookindDetails?.service?.slug}`)
+      .then((res) => {
+        setBookingData(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const getEventList = async () => {
     await axios
       .get(`${BOOKING_APPOINTMENT_DETAILS}/${params?.id}`)
@@ -1090,6 +1110,8 @@ function BookingOrderDetails() {
         handleClose={() => setEditBookingModal(false)}
         bookindDetails={bookindDetails}
         getEventList={getEventList}
+        bookingData={bookingData}
+        getBookingData={getBookingData}
       />
     </>
   );
