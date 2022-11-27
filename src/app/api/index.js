@@ -39,3 +39,4 @@ export const GET_BOOKING_ATTACHMENTS = '/booking/get_attachment';
 export const CREATE_BOOKING_ATTACHMENTS = '/booking/create_attachment';
 export const DELETE_ATTACHMENT = '/booking/delete_attachment';
 export const UPDATE_BOOKING = '/booking/update_booking_package';
+export const BOOKING_DISPATCH = '/booking/booking_dispatch_list';
