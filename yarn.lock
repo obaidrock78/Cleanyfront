@@ -7598,7 +7598,7 @@
   dependencies:
     "path-type" "^4.0.0"
 
-"dnd-core@^7.5.0", "dnd-core@^7.7.0":
+"dnd-core@^7.5.0":
   "integrity" "sha512-+YqwflWEY1MEAEl2QiEiRaglYkCwIZryyQwximQGuTOm/ns7fS6Lg/i7OCkrtjM10D5FhArf/VUHIL4ZaRBK0g=="
   "resolved" "https://registry.npmjs.org/dnd-core/-/dnd-core-7.7.0.tgz"
   "version" "7.7.0"
@@ -17222,32 +17222,14 @@
     "strip-ansi" "6.0.0"
     "text-table" "0.2.0"
 
-"react-dnd-html5-backend@^7.4.4":
-  "integrity" "sha512-JgKmWOxqorFyfGPeWV+SAPhVGFe6+LrOR24jETE9rrYZU5hCppzwK9ujjS508kWibeDvbfEgi9j5qC2wB1/MoQ=="
-  "resolved" "https://registry.npmjs.org/react-dnd-html5-backend/-/react-dnd-html5-backend-7.7.0.tgz"
-  "version" "7.7.0"
-  dependencies:
-    "dnd-core" "^7.7.0"
-
-"react-dnd-html5-backend@^7.5.0":
+"react-dnd-html5-backend@^7.4.4", "react-dnd-html5-backend@^7.5.0":
   "integrity" "sha512-PoKEYYsLCpV/DbtXhXTG4SAkweOwrAGDo7Pf/4M3X8/uFlWwjx6ojONFcFCa1tKBsvcHxUe7WZQ9TqUM4hLLTA=="
   "resolved" "https://registry.npmjs.org/react-dnd-html5-backend/-/react-dnd-html5-backend-7.5.0.tgz"
   "version" "7.5.0"
   dependencies:
     "dnd-core" "^7.5.0"
 
-"react-dnd@^7.4.5":
-  "integrity" "sha512-anpJDKMgdXE6kXvtBFmIAe1fuaexpVy7meUyNjiTfCnjQ1mRvnttGTVvcW9fMKijsUQYadiyvzd3BRxteFuVXg=="
-  "resolved" "https://registry.npmjs.org/react-dnd/-/react-dnd-7.7.0.tgz"
-  "version" "7.7.0"
-  dependencies:
-    "@types/hoist-non-react-statics" "^3.3.1"
-    "dnd-core" "^7.7.0"
-    "hoist-non-react-statics" "^3.3.0"
-    "invariant" "^2.1.0"
-    "shallowequal" "^1.1.0"
-
-"react-dnd@^7.5.0":
+"react-dnd@^7.4.5", "react-dnd@^7.5.0":
   "integrity" "sha512-IFjXLQFauZINUQITnl6kdzDuORVaJHna9lXEZK98mjFSRpNuM/fbh/hpVq/juxzBsXV/Jv0Ew5JaraFinkjDWw=="
   "resolved" "https://registry.npmjs.org/react-dnd/-/react-dnd-7.5.0.tgz"
   "version" "7.5.0"

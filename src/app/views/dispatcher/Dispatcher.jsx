@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Box, styled } from '@mui/material';
+import { Box, CircularProgress, styled } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import { useParams } from 'react-router-dom';
 import axios from '../../../axios';
@@ -39,8 +39,8 @@ function Dispatcher() {
           return {
             ...item,
             id: item?.schedule?.booking,
-            start: moment.utc(item?.schedule?.start_time).format('YYYY-MM-DD HH:mm:s'),
-            end: moment.utc(item?.schedule?.end_time).format('YYYY-MM-DD HH:mm:s'),
+            start: moment.utc(item?.schedule?.start_time).format('YYYY-MM-DD HH:mm:ss'),
+            end: moment.utc(item?.schedule?.end_time).format('YYYY-MM-DD HH:mm:ss'),
             resourceId: 'r1',
             title: `${item?.bod?.bod_contact_info?.first_name} ${item?.bod?.bod_contact_info?.last_name}`,
             // rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
@@ -64,7 +64,23 @@ function Dispatcher() {
             ]}
           />
         </Box>
-        <SimpleCard>{!!myEvents.length && <Basic myEvents={myEvents} />}</SimpleCard>
+        <SimpleCard>
+          {myEvents.length > 0 ? (
+            <Basic myEvents={myEvents} />
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%',
+                height: '50vh',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
+        </SimpleCard>
       </Container>
       <Toaster position="top-right" />
     </>

@@ -8,7 +8,7 @@ import 'react-big-scheduler/lib/css/style.css';
 import { Box } from '@mui/material';
 
 let schedulerData = new SchedulerData(
-  new moment(new Date()).format(DATE_FORMAT),
+  moment(new Date()).format('YYYY-MM-DD'),
   ViewTypes.Week,
   false,
   false,
