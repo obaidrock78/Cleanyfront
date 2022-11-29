@@ -540,7 +540,7 @@ const MainDashboard = () => {
                             <TabPanel value="3">
 
                                 <Grid container >
-                                    <Grid item md={4} sx={{ borderRight: '1px solid lightgray', height: '600px' }}>  All Chats
+                                    <Grid item md={4} sx={{ borderRight: '1px   lightgray', height: '500px' }}>  All Chats
 
 
 
@@ -554,24 +554,24 @@ const MainDashboard = () => {
                                             }
                                         </Grid>
                                     </Grid>
-                                    <Grid item md={8}> Single Chat
+                                    <Grid item md={8} sx={{ p: 2 }}> Single Chat
 
                                         <Grid container>
-                                            <Grid item md={12} sx={{ height: '600px', overflowY: 'scroll', height: '500px' }} >
+                                            <Grid item md={12} sx={{ height: '600px', overflowY: 'scroll', height: '500px', display: 'flex', flexDirection: ' column-reverse' }}>
                                                 {
                                                     Chats.map((chat) => {
                                                         return (
 
                                                             <>
 
-                                                                <Box>
-                                                                    <h4 key={chat.id} item md={12} style={{ padding: 2, margin: 2, textAlign: 'right' }}> {chat.name} <span><Avatar /></span> </h4>
+                                                                <Box >
+                                                                    <Box sx={{}} key={chat.id} item md={12} style={{ padding: 2, margin: 2, textAlign: 'right' }}> {chat.name} <Box component={'img'} sx={{ width: '50px', height: '50px', borderRadius: '50%' }} src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />   </Box>
                                                                 </Box>
 
 
-                                                                <Box>
+                                                                <Box >
 
-                                                                    <h4 key={chat.id} item md={12} style={{ padding: 2, margin: 2, textAlign: 'left' }}>. {chat.name}</h4>
+                                                                    <h4 key={chat.id} item md={12} style={{ padding: 2, margin: 2, textAlign: 'left' }}><Box component={'img'} sx={{ width: '50px', height: '50px', borderRadius: '50%' }} src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />{chat.name} </h4>
                                                                 </Box>
 
                                                             </>
@@ -584,7 +584,7 @@ const MainDashboard = () => {
                                             <Grid item md={11} sx={{ bottom: 0 }}>
                                                 <Box>
 
-                                                    <TextField fullWidth label="fullWidth" id="fullWidth" />
+                                                    <TextField fullWidth label="Type Here" id="fullWidth" />
                                                 </Box>
                                             </Grid>
                                             <Grid item md={1} sx={{ bottom: 0 }}>
