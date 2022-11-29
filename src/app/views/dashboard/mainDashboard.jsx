@@ -1,6 +1,6 @@
 import React from 'react'
 import Box from '@mui/material/Box';
-import { Button, Grid, styled } from '@mui/material';
+import { Button, Grid, IconButton, styled } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
@@ -18,6 +18,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { SendOutlined } from '@mui/icons-material';
 
 const localizer = momentLocalizer(moment)
 
@@ -361,6 +362,101 @@ const rows = [
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
+const Chats = [
+    {
+        id: 1,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 2,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 3,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 4,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 5,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 6,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 7,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 8,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 9,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 10,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 11,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 12,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 13,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 14,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 15,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 16,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 17,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 18,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 19,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 20,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 21,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 23,
+        name: 'Haseeb ALi Khan'
+    },
+    {
+        id: 23,
+        name: 'Haseeb ALi Khan'
+    },
+
+]
 
 const MainDashboard = () => {
     const [value, setValue] = React.useState('3');
@@ -449,37 +545,58 @@ const MainDashboard = () => {
 
 
                                         <Grid container sx={{ overflowY: 'scroll', height: '500px' }}>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
-                                            <Grid item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> Haseeb Ali Khan</Grid>
+                                            {
+                                                Chats.map((chat) => {
+                                                    return (
+                                                        <Grid key={chat.id} item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> {chat.name}</Grid>
+                                                    )
+                                                })
+                                            }
                                         </Grid>
                                     </Grid>
-                                    <Grid item md={8} > Single Chat</Grid>
+                                    <Grid item md={8}> Single Chat
+
+                                        <Grid container>
+                                            <Grid item md={12} sx={{ height: '600px', overflowY: 'scroll', height: '500px' }} >
+                                                {
+                                                    Chats.map((chat) => {
+                                                        return (
+
+                                                            <>
+
+                                                                <Box>
+                                                                    <h4 key={chat.id} item md={12} style={{ padding: 2, margin: 2, textAlign: 'right' }}> {chat.name} <span><Avatar /></span> </h4>
+                                                                </Box>
+
+
+                                                                <Box>
+
+                                                                    <h4 key={chat.id} item md={12} style={{ padding: 2, margin: 2, textAlign: 'left' }}>. {chat.name}</h4>
+                                                                </Box>
+
+                                                            </>
+
+                                                        )
+                                                    })
+                                                }
+                                            </Grid>
+
+                                            <Grid item md={11} sx={{ bottom: 0 }}>
+                                                <Box>
+
+                                                    <TextField fullWidth label="fullWidth" id="fullWidth" />
+                                                </Box>
+                                            </Grid>
+                                            <Grid item md={1} sx={{ bottom: 0 }}>
+                                                <Box>
+
+                                                    <IconButton>
+                                                        <SendOutlined />
+                                                    </IconButton>
+                                                </Box>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
 
                                 </Grid>
                             </TabPanel>
