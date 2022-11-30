@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Box, CircularProgress, styled } from '@mui/material';
+import { Box, Button, CircularProgress, Divider, styled, Typography } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../../axios';
 import { BOOKING_DISPATCH, GET_PROVIDER_WORK_LIST, GET_SERVICE_PROVIDER_LIST } from 'app/api';
 import toast, { Toaster } from 'react-hot-toast';
 import 'react-big-scheduler/lib/css/style.css';
 import Basic from './Basic.js';
 import * as _ from 'lodash';
+import Drawer from '@mui/material/Drawer';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -22,12 +24,17 @@ const Container = styled('div')(({ theme }) => ({
     fontSize: 'small !important',
   },
 }));
-
+const DrawerMain = styled('div')(({ theme }) => ({
+  height: 'calc(100vh - 63px)',
+}));
 function Dispatcher() {
   const params = useParams();
-
+  const navigate = useNavigate();
   const [myEvents, setMyEvents] = useState([]);
   const [serviceProviderList, setServiceProviderList] = useState([]);
+  const [leaveTime, setLeaveTime] = useState([]);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [drawerState, setDrawerState] = useState(false);
 
   useEffect(() => {
     serviceListAPI();
@@ -48,6 +55,7 @@ function Dispatcher() {
             // rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
             resizable: false,
             bgColor: '#488FAB',
+            type: 1,
           };
         });
         setMyEvents(_.sortBy(mapData, ['start']));
@@ -55,6 +63,7 @@ function Dispatcher() {
       .catch((err) => console.log(err));
   };
   const serviceListAPI = async () => {
+    const dupEvent = [];
     await axios
       .get(`${GET_SERVICE_PROVIDER_LIST}`, {
         headers: { 'Content-Type': 'application/json' },
@@ -83,6 +92,23 @@ function Dispatcher() {
           },
         ];
         res?.data?.data?.map((item) => {
+          if (item.leave_time.length > 0) {
+            item.leave_time.forEach((leave) => {
+              dupEvent.push({
+                id: `leave${leave.id}`,
+                start: moment.utc(leave?.start).format('YYYY-MM-DD HH:mm:ss'),
+                end: moment.utc(leave?.end).format('YYYY-MM-DD HH:mm:ss'),
+                resourceId: leave?.service_provider,
+                title: leave?.title,
+                resizable: false,
+                bgColor: 'rgb(217, 35, 53)',
+                movable: false,
+                type: 3,
+                schedule: { start_time: leave?.start, end_time: leave?.end },
+              });
+            });
+          }
+
           if (item?.is_active === true) {
             arr.push({
               ...item,
@@ -105,6 +131,7 @@ function Dispatcher() {
             });
           }
         });
+        setLeaveTime(dupEvent);
         setServiceProviderList(arr);
       })
       .catch((err) => console.log(err));
@@ -125,8 +152,11 @@ function Dispatcher() {
           {myEvents.length > 0 && serviceProviderList.length > 0 ? (
             <Basic
               myEvents={myEvents}
+              leaveTimeList={leaveTime}
               serviceProviderList={serviceProviderList}
               getEventList={getEventList}
+              setDrawerState={setDrawerState}
+              setSelectedBooking={setSelectedBooking}
             />
           ) : (
             <Box
@@ -143,6 +173,124 @@ function Dispatcher() {
           )}
         </SimpleCard>
       </Container>
+      <Drawer
+        anchor={'right'}
+        open={drawerState}
+        sx={{
+          '& .MuiDrawer-paperAnchorRight': {
+            width: '400px',
+          },
+        }}
+        onClose={() => setDrawerState(false)}
+      >
+        <DrawerMain>
+          <Box
+            display={'flex'}
+            alignItems="center"
+            justifyContent={'space-between'}
+            sx={{ padding: '15px', position: 'sticky' }}
+          >
+            <Typography variant="h5">Booking</Typography>
+            <CloseIcon sx={{ cursor: 'pointer' }} onClick={() => setDrawerState(false)} />
+          </Box>
+          <Divider />
+          <Box
+            sx={{ padding: '15px' }}
+            display={'flex'}
+            justifyContent={'space-between'}
+            flexDirection="column"
+            height={'100%'}
+          >
+            <Box>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Service Name
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                Cleany Miami - Maid Service
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Booking Number
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                {selectedBooking?.id}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Schedule Id
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                {selectedBooking?.schedule?.id}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Dispatch Id
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                {selectedBooking?.dispatch_id}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Customer
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                {selectedBooking?.bod?.bod_contact_info?.first_name}{' '}
+                {selectedBooking?.bod?.bod_contact_info?.last_name}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Location
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                {selectedBooking?.bod?.bod_service_location?.street_address}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Start
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                {moment.utc(selectedBooking?.schedule?.start_time).format('LLL')}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                End
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'}>
+                {moment.utc(selectedBooking?.schedule?.end_time).format('LLL')}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Frequency
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'} textTransform="capitalize">
+                {selectedBooking?.bod?.frequency?.type}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Booking Notes
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'} textTransform="capitalize">
+                {selectedBooking?.cleaner_notes === 'null'
+                  ? 'No booking notes'
+                  : selectedBooking?.cleaner_notes}
+              </Typography>
+              <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
+                Customer Notes
+              </Typography>
+              <Typography variant="body1" paddingBottom={'0.5rem'} textTransform="capitalize">
+                {selectedBooking?.customer_notes === 'null'
+                  ? 'No customer notes'
+                  : selectedBooking?.customer_notes}
+              </Typography>
+            </Box>
+            <Box display={'flex'} alignItems="center" gap={2} paddingBottom={'1rem'}>
+              <Button variant="outlined" color="error" onClick={() => setDrawerState(false)}>
+                Close
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                  navigate(`/dashboard/booking-appointments/${selectedBooking?.id}/details/`)
+                }
+              >
+                View Details
+              </Button>
+            </Box>
+          </Box>
+        </DrawerMain>
+      </Drawer>
       <Toaster position="top-right" />
     </>
   );

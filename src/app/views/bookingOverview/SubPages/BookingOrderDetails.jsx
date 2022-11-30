@@ -133,15 +133,15 @@ function BookingOrderDetails() {
                 >
                   <Stepper
                     activeStep={
-                      bookindDetails?.bod?.status === 'unscheduled'
+                      bookindDetails?.status === 'unscheduled'
                         ? 0
-                        : bookindDetails?.bod?.status === 'scheduled'
+                        : bookindDetails?.status === 'scheduled'
                         ? 1
-                        : bookindDetails?.bod?.status === 'dispatched'
+                        : bookindDetails?.status === 'dispatched'
                         ? 2
-                        : bookindDetails?.bod?.status === 'complete'
+                        : bookindDetails?.status === 'complete'
                         ? 3
-                        : bookindDetails?.bod?.status === 'complete'
+                        : bookindDetails?.status === 'complete'
                         ? 4
                         : null
                     }

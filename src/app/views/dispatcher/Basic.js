@@ -7,6 +7,7 @@ import { Box } from '@mui/material';
 import { CREATE_BOOKING_DISPATCH, DELETE_BOOKING_DISPATCH } from 'app/api';
 import axios from '../../../axios';
 import toast, { Toaster } from 'react-hot-toast';
+import * as _ from 'lodash';
 
 let schedulerData = new SchedulerData(
   moment(new Date()).format('YYYY-MM-DD'),
@@ -15,7 +16,7 @@ let schedulerData = new SchedulerData(
   false,
   {
     schedulerWidth: '72%',
-
+    // checkConflict: true,
     // schedulerMaxHeight: 700,
     eventItemHeight: 58,
     eventItemLineHeight: 60,
@@ -50,14 +51,16 @@ class Basic extends Component {
 
     schedulerData.setResources(props.serviceProviderList);
 
-    schedulerData.setEvents(props.myEvents);
+    schedulerData.setEvents(_.sortBy(_.concat(props.myEvents, props.leaveTimeList), ['start']));
     this.state = {
       viewModel: schedulerData,
     };
   }
   // componentWillReceiveProps = (nextProps) => {
   //   if (nextProps.myEvents !== this.props.myEvents) {
-  //     schedulerData.setEvents(this.props.myEvents);
+  //     schedulerData.setEvents(
+  //       _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+  //     );
   //     this.setState({
   //       viewModel: schedulerData,
   //     });
@@ -65,6 +68,7 @@ class Basic extends Component {
   // };
   render() {
     const { viewModel } = this.state;
+    console.log(viewModel);
     return (
       <Box
         sx={{
@@ -83,6 +87,7 @@ class Basic extends Component {
           eventItemClick={this.eventClicked}
           moveEvent={this.moveEvent}
           eventItemTemplateResolver={this.eventItemTemplateResolver}
+          conflictOccurred={this.conflictOccurred}
           toggleExpandFunc={this.toggleExpandFunc}
         />
         <Toaster position="top-right" />
@@ -92,7 +97,9 @@ class Basic extends Component {
 
   prevClick = (schedulerData) => {
     schedulerData.prev();
-    schedulerData.setEvents(this.props.myEvents);
+    schedulerData.setEvents(
+      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+    );
     this.setState({
       viewModel: schedulerData,
     });
@@ -100,7 +107,9 @@ class Basic extends Component {
 
   nextClick = (schedulerData) => {
     schedulerData.next();
-    schedulerData.setEvents(this.props.myEvents);
+    schedulerData.setEvents(
+      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+    );
     this.setState({
       viewModel: schedulerData,
     });
@@ -108,7 +117,9 @@ class Basic extends Component {
 
   onViewChange = (schedulerData, view) => {
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-    schedulerData.setEvents(this.props.myEvents);
+    schedulerData.setEvents(
+      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+    );
     this.setState({
       viewModel: schedulerData,
     });
@@ -116,28 +127,74 @@ class Basic extends Component {
 
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
-    schedulerData.setEvents(this.props.myEvents);
+    schedulerData.setEvents(
+      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+    );
     this.setState({
       viewModel: schedulerData,
     });
   };
 
   eventClicked = (schedulerData, event) => {
-    alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
+    if (typeof event.id === 'number') {
+      const filteredData = this.props.myEvents.find((item) => item.id === event.id);
+      this.props.setSelectedBooking(filteredData);
+      this.props.setDrawerState(true);
+    }
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
-    const filteredData = this.props.myEvents.find((item) => item.id === event.id);
-    if (
-      schedulerData.resources
-        .filter((item) => item.is_active === true)
-        .some((item) => item.id === slotId)
-    ) {
-      this.handleAssignBooking(event, slotId, schedulerData, slotName);
-    } else if (slotId === 'r1') {
-      this.handleDeleteBooking(event, slotId, schedulerData, slotName, filteredData);
-    } else {
-      alert(`Selected Booking cannot be assigned to inactive workers!`);
+    if (event?.resourceId !== slotId) {
+      const filteredData = this.props.myEvents.find((item) => item.id === event.id);
+      if (
+        schedulerData.resources
+          .filter((item) => item.is_active === true)
+          .some((item) => item.id === slotId)
+      ) {
+        if (filteredData.dispatch_id === null) {
+          this.handleAssignBooking(event, slotId, schedulerData, slotName);
+        } else {
+          toast.promise(axios.delete(`${DELETE_BOOKING_DISPATCH}/${filteredData?.dispatch_id}`), {
+            loading: () => {
+              return `Assigning to new worker!`;
+            },
+            success: (res) => {
+              const values = {
+                status: 'Dispatched',
+                shift_started: true,
+                shift_ended: true,
+                shift_status: 'pending',
+                service_provider: slotId,
+                booking: event?.id,
+              };
+              toast.promise(axios.post(`${CREATE_BOOKING_DISPATCH}`, values), {
+                loading: () => {
+                  return `In process!`;
+                },
+                success: (res) => {
+                  this.props.getEventList();
+                  schedulerData.moveEvent(event, slotId, slotName, event.start, event.end);
+
+                  this.setStateIn(schedulerData);
+
+                  return res?.data?.message;
+                },
+                error: (err) => {
+                  return err?.message;
+                },
+              });
+              return res?.data?.message;
+            },
+            error: (err) => {
+              return err?.message;
+            },
+          });
+        }
+      } else if (slotId === 'r1') {
+        this.handleDeleteBooking(event, slotId, schedulerData, slotName, filteredData);
+      } else {
+        alert(`Selected Booking cannot be assigned to inactive workers!`);
+      }
     }
   };
   handleDeleteBooking(event, slotId, schedulerData, slotName, filteredData) {
@@ -148,7 +205,7 @@ class Basic extends Component {
       success: (res) => {
         schedulerData.moveEvent(event, slotId, slotName, event.start, event.end);
         this.setStateIn(schedulerData);
-
+        this.props.getEventList();
         return res?.data?.message;
       },
       error: (err) => {
@@ -218,30 +275,50 @@ class Basic extends Component {
     return (
       <div key={event.id} className={mustAddCssClass} style={divStyle}>
         <p style={{ margin: 'unset', marginLeft: '4px' }} className="event-text">
-          {titleText}, {start} - {end}
+          {titleText}
+          {event.type === 1 && `, ${start} - ${end}`}
         </p>
-        <p
-          style={{
-            fonstSize: '5px',
-            margin: 'unset',
-            marginLeft: '4px',
-          }}
-          className="event-text"
-        >
-          {event.bod.bod_service_location.street_address}
-        </p>
-        <p
-          style={{
-            fonstSize: '5px',
-            margin: 'unset',
-            marginLeft: '4px',
-          }}
-          className="event-text"
-        >
-          &#8635; B-{event.id}
-        </p>
+        {event.type === 3 && (
+          <p
+            style={{
+              fonstSize: '5px',
+              margin: 'unset',
+              marginLeft: '4px',
+            }}
+            className="event-text"
+          >
+            {start} - {end}
+          </p>
+        )}
+        {event.type === 1 && (
+          <p
+            style={{
+              fonstSize: '5px',
+              margin: 'unset',
+              marginLeft: '4px',
+            }}
+            className="event-text"
+          >
+            {event.bod.bod_service_location.street_address}
+          </p>
+        )}
+        {event.type === 1 && (
+          <p
+            style={{
+              fonstSize: '5px',
+              margin: 'unset',
+              marginLeft: '4px',
+            }}
+            className="event-text"
+          >
+            &#8635; B-{event.id}
+          </p>
+        )}
       </div>
     );
+  };
+  conflictOccurred = (schedulerData, action, event, type, slotId, slotName, start, end) => {
+    alert(`Conflict occurred. {action: ${action}, event: ${event}`);
   };
   toggleExpandFunc = (schedulerData, slotId) => {
     schedulerData.toggleExpandStatus(slotId);
