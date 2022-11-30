@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-//import moment from 'moment'
-//import 'moment/locale/zh-cn';
 import moment from 'moment';
 import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from 'react-big-scheduler';
 import withDragDropContext from './withDnDContext';
 import 'react-big-scheduler/lib/css/style.css';
 import { Box } from '@mui/material';
+import { CREATE_BOOKING_DISPATCH, DELETE_BOOKING_DISPATCH } from 'app/api';
+import axios from '../../../axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 let schedulerData = new SchedulerData(
   moment(new Date()).format('YYYY-MM-DD'),
@@ -15,10 +16,10 @@ let schedulerData = new SchedulerData(
   {
     schedulerWidth: '72%',
 
-    schedulerMaxHeight: 550,
+    // schedulerMaxHeight: 700,
     eventItemHeight: 58,
-    eventItemLineHeight: 63,
-    displayWeekend: true,
+    eventItemLineHeight: 60,
+    nonAgendaSlotMinHeight: 45,
     eventItemPopoverEnabled: false,
     views: [
       {
@@ -39,124 +40,37 @@ let schedulerData = new SchedulerData(
         showAgenda: false,
         isEventPerspective: false,
       },
-    ], // minuteStep: 15
+    ],
   }
 );
 
 class Basic extends Component {
   constructor(props) {
     super(props);
-    let resources = [
-      {
-        id: 'r0',
-        name: 'None',
-        groupOnly: true,
-      },
-      {
-        id: 'r1',
-        name: 'Unassigned',
-        parentId: 'r0',
-      },
-      {
-        id: 'r2',
-        name: 'Active',
-        groupOnly: true,
-      },
-      {
-        id: 'r3',
-        // name: 'Staff_Val sdfddf\n+923344666108',
-        name: 'ASD',
-        parentId: 'r2',
-      },
-      {
-        id: 'r4',
-        name: 'Inactive',
-        groupOnly: true,
-      },
-      {
-        id: 'r5',
-        // name: 'Staff_Val sdfddf\n+923344666108',
-        name: 'Abdul',
-        parentId: 'r4',
-      },
-      {
-        id: 'r6',
-        name: 'Staff_Val sdfddf asdas dasd asd ',
-        parentId: 'r4',
-      },
-    ];
 
-    // schedulerData.localeMoment.locale('en');
+    schedulerData.setResources(props.serviceProviderList);
 
-    schedulerData.setResources(resources);
-    //schedulerData.setEvents(DemoData.events);
-    let events = [
-      // {
-      //   id: 1,
-      //   start: '2017-12-18 09:30:00',
-      //   end: '2017-12-19 23:30:00',
-      //   resourceId: 'r1',
-      //   title: 'A1',
-      //   bgColor: '#488FAB',
-      //   resizable: false,
-      // },
-      // {
-      //   id: 2,
-      //   start: '2017-12-18 12:30:00',
-      //   end: '2017-12-26 23:30:00',
-      //   resourceId: 'r1',
-      //   title: 'A2',
-      //   resizable: false,
-      //   bgColor: '#488FAB',
-      // },
-      // {
-      //   id: 3,
-      //   start: '2017-12-19 12:30:00',
-      //   end: '2017-12-20 23:30:00',
-      //   resourceId: 'r3',
-      //   title: 'Fixed',
-      //   bgColor: '#488FAB',
-      //   resizable: false,
-      // },
-      // {
-      //   id: 4,
-      //   start: '2017-12-19 14:30:00',
-      //   end: '2017-12-20 23:30:00',
-      //   resourceId: 'r1',
-      //   title: 'Training',
-      //   resizable: false,
-      //   bgColor: '#488FAB',
-      // },
-      // {
-      //   id: 5,
-      //   start: '2017-12-19 15:30:00',
-      //   end: '2017-12-20 23:30:00',
-      //   resourceId: 'r1',
-      //   title: 'R2',
-      //   rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
-      //   resizable: false,
-      //   bgColor: '#488FAB',
-      // },
-    ];
-    //
     schedulerData.setEvents(props.myEvents);
     this.state = {
       viewModel: schedulerData,
     };
   }
-
+  // componentWillReceiveProps = (nextProps) => {
+  //   if (nextProps.myEvents !== this.props.myEvents) {
+  //     schedulerData.setEvents(this.props.myEvents);
+  //     this.setState({
+  //       viewModel: schedulerData,
+  //     });
+  //   }
+  // };
   render() {
     const { viewModel } = this.state;
-    console.log(viewModel);
     return (
       <Box
         sx={{
           '& .slot-text': {
-            // whiteSpace: 'pre-wrap !important',
+            whiteSpace: 'pre-wrap !important',
           },
-          // '& .scheduler': {
-          //   width: '100% !important',
-          // },
         }}
         style={{ width: '100%', overflowX: 'auto' }}
       >
@@ -171,6 +85,7 @@ class Basic extends Component {
           eventItemTemplateResolver={this.eventItemTemplateResolver}
           toggleExpandFunc={this.toggleExpandFunc}
         />
+        <Toaster position="top-right" />
       </Box>
     );
   }
@@ -212,17 +127,66 @@ class Basic extends Component {
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
+    const filteredData = this.props.myEvents.find((item) => item.id === event.id);
     if (
-      window.confirm(
-        `Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`
-      )
+      schedulerData.resources
+        .filter((item) => item.is_active === true)
+        .some((item) => item.id === slotId)
     ) {
-      schedulerData.moveEvent(event, slotId, slotName, start, end);
-      this.setState({
-        viewModel: schedulerData,
-      });
+      this.handleAssignBooking(event, slotId, schedulerData, slotName);
+    } else if (slotId === 'r1') {
+      this.handleDeleteBooking(event, slotId, schedulerData, slotName, filteredData);
+    } else {
+      alert(`Selected Booking cannot be assigned to inactive workers!`);
     }
   };
+  handleDeleteBooking(event, slotId, schedulerData, slotName, filteredData) {
+    toast.promise(axios.delete(`${DELETE_BOOKING_DISPATCH}/${filteredData?.dispatch_id}`), {
+      loading: () => {
+        return `Unassigning Booking!`;
+      },
+      success: (res) => {
+        schedulerData.moveEvent(event, slotId, slotName, event.start, event.end);
+        this.setStateIn(schedulerData);
+
+        return res?.data?.message;
+      },
+      error: (err) => {
+        return err?.message;
+      },
+    });
+  }
+  handleAssignBooking(event, slotId, schedulerData, slotName) {
+    const values = {
+      status: 'Dispatched',
+      shift_started: true,
+      shift_ended: true,
+      shift_status: 'pending',
+      service_provider: slotId,
+      booking: event?.id,
+    };
+    toast.promise(axios.post(`${CREATE_BOOKING_DISPATCH}`, values), {
+      loading: () => {
+        return `Assigning Booking!`;
+      },
+      success: (res) => {
+        this.props.getEventList();
+        schedulerData.moveEvent(event, slotId, slotName, event.start, event.end);
+
+        this.setStateIn(schedulerData);
+
+        return res?.data?.message;
+      },
+      error: (err) => {
+        return err?.message;
+      },
+    });
+  }
+  setStateIn(schedulerData) {
+    this.setState({
+      viewModel: schedulerData,
+    });
+  }
   eventItemTemplateResolver = (
     schedulerData,
     event,
