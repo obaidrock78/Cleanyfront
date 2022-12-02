@@ -1,7 +1,6 @@
 import '../fake-db';
 import { Provider } from 'react-redux';
 import { useRoutes, Outlet } from 'react-router-dom';
-
 import { MatxTheme } from './components';
 import { AuthProvider } from './contexts/JWTAuthContext';
 import { SettingsProvider } from './contexts/SettingsContext';

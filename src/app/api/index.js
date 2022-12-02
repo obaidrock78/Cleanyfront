@@ -29,3 +29,5 @@ export const UPDATE_SERVICE_PROVIDER = '/service_provider/update_cleaner';
 export const GET_PROVIDER_WORK_LIST = '/service_provider/list_leaves';
 export const CREATE_PROVIDER_LEAVE = '/service_provider/create_leave';
 export const DELETE_PROVIDER_LEAVE = '/service_provider/delete_leave';
+export const GET_PROVIDER_LIST_TASK = '/service_provider/list_tasks';
+export const CREATE_PROVIDER_LIST_TASK = '/service_provider/create_task';
