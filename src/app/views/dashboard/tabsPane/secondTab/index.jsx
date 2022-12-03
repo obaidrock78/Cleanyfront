@@ -102,7 +102,7 @@ const SecondTab = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     const values = {
-      tasks, date
+      tasks, due_date: date, service_provider: 1
     }
     toast.promise(
       axios.post(`${CREATE_PROVIDER_LIST_TASK}`, values, {
@@ -113,6 +113,7 @@ const SecondTab = () => {
           return `Creating Service`;
         },
         success: (res) => {
+          setOpen(false)
           return 'Service Created';
         },
         error: (err) => {
@@ -186,6 +187,7 @@ const SecondTab = () => {
             checkboxSelection
           />
         </div>
+        <Toaster position='top-right' />
       </LocalizationProvider >
     </>
   )
