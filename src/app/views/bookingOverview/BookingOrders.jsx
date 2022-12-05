@@ -12,6 +12,17 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import moment from 'moment';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import StepOne from './Modals/CreateBookingModals/StepOne';
+import StepTwo from './Modals/CreateBookingModals/StepTwo';
+import StepThree from './Modals/CreateBookingModals/StepThree';
+import StepFour from './Modals/CreateBookingModals/StepFour';
+import StepFive from './Modals/CreateBookingModals/StepFive';
+import StepSix from './Modals/CreateBookingModals/StepSix';
+import StepSeven from './Modals/CreateBookingModals/StepSeven';
+import StepEight from './Modals/CreateBookingModals/StepEight';
+import StepNine from './Modals/CreateBookingModals/StepNine';
+import StepTen from './Modals/CreateBookingModals/StepTen';
+import CompleteBooking from './Modals/CreateBookingModals/CompleteBooking';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -68,12 +79,131 @@ const TableHeading = styled('p')(() => ({
   margin: 'unset',
 }));
 function BookingOrders() {
+  const initialData = {
+    email: '',
+    service: 'select',
+    address: '',
+    road: '',
+    apt_suite: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    location: '',
+    deep_clean_hours: '2 Hours (1 Cleaner)',
+    rooms: 'Studio',
+    bath_rooms: '1 Bathroom',
+    square_feet: '<1000 Sq Ft',
+    switch_component: [
+      { title: 'Go Green - Free Upgrade', value: false },
+      { title: 'Inside of Fridge', value: false },
+      { title: 'Inside of Oven', value: false },
+      { title: 'Interior Kitchen Cabinets', value: false },
+      { title: 'Inside Windows (# Of Windows)', value: false },
+      { title: 'Inside Windows (30 Min)', value: false },
+      { title: 'Washing Dishes', value: false },
+      { title: 'Pet Hair Removal', value: false },
+      { title: 'Deep Bathroom', value: false },
+      { title: 'Laundry (wash & fold)', value: false },
+      { title: 'Baseboards & Radiators', value: false },
+      { title: 'Oraganizing / Paking (30 Min)', value: false },
+      { title: 'Patio or Balcony', value: false },
+      { title: 'Wall Washing (60 Min)', value: false },
+      { title: 'Post Constrruction Equipment (HEPA)', value: false },
+      { title: 'Airbrb Package', value: false },
+    ],
+    custom_options: [],
+    custom_discount: [],
+    custom_extras: [],
+    schedule_booking: true,
+    start_time: '',
+    end_time: '',
+    frequency: 'none',
+    confirmation_email: true,
+    allow_rescedule: false,
+    allow_cancel: false,
+    optional_notes: '',
+    attachments: [],
+    payment_processor: 'none',
+    payment_method: 'Card',
+    dispatch_now: true,
+  };
   const navigate = useNavigate();
+  const [formData, setFormData] = useState(initialData);
   const [bookingList, setBookingList] = useState([]);
   const [dateChange, setDateChange] = useState('month');
   const [statusChange, setStatusChange] = useState('scheduled');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
+  const [stepOne, setStepOne] = useState(false);
+  const [stepTwo, setStepTwo] = useState(false);
+  const [stepThree, setStepThree] = useState(false);
+  const [stepFour, setStepFour] = useState(false);
+  const [stepFive, setStepFive] = useState(false);
+  const [stepSix, setStepSix] = useState(false);
+  const [stepSeven, setStepSeven] = useState(false);
+  const [stepEight, setStepEight] = useState(false);
+  const [stepNine, setStepNine] = useState(false);
+  const [stepTen, setStepTen] = useState(false);
+  const [completeBooking, setCompleteBooking] = useState(false);
+
+  const handleFormData = (field, value) => {
+    setFormData({
+      ...formData,
+      [field]: value,
+    });
+  };
+  const handleReset = () => {
+    const dupData = {
+      email: '',
+      service: 'select',
+      address: '',
+      road: '',
+      apt_suite: '',
+      city: '',
+      state: '',
+      zip_code: '',
+      location: '',
+      deep_clean_hours: '2 Hours (1 Cleaner)',
+      rooms: 'Studio',
+      bath_rooms: '1 Bathroom',
+      square_feet: '<1000 Sq Ft',
+      switch_component: [
+        { title: 'Go Green - Free Upgrade', value: false },
+        { title: 'Inside of Fridge', value: false },
+        { title: 'Inside of Oven', value: false },
+        { title: 'Interior Kitchen Cabinets', value: false },
+        { title: 'Inside Windows (# Of Windows)', value: false },
+        { title: 'Inside Windows (30 Min)', value: false },
+        { title: 'Washing Dishes', value: false },
+        { title: 'Pet Hair Removal', value: false },
+        { title: 'Deep Bathroom', value: false },
+        { title: 'Laundry (wash & fold)', value: false },
+        { title: 'Baseboards & Radiators', value: false },
+        { title: 'Oraganizing / Paking (30 Min)', value: false },
+        { title: 'Patio or Balcony', value: false },
+        { title: 'Wall Washing (60 Min)', value: false },
+        { title: 'Post Constrruction Equipment (HEPA)', value: false },
+        { title: 'Airbrb Package', value: false },
+      ],
+      custom_options: [],
+      custom_discount: [],
+      custom_extras: [],
+      schedule_booking: true,
+      start_time: '',
+      end_time: '',
+      frequency: 'none',
+      confirmation_email: true,
+      allow_rescedule: false,
+      allow_cancel: false,
+      optional_notes: '',
+      attachments: [],
+      payment_processor: 'none',
+      payment_method: 'Card',
+      dispatch_now: true,
+    };
+    setFormData(dupData);
+  };
+
   useEffect(() => {
     serviceListAPI();
   }, [dateChange, statusChange, page, perPage]);
@@ -248,9 +378,7 @@ function BookingOrders() {
           startIcon={<AddIcon />}
           variant="contained"
           color="primary"
-          // onClick={() => {
-          //   navigate('/dashboard/service-providers/create');
-          // }}
+          onClick={() => setStepOne(true)}
         >
           Create Booking
         </StyledButton>
@@ -357,6 +485,112 @@ function BookingOrders() {
           </Box>
         )}
       </SimpleCard>
+      <StepOne
+        open={stepOne}
+        handleClose={() => setStepOne(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        handleReset={handleReset}
+        setStepTwo={setStepTwo}
+      />
+      <StepTwo
+        open={stepTwo}
+        handleClose={() => setStepTwo(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        handleReset={handleReset}
+        setStepOne={setStepOne}
+        setStepThree={setStepThree}
+      />
+      <StepThree
+        open={stepThree}
+        handleClose={() => setStepThree(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        handleReset={handleReset}
+        setStepTwo={setStepTwo}
+        setStepFour={setStepFour}
+      />
+      <StepFour
+        open={stepFour}
+        handleClose={() => setStepFour(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+        setStepThree={setStepThree}
+        setStepFive={setStepFive}
+      />
+      <StepFive
+        open={stepFive}
+        handleClose={() => setStepFive(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+        setStepFour={setStepFour}
+        setStepSix={setStepSix}
+      />
+      <StepSix
+        open={stepSix}
+        handleClose={() => setStepSix(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+        setStepFive={setStepFive}
+        setStepSeven={setStepSeven}
+      />
+      <StepSeven
+        open={stepSeven}
+        handleClose={() => setStepSeven(false)}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+        setStepSix={setStepSix}
+        setStepEight={setStepEight}
+        setCompleteBooking={setCompleteBooking}
+      />
+      <StepEight
+        open={stepEight}
+        handleClose={() => setStepEight(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+        setStepSeven={setStepSeven}
+        setStepNine={setStepNine}
+        setCompleteBooking={setCompleteBooking}
+      />
+      <StepNine
+        open={stepNine}
+        handleClose={() => setStepNine(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+        setStepEight={setStepEight}
+        setStepTen={setStepTen}
+        setCompleteBooking={setCompleteBooking}
+      />
+      <StepTen
+        open={stepTen}
+        handleClose={() => setStepTen(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+        setStepNine={setStepNine}
+        setCompleteBooking={setCompleteBooking}
+      />
+      <CompleteBooking
+        open={completeBooking}
+        handleClose={() => setCompleteBooking(false)}
+        handleFormData={handleFormData}
+        formData={formData}
+        setFormData={setFormData}
+        handleReset={handleReset}
+      />
     </Container>
   );
 }

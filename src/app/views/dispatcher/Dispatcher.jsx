@@ -113,10 +113,7 @@ function Dispatcher() {
             arr.push({
               ...item,
               id: item?.id,
-              name:
-                `${item?.user_profile?.first_name} ${item?.user_profile?.last_name}` +
-                '\n' +
-                `${item?.user_profile?.phone_number}`,
+              name: `${item?.user_profile?.first_name} ${item?.user_profile?.last_name}`,
               parentId: 'r2',
             });
           } else {
