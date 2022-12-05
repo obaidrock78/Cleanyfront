@@ -29,16 +29,18 @@ const Heading = styled('h6')(({ theme }) => ({
 
 const StatCards = () => {
   const cardList = [
-    { name: 'New Leads', amount: 3050, icon: 'group' },
-    { name: 'This week Sales', amount: '$80,500', icon: 'attach_money' },
-    { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store' },
-    { name: 'Orders to deliver', amount: '305 Orders', icon: 'shopping_cart' },
+    {
+      name: 'ANALYTICS', amount: "0 0% ", icon: 'group'
+    },
+    { name: 'CUSTOMERS/NEW', amount: '$80,500', icon: 'attach_money' },
+    { name: 'REVENUE', amount: '0%', icon: 'store' },
+    { name: 'WEB BOOKINGS', amount: '0', icon: 'shopping_cart' },
   ];
 
   return (
-    <Grid container spacing={3} sx={{ mb: '24px' }}>
+    <Grid container spacing={2} sx={{ mb: '24px' }}>
       {cardList.map((item, index) => (
-        <Grid item xs={12} md={6} key={index}>
+        <Grid item xs={12} md={3} key={index}>
           <StyledCard elevation={6}>
             <ContentBox>
               <Icon className="icon">{item.icon}</Icon>

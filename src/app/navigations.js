@@ -1,4 +1,5 @@
 export const navigations = [
+  { name: 'Main Dashboard', path: '/main-dashboard/default', icon: 'dashboard' },
   { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
   { label: 'PAGES', type: 'label' },
   {
