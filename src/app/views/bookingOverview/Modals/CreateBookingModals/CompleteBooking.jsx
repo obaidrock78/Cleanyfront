@@ -114,16 +114,7 @@ function CompleteBooking({ open, handleClose, setFormData, formData, handleReset
               Create Booking Now
             </Button>
           </Box>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleReset();
-              handleClose();
-            }}
-          >
-            Cancel
-          </Button>
+          <Box></Box>
         </DialogActions>
         <Box
           sx={{
