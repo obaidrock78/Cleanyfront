@@ -68,15 +68,15 @@ const NotificationsContent = styled(Box)(({ theme }) => ({
 
 }))
 const easyAccessContentItems = [
-  'Create Customer',
-  'Create Booking',
-  'Google Chat',
-  'Nextiva',
-  'Yelp',
-  'Google Business',
-  'Last Pass',
-  'Stripe',
-  "Banking"
+  { link: 'Create Customer', color: 'red' },
+  { link: 'Create Booking', color: 'yellow' },
+  { link: 'Google Chat', color: 'orange' },
+  { link: 'Nextiva', color: 'blue' },
+  { link: 'Yelp', color: 'green' },
+  { link: 'Google Business', color: 'yellow' },
+  { link: 'Last Pass', color: 'lightgreen' },
+  { link: 'Stripe', color: 'red' },
+  { link: "Banking", color: 'red' }
 ]
 const notifications = [
   {
@@ -143,7 +143,7 @@ const notifications = [
 
 
 const MainDashboard = () => {
-  const [value, setValue] = React.useState('2');
+  const [value, setValue] = React.useState('1');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -193,9 +193,9 @@ const MainDashboard = () => {
                 <EasyAccessContent>
                   {easyAccessContentItems.map((items) => {
                     return (
-                      <p>
+                      <p style={{ backgroundColor: items.color }}>
                         {
-                          items
+                          items.link
                         }
                       </p>
                     )

@@ -31,3 +31,4 @@ export const CREATE_PROVIDER_LEAVE = '/service_provider/create_leave';
 export const DELETE_PROVIDER_LEAVE = '/service_provider/delete_leave';
 export const GET_PROVIDER_LIST_TASK = '/service_provider/list_tasks';
 export const CREATE_PROVIDER_LIST_TASK = '/service_provider/create_task';
+export const GET_BOOKING_DASHBOARD = '/booking/booking_dashboard';
