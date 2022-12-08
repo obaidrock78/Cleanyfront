@@ -44,3 +44,4 @@ export const CREATE_BOOKING_DISPATCH = '/booking/create_dispatch';
 export const DELETE_BOOKING_DISPATCH = '/booking/delete_dispatch';
 export const GET_PROVIDER_LIST_TASK = '/service_provider/list_tasks';
 export const CREATE_PROVIDER_LIST_TASK = '/service_provider/create_task';
+export const GET_BOOKING_DASHBOARD = '/booking/booking_dashboard';
