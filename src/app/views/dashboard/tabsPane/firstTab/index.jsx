@@ -3,13 +3,14 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { GET_BOOKING_DASHBOARD } from '../../../../api'
 import axios from '../../../../../axios'
 import moment from 'moment';
+import { Box, Chip, Grid, Icon, Typography } from '@mui/material';
 
 
 
 function Scheduler() {
-  const localizer = momentLocalizer(moment)
+  // const localizer = momentLocalizer(moment)
   const [events, setEvents] = useState()
-  const now = new Date()
+  // const now = new Date()
 
 
   React.useEffect(() => { getEvents() }, [])
@@ -23,16 +24,6 @@ function Scheduler() {
       })
       .catch((err) => console.log(err));
   }
-
-
-  console.log({
-    id: 0,
-    title: 'All Day Event very long title',
-    allDay: true,
-    start: new Date(2015, 3, 0),
-    end: new Date(2015, 3, 1),
-  }
-  )
   let temparry = []
   events?.map((ele) => {
     temparry.push({ id: ele.id, title: ele.additional_info, end: ele?.schedule?.end_time, start: ele?.schedule?.start_time })
@@ -123,16 +114,118 @@ function Scheduler() {
   }
 
   return (
-    <div>
+    <Box>
 
-      <Calendar
+      {/* <Calendar
         localizer={localizer}
         startAccessor="start"
         events={temparry}
         endAccessor="end"
         style={{ height: 600 }}
-      />
-    </div>
+      /> */}
+      <Typography sx={{ fontWeight: 900, fontSize: '20px', textAlign: 'center', mb: 4 }}>
+        Your Scheduling Overview
+      </Typography>
+
+      <Grid container>
+        <Grid item md={2.4} textAlign="center">
+          <Typography sx={{ fontWeight: 900, fontSize: '20px' }}>
+            Today
+          </Typography>
+          <Box>
+            3 booking
+          </Box>
+          <Box sx={{ textAlign: 'left' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-evenly', py: 3 }}>
+              <Icon className="icon" fontSize='large'>
+                woman
+              </Icon>
+              <Box>
+                <Typography>
+                  <Icon>  alarm</Icon>  9:00  Am - 3(hours)
+                </Typography>
+                <Typography>
+
+                  <Icon>public</Icon> 0000-0797
+                </Typography>
+                <Box>
+                  <Chip label="Dispatched" />
+                </Box>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-evenly', py: 3 }}>
+              <Icon className="icon" fontSize='large'>
+                woman
+              </Icon>
+              <Box>
+                <Typography>
+                  <Icon>  alarm</Icon>  9:00  Am - 3(hours)
+                </Typography>
+                <Typography>
+
+                  <Icon>public</Icon> 0000-0797
+                </Typography>
+                <Box>
+                  <Chip label="Dispatched" />
+                </Box>
+              </Box>
+            </Box> <Box sx={{ display: 'flex', justifyContent: 'space-evenly', py: 3 }}>
+              <Icon className="icon" fontSize='large'>
+                woman
+              </Icon>
+              <Box>
+                <Typography>
+                  <Icon>  alarm</Icon>  9:00  Am - 3(hours)
+                </Typography>
+                <Typography>
+
+                  <Icon>public</Icon> 0000-0797
+                </Typography>
+                <Box>
+                  <Chip label="Dispatched" />
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Grid>
+        <Grid item md={2.4} textAlign="center">
+          <Typography sx={{ fontWeight: 900, fontSize: '20px' }}>
+            Saturday
+          </Typography>
+          <p>8 DEC</p>
+          <p>1 booking</p>
+          <Chip label="9:00 pm" />
+        </Grid>
+        <Grid item md={2.4} textAlign="center">
+          <Typography sx={{ fontWeight: 900, fontSize: '20px' }}>
+            Sunday
+          </Typography>
+          <p>8 DEC</p>
+          <p>1 booking</p>
+          <Chip label="9:00 pm" />
+          <Chip label="9:00 pm" />
+          <Chip label="9:00 pm" />
+        </Grid>
+        <Grid item md={2.4} textAlign="center">
+          <Typography sx={{ fontWeight: 900, fontSize: '20px' }}>
+            Monday
+          </Typography>
+          <p>8 DEC</p>
+          <p>1 booking</p>
+          <Chip label="9:00 pm" />
+        </Grid>
+        <Grid item md={2.4} textAlign="center">
+          <Typography sx={{ fontWeight: 900, fontSize: '20px' }}>
+            Tuesday
+          </Typography>
+          <p>8 DEC</p>
+          <p>1 booking</p>
+          <Chip label="9:00 pm" />
+        </Grid>
+      </Grid>
+
+
+    </Box>
   )
 }
 
