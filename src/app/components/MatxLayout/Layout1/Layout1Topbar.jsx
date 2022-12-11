@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { Span } from '../../../components/Typography';
 import NotificationBar from '../../NotificationBar/NotificationBar';
 import ShoppingCart from '../../ShoppingCart';
+import Clock from 'react-live-clock';
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -116,6 +117,11 @@ const Layout1Topbar = () => {
           </IconBox>
         </Box>
 
+        <Clock
+
+          format={'h:mm:ssa'}
+          style={{ fontSize: '1.5em' }}
+          ticking={true} />
         <Box display="flex" alignItems="center">
           <MatxSearchBox />
 
