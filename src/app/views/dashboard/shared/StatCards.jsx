@@ -1,5 +1,8 @@
+import React from "react";
 import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
 import { Small } from 'app/components/Typography';
+import { GET_CARD_DATA } from '../../../api';
+import axios from '../../../../axios'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -28,15 +31,31 @@ const Heading = styled('h6')(({ theme }) => ({
 }));
 
 const StatCards = () => {
-  const cardList = [
-    {
-      name: 'ANALYTICS', amount: "0 0% ", icon: 'group'
-    },
-    { name: 'CUSTOMERS/NEW', amount: '$80,500', icon: 'attach_money' },
-    { name: 'REVENUE', amount: '0%', icon: 'store' },
-    { name: 'WEB BOOKINGS', amount: '0', icon: 'shopping_cart' },
+  const iconList = [
+    'group',
+    'attach_money',
+    'store',
+    'shopping_cart',
+    'alarm'
   ];
 
+  const [cardList, setCardList] = React.useState([])
+  React.useEffect(() => {
+    getCardData()
+  }, [])
+
+  const getCardData = async () => {
+    await axios
+      .get(`${GET_CARD_DATA}`)
+      .then((res) => {
+        const dataToMap = res?.data?.data
+        dataToMap.forEach((object, index) => {
+          object.icon = iconList[index];
+        });
+        setCardList(dataToMap);
+      })
+      .catch((err) => console.log(err));
+  }
   return (
     <Grid container spacing={2} sx={{ mb: '24px' }}>
       {cardList.map((item, index) => (
@@ -46,7 +65,7 @@ const StatCards = () => {
               <Icon className="icon">{item.icon}</Icon>
               <Box ml="12px">
                 <Small>{item.name}</Small>
-                <Heading>{item.amount}</Heading>
+                <Heading>{item.value}</Heading>
               </Box>
             </ContentBox>
 
