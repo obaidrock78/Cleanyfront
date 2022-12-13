@@ -19,12 +19,20 @@ const StylesTabsArea = styled(Box)(({ theme }) => ({
   p: 3,
   width: '100%',
   typography: 'body1',
-  // height: '725px',
+  height: '510px',
   background: theme.palette.background.paper,
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
   borderRadius: '10px'
 }));
-
+const ChatArea = styled(Box)(({ theme }) => ({
+  p: 3,
+  width: '100%',
+  typography: 'body1',
+  height: '100%',
+  background: theme.palette.background.paper,
+  boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
+  borderRadius: '10px'
+}));
 
 const EasyAccess = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -34,12 +42,18 @@ const EasyAccess = styled(Box)(({ theme }) => ({
   borderRadius: '10px',
   padding: "10px"
 }));
+
 const EasyAccessHeading = styled('h3')(({ theme }) => ({
 
   typography: 'body1',
   color: theme.palette.text.secondary,
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary
+}))
+
+const EasyAccessContent = styled(Box)(({ theme }) => ({
+  overflowY: 'scroll',
+  height: '200px'
 }))
 
 const Notifications = styled(Box)(({ theme }) => ({
@@ -61,13 +75,36 @@ const NotificationsHeading = styled('h3')(({ theme }) => ({
   borderBottomColor: theme.palette.text.secondary
 }))
 
-const EasyAccessContent = styled(Box)(({ theme }) => ({
-  overflowY: 'scroll',
-  height: '200px'
-}))
+
 const NotificationsContent = styled(Box)(({ theme }) => ({
   overflowY: 'scroll',
   height: '100px'
+
+}))
+
+const Weather = styled(Box)(({ theme }) => ({
+
+  width: '100%',
+  height: '100%',
+  background: theme.palette.background.paper,
+  boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
+  borderRadius: '10px',
+  padding: "10px",
+  marginBottom: '10px'
+}));
+
+const WeatherHeading = styled('h3')(({ theme }) => ({
+
+  typography: 'body1',
+  color: theme.palette.text.secondary,
+  borderBottom: '1px solid',
+  borderBottomColor: theme.palette.text.secondary
+}))
+
+
+const WeatherContent = styled(Box)(({ theme }) => ({
+  overflowY: 'scroll',
+  height: '500px'
 
 }))
 const easyAccessContentItems = [
@@ -88,8 +125,8 @@ const easyAccessContentItems = [
 const MainDashboard = () => {
   const { data, isLoading, errorMessage } = useWeatherBit({
     key: 'ac69bc70043f4c47aec73dfd3a19007e',
-    lat: '48.137154',
-    lon: '11.576124',
+    lat: '27.6648',
+    lon: '81.5158',
     lang: 'en',
     unit: 'metric',
   });
@@ -146,7 +183,6 @@ const MainDashboard = () => {
           <EasyAccess >
             <EasyAccessHeading>
               Easy Access
-
             </EasyAccessHeading>
             <EasyAccessContent>
               {easyAccessContentItems.map((items) => {
@@ -177,11 +213,11 @@ const MainDashboard = () => {
           </StylesTabsArea>
         </Grid>
         <Grid item lg={3} md={3} sm={12} xs={12} >
-          <Notifications >
-            <NotificationsHeading>
+          <Weather >
+            <WeatherHeading>
               Weather
-            </NotificationsHeading>
-            <NotificationsContent>
+            </WeatherHeading>
+            <WeatherContent>
               <ReactWeather
                 isLoading={isLoading}
                 errorMessage={errorMessage}
@@ -191,13 +227,13 @@ const MainDashboard = () => {
                 unitsLabels={{ temperature: 'C', windSpeed: 'Km/h' }}
                 showForecast
               />
-            </NotificationsContent>
-          </Notifications>
+            </WeatherContent>
+          </Weather>
         </Grid>
         <Grid item md={12}>
-          <StylesTabsArea>
+          <ChatArea>
             <Chat />
-          </StylesTabsArea>
+          </ChatArea>
         </Grid>
 
       </Grid>

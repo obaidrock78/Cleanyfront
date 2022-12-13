@@ -5,12 +5,7 @@ import axios from '../../../../../axios'
 import moment from 'moment';
 import { Box, Chip, Grid, Icon, Stack, Typography } from '@mui/material';
 
-const GetDayFormDate = (date) => {
-  let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  let d = new Date(date);
-  let dayName = days[d.getDay()];
-  return dayName
-}
+
 function Scheduler() {
   const [events, setEvents] = useState()
   const currentDate = new Date().toJSON().slice(0, 10)
@@ -24,6 +19,12 @@ function Scheduler() {
         setEvents(dataToMap);
       })
       .catch((err) => console.log(err));
+  }
+  const GetDayFormDate = (date) => {
+    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let d = new Date(date);
+    let dayName = days[d.getDay()];
+    return date === currentDate ? "Today" : dayName
   }
   return (
     <Box>
