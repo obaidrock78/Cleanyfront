@@ -51,24 +51,16 @@ class Basic extends Component {
 
     schedulerData.setResources(props.serviceProviderList);
 
-    schedulerData.setEvents(_.sortBy(_.concat(props.myEvents, props.leaveTimeList), ['start']));
+    schedulerData.setEvents(
+      _.sortBy(_.concat(props.myEvents, props.myEventsTwo, props.leaveTimeList), ['start'])
+    );
     this.state = {
       viewModel: schedulerData,
     };
   }
-  // componentWillReceiveProps = (nextProps) => {
-  //   if (nextProps.myEvents !== this.props.myEvents) {
-  //     schedulerData.setEvents(
-  //       _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
-  //     );
-  //     this.setState({
-  //       viewModel: schedulerData,
-  //     });
-  //   }
-  // };
+
   render() {
     const { viewModel } = this.state;
-    console.log(viewModel);
     return (
       <Box
         sx={{
@@ -98,7 +90,9 @@ class Basic extends Component {
   prevClick = (schedulerData) => {
     schedulerData.prev();
     schedulerData.setEvents(
-      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+      _.sortBy(_.concat(this.props.myEvents, this.props.myEventsTwo, this.props.leaveTimeList), [
+        'start',
+      ])
     );
     this.setState({
       viewModel: schedulerData,
@@ -108,7 +102,9 @@ class Basic extends Component {
   nextClick = (schedulerData) => {
     schedulerData.next();
     schedulerData.setEvents(
-      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+      _.sortBy(_.concat(this.props.myEvents, this.props.myEventsTwo, this.props.leaveTimeList), [
+        'start',
+      ])
     );
     this.setState({
       viewModel: schedulerData,
@@ -118,7 +114,9 @@ class Basic extends Component {
   onViewChange = (schedulerData, view) => {
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
     schedulerData.setEvents(
-      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+      _.sortBy(_.concat(this.props.myEvents, this.props.myEventsTwo, this.props.leaveTimeList), [
+        'start',
+      ])
     );
     this.setState({
       viewModel: schedulerData,
@@ -128,7 +126,9 @@ class Basic extends Component {
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
     schedulerData.setEvents(
-      _.sortBy(_.concat(this.props.myEvents, this.props.leaveTimeList), ['start'])
+      _.sortBy(_.concat(this.props.myEvents, this.props.myEventsTwo, this.props.leaveTimeList), [
+        'start',
+      ])
     );
     this.setState({
       viewModel: schedulerData,
@@ -138,14 +138,14 @@ class Basic extends Component {
   eventClicked = (schedulerData, event) => {
     if (typeof event.id === 'number') {
       const filteredData = this.props.myEvents.find((item) => item.id === event.id);
-      this.props.setSelectedBooking(filteredData);
+      this.props.setSelectedBooking(event);
       this.props.setDrawerState(true);
     }
   };
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
     if (event?.resourceId !== slotId) {
-      const filteredData = this.props.myEvents.find((item) => item.id === event.id);
+      const filteredData = this.props.compareEvents.find((item) => item.id === event.id);
       if (
         schedulerData.resources
           .filter((item) => item.is_active === true)
@@ -154,35 +154,21 @@ class Basic extends Component {
         if (filteredData.dispatch_id === null) {
           this.handleAssignBooking(event, slotId, schedulerData, slotName);
         } else {
-          toast.promise(axios.delete(`${DELETE_BOOKING_DISPATCH}/${filteredData?.dispatch_id}`), {
+          const values = {
+            status: 'Dispatched',
+            shift_started: true,
+            shift_ended: true,
+            shift_status: 'pending',
+            service_provider: slotId,
+            booking: event?.id,
+          };
+          toast.promise(axios.post(`${CREATE_BOOKING_DISPATCH}`, values), {
             loading: () => {
-              return `Assigning to new worker!`;
+              return `In process!`;
             },
             success: (res) => {
-              const values = {
-                status: 'Dispatched',
-                shift_started: true,
-                shift_ended: true,
-                shift_status: 'pending',
-                service_provider: slotId,
-                booking: event?.id,
-              };
-              toast.promise(axios.post(`${CREATE_BOOKING_DISPATCH}`, values), {
-                loading: () => {
-                  return `In process!`;
-                },
-                success: (res) => {
-                  this.props.getEventList();
-                  schedulerData.moveEvent(event, slotId, slotName, event.start, event.end);
+              window.location.reload();
 
-                  this.setStateIn(schedulerData);
-
-                  return res?.data?.message;
-                },
-                error: (err) => {
-                  return err?.message;
-                },
-              });
               return res?.data?.message;
             },
             error: (err) => {
@@ -191,13 +177,14 @@ class Basic extends Component {
           });
         }
       } else if (slotId === 'r1') {
-        this.handleDeleteBooking(event, slotId, schedulerData, slotName, filteredData);
+        this.handleDeleteBooking(event, slotId, schedulerData, slotName);
       } else {
         alert(`Selected Booking cannot be assigned to inactive workers!`);
       }
     }
   };
-  handleDeleteBooking(event, slotId, schedulerData, slotName, filteredData) {
+  handleDeleteBooking(event, slotId, schedulerData, slotName) {
+    const filteredData = this.props.myEventsTwo.find((item) => item.id === event.id);
     toast.promise(axios.delete(`${DELETE_BOOKING_DISPATCH}/${filteredData?.dispatch_id}`), {
       loading: () => {
         return `Unassigning Booking!`;
@@ -206,6 +193,7 @@ class Basic extends Component {
         schedulerData.moveEvent(event, slotId, slotName, event.start, event.end);
         this.setStateIn(schedulerData);
         this.props.getEventList();
+        window.location.reload();
         return res?.data?.message;
       },
       error: (err) => {

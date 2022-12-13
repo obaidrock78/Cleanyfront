@@ -5,7 +5,12 @@ import { Box, Button, CircularProgress, Divider, styled, Typography } from '@mui
 import { Breadcrumb, SimpleCard } from 'app/components';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../../axios';
-import { BOOKING_DISPATCH, GET_PROVIDER_WORK_LIST, GET_SERVICE_PROVIDER_LIST } from 'app/api';
+import {
+  BOOKING_DISPATCH,
+  BOOKING_DISPATCH_TWO,
+  GET_PROVIDER_WORK_LIST,
+  GET_SERVICE_PROVIDER_LIST,
+} from 'app/api';
 import toast, { Toaster } from 'react-hot-toast';
 import 'react-big-scheduler/lib/css/style.css';
 import Basic from './Basic.js';
@@ -23,6 +28,23 @@ const Container = styled('div')(({ theme }) => ({
   '& .event-text': {
     fontSize: 'small !important',
   },
+  '& .header2-text-label': {
+    fontSize: '1.3rem !important',
+    fontWeight: 'bold !important',
+  },
+  '& .header2-text': {
+    '& svg': {
+      width: '20px !important',
+      height: '20px !important',
+    },
+  },
+  '& .header3-text': {
+    fontSize: '0.9rem !important',
+    fontWeight: 'bold !important',
+  },
+  '& .slot-text': {
+    fontWeight: 'bold !important',
+  },
 }));
 const DrawerMain = styled('div')(({ theme }) => ({
   height: 'calc(100vh - 63px)',
@@ -35,12 +57,39 @@ function Dispatcher() {
   const [leaveTime, setLeaveTime] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [drawerState, setDrawerState] = useState(false);
+  const [myEventsTwo, setMyEventsTwo] = useState([]);
+  const [compareEvents, setCompareEvents] = useState([]);
 
   useEffect(() => {
     serviceListAPI();
     getEventList();
   }, []);
   const getEventList = async () => {
+    await axios
+      .get(`${BOOKING_DISPATCH_TWO}`)
+      .then((res) => {
+        const mapData = res.data.data.map((item) => {
+          return {
+            ...item,
+            id: item?.booking?.id,
+            start: moment.utc(item?.booking?.schedule?.start_time).format('YYYY-MM-DD HH:mm:ss'),
+            end: moment.utc(item?.booking?.schedule?.end_time).format('YYYY-MM-DD HH:mm:ss'),
+            resourceId: item?.service_provider === null ? 'r1' : item?.service_provider,
+            title: `${item?.booking?.bod?.bod_contact_info?.first_name} ${item?.booking?.bod?.bod_contact_info?.last_name}`,
+            // rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
+            resizable: false,
+            bgColor: '#488FAB',
+            type: 1,
+            bod: item?.booking?.bod,
+            schedule: item?.booking?.schedule,
+            dispatch_id: item?.id,
+            customer_notes: item?.booking?.customer_notes,
+            cleaner_notes: item?.booking?.cleaner_notes,
+          };
+        });
+        setMyEventsTwo(_.sortBy(mapData, ['start']));
+      })
+      .catch((err) => console.log(err));
     await axios
       .get(`${BOOKING_DISPATCH}`)
       .then((res) => {
@@ -58,7 +107,13 @@ function Dispatcher() {
             type: 1,
           };
         });
-        setMyEvents(_.sortBy(mapData, ['start']));
+        setCompareEvents(mapData);
+        setMyEvents(
+          _.sortBy(
+            mapData.filter((obj) => obj.status === 'scheduled' && obj.resourceId === 'r1'),
+            ['start']
+          )
+        );
       })
       .catch((err) => console.log(err));
   };
@@ -149,11 +204,13 @@ function Dispatcher() {
           {myEvents.length > 0 && serviceProviderList.length > 0 ? (
             <Basic
               myEvents={myEvents}
+              myEventsTwo={myEventsTwo}
               leaveTimeList={leaveTime}
               serviceProviderList={serviceProviderList}
               getEventList={getEventList}
               setDrawerState={setDrawerState}
               setSelectedBooking={setSelectedBooking}
+              compareEvents={compareEvents}
             />
           ) : (
             <Box

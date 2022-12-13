@@ -40,6 +40,7 @@ export const CREATE_BOOKING_ATTACHMENTS = '/booking/create_attachment';
 export const DELETE_ATTACHMENT = '/booking/delete_attachment';
 export const UPDATE_BOOKING = '/booking/update_booking_package';
 export const BOOKING_DISPATCH = '/booking/booking_dispatch_list';
+export const BOOKING_DISPATCH_TWO = '/booking/dispatch_list';
 export const CREATE_BOOKING_DISPATCH = '/booking/create_dispatch';
 export const DELETE_BOOKING_DISPATCH = '/booking/delete_dispatch';
 export const GET_PROVIDER_LIST_TASK = '/service_provider/list_tasks';
