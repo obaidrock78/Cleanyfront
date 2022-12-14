@@ -26,13 +26,13 @@ const Container = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('sm')]: { marginBottom: '16px' },
   },
   '& .event-text': {
-    fontSize: 'small !important',
+    fontSize: '11px !important',
   },
   '& .header2-text-label': {
     fontSize: '1.3rem !important',
     fontWeight: 'bold !important',
   },
-  '& .header2-text': {
+  '& .icon-nav': {
     '& svg': {
       width: '20px !important',
       height: '20px !important',
@@ -44,6 +44,9 @@ const Container = styled('div')(({ theme }) => ({
   },
   '& .slot-text': {
     fontWeight: 'bold !important',
+  },
+  '& .event-item': {
+    paddingRight: '0px important',
   },
 }));
 const DrawerMain = styled('div')(({ theme }) => ({
@@ -59,12 +62,14 @@ function Dispatcher() {
   const [drawerState, setDrawerState] = useState(false);
   const [myEventsTwo, setMyEventsTwo] = useState([]);
   const [compareEvents, setCompareEvents] = useState([]);
+  const [loaderShow, setLoaderShow] = useState([false, false]);
 
   useEffect(() => {
     serviceListAPI();
     getEventList();
   }, []);
   const getEventList = async () => {
+    setLoaderShow([true, true]);
     await axios
       .get(`${BOOKING_DISPATCH_TWO}`)
       .then((res) => {
@@ -88,6 +93,7 @@ function Dispatcher() {
           };
         });
         setMyEventsTwo(_.sortBy(mapData, ['start']));
+        setLoaderShow([false, true]);
       })
       .catch((err) => console.log(err));
     await axios
@@ -114,6 +120,7 @@ function Dispatcher() {
             ['start']
           )
         );
+        setLoaderShow([false, false]);
       })
       .catch((err) => console.log(err));
   };
@@ -201,7 +208,10 @@ function Dispatcher() {
           />
         </Box>
         <SimpleCard>
-          {myEvents.length > 0 && serviceProviderList.length > 0 ? (
+          {!loaderShow[0] &&
+          !loaderShow[1] &&
+          myEvents.length > 0 &&
+          serviceProviderList.length > 0 ? (
             <Basic
               myEvents={myEvents}
               myEventsTwo={myEventsTwo}

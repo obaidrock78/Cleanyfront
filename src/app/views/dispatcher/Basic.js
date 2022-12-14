@@ -11,16 +11,16 @@ import * as _ from 'lodash';
 
 let schedulerData = new SchedulerData(
   moment(new Date()).format('YYYY-MM-DD'),
-  ViewTypes.Week,
+  ViewTypes.Day,
   false,
   false,
   {
     schedulerWidth: '72%',
     // checkConflict: true,
     // schedulerMaxHeight: 700,
-    eventItemHeight: 58,
-    eventItemLineHeight: 60,
-    nonAgendaSlotMinHeight: 45,
+    eventItemHeight: 49,
+    eventItemLineHeight: 52,
+    nonAgendaSlotMinHeight: 30,
     eventItemPopoverEnabled: false,
     views: [
       {
@@ -167,7 +167,7 @@ class Basic extends Component {
               return `In process!`;
             },
             success: (res) => {
-              window.location.reload();
+              this.props.getEventList();
 
               return res?.data?.message;
             },
@@ -193,7 +193,6 @@ class Basic extends Component {
         schedulerData.moveEvent(event, slotId, slotName, event.start, event.end);
         this.setStateIn(schedulerData);
         this.props.getEventList();
-        window.location.reload();
         return res?.data?.message;
       },
       error: (err) => {
@@ -256,6 +255,7 @@ class Basic extends Component {
       backgroundColor: backgroundColor,
       height: mustBeHeight,
       fontSize: '2px !important',
+      paddingRight: '0px',
     };
     if (!!agendaMaxEventWidth) divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
     let start = moment.utc(event.schedule?.start_time).format('HH:mm');
