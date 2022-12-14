@@ -10,7 +10,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Span } from '../../../components/Typography';
 import NotificationBar from '../../NotificationBar/NotificationBar';
-import ShoppingCart from '../../ShoppingCart';
 import Clock from 'react-live-clock';
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -101,35 +100,15 @@ const Layout1Topbar = () => {
           <StyledIconButton onClick={handleSidebarToggle}>
             <Icon>menu</Icon>
           </StyledIconButton>
-
-          <IconBox>
-            <StyledIconButton>
-              <Icon>mail_outline</Icon>
-            </StyledIconButton>
-
-            <StyledIconButton>
-              <Icon>web_asset</Icon>
-            </StyledIconButton>
-
-            <StyledIconButton>
-              <Icon>star_outline</Icon>
-            </StyledIconButton>
-          </IconBox>
         </Box>
 
-        <Clock
-
-          format={'h:mm:ssa'}
-          style={{ fontSize: '1.5em' }}
-          ticking={true} />
+        <Clock format={'h:mm:ssa'} style={{ fontSize: '1.5em' }} ticking={true} />
         <Box display="flex" alignItems="center">
           <MatxSearchBox />
 
           <NotificationProvider>
             <NotificationBar />
           </NotificationProvider>
-
-          <ShoppingCart />
 
           <MatxMenu
             menuButton={
