@@ -208,10 +208,7 @@ function Dispatcher() {
           />
         </Box>
         <SimpleCard>
-          {!loaderShow[0] &&
-          !loaderShow[1] &&
-          myEvents.length > 0 &&
-          serviceProviderList.length > 0 ? (
+          {!loaderShow[0] && !loaderShow[1] ? (
             <Basic
               myEvents={myEvents}
               myEventsTwo={myEventsTwo}

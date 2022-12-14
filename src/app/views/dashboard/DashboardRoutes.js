@@ -1,11 +1,8 @@
-import Loadable from 'app/components/Loadable';
-import { lazy } from 'react';
 import { authRoles } from '../../auth/authRoles';
-
-const MainDashboard = Loadable(lazy(() => import('./mainDashboard')));
+import IndexMain from './indexMain';
 
 const dashboardRoutes = [
-  { path: '/dashboard/default', element: <MainDashboard />, auth: authRoles.admin },
+  { path: '/dashboard/default', element: <IndexMain />, auth: authRoles.admin },
 ];
 
 export default dashboardRoutes;
