@@ -164,12 +164,12 @@ function CustomerDashboard() {
           </Box>
 
           <svg
-            class="waves"
+            className="waves"
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
             viewBox="0 24 150 28"
             preserveAspectRatio="none"
-            shape-rendering="auto"
+            shapeRendering="auto"
           >
             <defs>
               <path
@@ -177,7 +177,7 @@ function CustomerDashboard() {
                 d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
               ></path>
             </defs>
-            <g class="parallax">
+            <g className="parallax">
               <use xlinkHref="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)"></use>
               <use xlinkHref="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)"></use>
               <use xlinkHref="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)"></use>
@@ -205,6 +205,7 @@ function CustomerDashboard() {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
+            cursor: 'pointer',
             '& svg': {
               border: '2px solid white',
               padding: '2px',
@@ -222,15 +223,15 @@ function CustomerDashboard() {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="icon icon-tabler icon-tabler-bookmark"
+            className="icon icon-tabler icon-tabler-bookmark"
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            stroke-width="2"
+            strokeWidth="2"
             stroke="currentColor"
             fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path>
@@ -243,6 +244,7 @@ function CustomerDashboard() {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
+            cursor: 'pointer',
             '& svg': {
               border: '2px solid white',
               padding: '2px',
@@ -260,15 +262,15 @@ function CustomerDashboard() {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="icon icon-tabler icon-tabler-brand-booking"
+            className="icon icon-tabler icon-tabler-brand-booking"
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            stroke-width="2"
+            strokeWidth="2"
             stroke="currentColor"
             fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M4 18v-9.5a4.5 4.5 0 0 1 4.5 -4.5h7a4.5 4.5 0 0 1 4.5 4.5v7a4.5 4.5 0 0 1 -4.5 4.5h-9.5a2 2 0 0 1 -2 -2z"></path>
@@ -283,6 +285,7 @@ function CustomerDashboard() {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
+            cursor: 'pointer',
             '& svg': {
               border: '2px solid white',
               padding: '2px',
@@ -300,15 +303,15 @@ function CustomerDashboard() {
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="icon icon-tabler icon-tabler-news"
+            className="icon icon-tabler icon-tabler-news"
             width="24"
             height="24"
             viewBox="0 0 24 24"
-            stroke-width="2"
+            strokeWidth="2"
             stroke="currentColor"
             fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
             <path d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1 -4 0v-13a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v12a3 3 0 0 0 3 3h11"></path>
