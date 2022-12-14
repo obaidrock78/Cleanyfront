@@ -1,6 +1,8 @@
 import React from 'react'
-import { Grid, Box, TextField, IconButton } from '@mui/material'
-import { SendOutlined } from '@mui/icons-material'
+import { Grid, Box, TextField, IconButton } from '@mui/material';
+import { SendOutlined } from '@mui/icons-material';
+import { GET_ADMIN_CHAT } from 'app/api';
+import axios from "../../../../../axios"
 const Chats = [
   {
     id: 1,
@@ -97,16 +99,31 @@ const Chats = [
 
 ]
 
+
 const Chat = () => {
+  const [users, setUsers] = React.useState([])
+  const [selectedChat, setSelectedChat] = React.useState([])
+  const [noChatSelected, setNoChatSelected] = React.useState(true)
+
+  React.useEffect(() => { getAdminChats() }, [])
+  const getAdminChats = async () => {
+    await axios
+      .get(`${GET_ADMIN_CHAT}`)
+      .then((res) => {
+        const dataToMap = res?.data?.data
+        setUsers(dataToMap)
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <Grid container >
       <Grid item md={4} sx={{ borderRight: '1px   lightgray', height: '500px' }}>
         All Chats
-        <Grid container sx={{ overflowY: 'scroll', height: '500px' }}>
+        <Grid container sx={{}}>
           {
-            Chats.map((chat) => {
+            users.map((chat) => {
               return (
-                <Grid key={chat.id} item md={12} sx={{ p: 2, border: '1px dashed lightgray', m: 2 }}> {chat.name}</Grid>
+                <Grid item md={12} sx={{ p: 1, border: '1px solid lightgray', m: 2, height: '50px' }} onClick={() => { setSelectedChat(chat.chats); setNoChatSelected(false) }}>  {chat.user.email}</Grid>
               )
             })
           }
@@ -115,40 +132,47 @@ const Chat = () => {
       <Grid item md={8} sx={{ p: 2 }}> Single Chat
         <Grid container>
           <Grid item md={12} sx={{ height: '600px', overflowY: 'scroll', height: '500px', display: 'flex', flexDirection: ' column-reverse' }}>
-            {
-              Chats.map((chat) => {
-                return (
-                  <>
-                    <Box >
-                      <Box
-                        component='h4'
-                        variant='h4'
-                        sx={{ padding: 2, margin: 2, textAlign: 'right', display: 'flex', justifyContent: 'left', alignItems: 'center' }}
-                        key={chat.id}>
-                        <Box
-                          component={'img'}
-                          sx={{ width: '50px', height: '50px', borderRadius: '50%', }}
-                          src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />
-                        {chat.name}
-                      </Box>
-                    </Box>
-                    <Box >
-                      <Box
-                        component='h4'
-                        variant='h4'
-                        sx={{ padding: 2, margin: 2, textAlign: 'left', display: 'flex', justifyContent: 'right', alignItems: 'center' }}
-                        key={chat.id} >
-                        {chat.name}
-                        <Box
-                          component={'img'}
-                          sx={{ width: '50px', height: '50px', borderRadius: '50%', }}
-                          src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />
-                      </Box>
-                    </Box>
-                  </>
-                )
-              })
-            }
+
+            {noChatSelected ? <> Select a chat to start Conversation </> : <>
+              {
+                selectedChat.map((chat) => {
+                  return (
+                    <>
+                      {chat.parent_id !== null ?
+                        <Box >
+                          <Box
+                            component='h4'
+                            variant='h4'
+                            sx={{ padding: 2, margin: 2, textAlign: 'right', display: 'flex', justifyContent: 'left', alignItems: 'center' }}
+                            key={chat.id}>
+                            <Box
+                              component={'img'}
+                              sx={{ width: '50px', height: '50px', borderRadius: '50%', }}
+                              src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />
+                            {chat.message}
+                          </Box>
+                        </Box> : <Box >
+                          <Box
+                            component='h4'
+                            variant='h4'
+                            sx={{ padding: 2, margin: 2, textAlign: 'left', display: 'flex', justifyContent: 'right', alignItems: 'center' }}
+                            key={chat.id} >
+                            {chat.message}
+                            <Box
+                              component={'img'}
+                              sx={{ width: '50px', height: '50px', borderRadius: '50%', }}
+                              src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />
+                          </Box>
+                        </Box>}
+
+
+                    </>
+                  )
+                })
+              }
+            </>}
+
+
           </Grid>
           <Grid item md={11} sx={{ bottom: 0 }}>
             <Box>

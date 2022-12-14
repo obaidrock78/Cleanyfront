@@ -48,3 +48,4 @@ export const CREATE_PROVIDER_LIST_TASK = '/service_provider/create_task';
 export const GET_BOOKING_DASHBOARD = '/booking/booking_dashboard';
 export const GET_CARD_DATA = '/booking/dashboard_data';
 export const BOOKING_NOTIFICATION = '/booking/notifications';
+export const GET_ADMIN_CHAT = '/booking/get_admin_chat';
