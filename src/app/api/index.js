@@ -50,3 +50,5 @@ export const GET_CARD_DATA = '/booking/dashboard_data';
 export const BOOKING_NOTIFICATION = '/booking/notifications';
 export const GET_ADMIN_CHAT = '/booking/get_admin_chat';
 export const ADMIN_CHAT = '/booking/admin_chat';
+export const CUSTOMER_ALL_BOOKINGS = '/booking/user_booking_listing';
+export const CUSTOMER_CURRENT_BOOKING = '/booking/user_current_booking';

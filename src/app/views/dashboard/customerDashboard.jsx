@@ -1,6 +1,10 @@
 import { Box, Button, Grid, styled } from '@mui/material';
+import { CUSTOMER_CURRENT_BOOKING } from 'app/api';
 import { Breadcrumb } from 'app/components';
-import React from 'react';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from '../../../axios';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -15,7 +19,25 @@ const Container = styled('div')(({ theme }) => ({
 }));
 
 function CustomerDashboard() {
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
+  const [currentBooking, setCurrentBooking] = useState(null);
+
+  useEffect(() => {
+    userBookingData();
+  }, []);
+
+  const userBookingData = async () => {
+    await axios
+      .get(`${CUSTOMER_CURRENT_BOOKING}`, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((res) => {
+        setCurrentBooking(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Container>
       <Box className="breadcrumb">
@@ -87,9 +109,9 @@ function CustomerDashboard() {
             <h2 className="subheading">Your Details</h2>
             <Grid container spacing={2}>
               <Grid item xs={6} sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
-                Recidential Cleaning
+                {currentBooking?.bod?.type}
                 <br />
-                March 10, 2022 8:00 AM
+                {moment.utc(currentBooking?.appointment_date_time).format('MMMM DD, YYYY h:mm a')}
                 <br />
                 0000-0015
               </Grid>
@@ -105,9 +127,11 @@ function CustomerDashboard() {
               >
                 At The Location
                 <br />
-                House no E21/7D St no 01 Qadri Colony Walton Road Lahore Cantt, Lahore, Florida
+                {currentBooking?.bod?.bod_service_location?.street_address},{' '}
+                {currentBooking?.bod?.bod_service_location?.city},{' '}
+                {currentBooking?.bod?.bod_service_location?.state}
                 <br />
-                54750
+                {currentBooking?.bod?.bod_service_location?.zip_code}
               </Grid>
               <Grid item xs={12} sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
                 <Button variant="contained" sx={{ fontWeight: 'bold' }}>
@@ -198,6 +222,7 @@ function CustomerDashboard() {
           justifyContent: 'space-around',
           borderRadius: '4px',
         }}
+        onClick={() => navigate('/dashboard/customer-booking')}
       >
         <Box
           sx={{
