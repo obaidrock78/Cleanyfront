@@ -35,3 +35,4 @@ export const GET_BOOKING_DASHBOARD = '/booking/booking_dashboard';
 export const GET_CARD_DATA = '/booking/dashboard_data';
 export const BOOKING_NOTIFICATION = '/booking/notifications';
 export const GET_ADMIN_CHAT = '/booking/get_admin_chat';
+export const ADMIN_CHAT = '/booking/admin_chat';
