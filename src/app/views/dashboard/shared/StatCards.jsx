@@ -10,7 +10,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   flexWrap: 'wrap',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: ' 24px 14px 0px 14px !important',
+  padding: ' 24px  !important',
   background: theme.palette.background.paper,
   [theme.breakpoints.down('sm')]: { padding: '16px !important' },
 }));
@@ -30,10 +30,7 @@ const Heading = styled('h6')(({ theme }) => ({
   fontWeight: '500',
   color: theme.palette.primary.main,
 }));
-const CardChart = styled(Box)(({ theme }) => ({
-  padding: '0px !important',
-  width: '100%'
-}))
+
 const StatCards = () => {
   const iconList = [
     'group',
@@ -104,15 +101,7 @@ const StatCards = () => {
                 <Icon>arrow_right_alt</Icon>
               </IconButton>
             </Tooltip> */}
-            <CardChart>
 
-              <Chart
-                options={options}
-                series={series}
-                type="bar"
-
-              />
-            </CardChart>
           </StyledCard>
 
         </Grid>

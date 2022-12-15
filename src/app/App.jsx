@@ -17,6 +17,7 @@ import MatxLayout from './components/MatxLayout/MatxLayout';
 import servicesRoutes from './views/services/Servicesroutes';
 import servicesProviderRoutes from './views/ServiceProvider/ProviderRoutes';
 import Booking from './views/booking/Booking';
+import PayrollRoutes from './views/payRoll/PayrollRoutes';
 
 const App = () => {
   const token = localStorage.getItem('accessToken');
@@ -34,13 +35,14 @@ const App = () => {
         ...settings,
         ...servicesRoutes,
         ...servicesProviderRoutes,
+        ...PayrollRoutes
       ],
     },
     { path: '/booking/:slug', element: <Booking /> },
     {
       path: '/',
 
-      element: !token ? <Outlet /> : <Navigate replace to="/dashboard/default" />,
+      element: !token ? <Outlet /> : <Navigate replace to="/main-dashboard/default" />,
       children: [...sessionRoutes],
     },
     ...sessionRoutes,

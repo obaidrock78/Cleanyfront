@@ -14,7 +14,7 @@ const StylesTabsArea = styled(Box)(({ theme }) => ({
   p: 3,
   width: '100%',
   typography: 'body1',
-  height: '510px',
+  height: '540px',
   background: theme.palette.background.paper,
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
   borderRadius: '10px'
@@ -31,7 +31,7 @@ const ChatArea = styled(Box)(({ theme }) => ({
 
 const EasyAccess = styled(Box)(({ theme }) => ({
   width: '100%',
-  height: '300px',
+  // height: '300px',
   background: theme.palette.background.paper,
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
   borderRadius: '10px',
@@ -47,8 +47,8 @@ const EasyAccessHeading = styled('h3')(({ theme }) => ({
 }))
 
 const EasyAccessContent = styled(Box)(({ theme }) => ({
-  overflowY: 'scroll',
-  height: '200px'
+  // overflowY: 'scroll',
+  // height: '200px'
 }))
 
 const Notifications = styled(Box)(({ theme }) => ({
@@ -103,15 +103,15 @@ const WeatherContent = styled(Box)(({ theme }) => ({
 
 }))
 const easyAccessContentItems = [
-  { text: 'Create Customer', color: '#206bc4' },
-  { text: 'Create Booking', color: '#206bc4' },
-  { text: 'Google Chat', color: '#0b956c' },
-  { text: 'Nextiva', color: '#daa520' },
-  { text: 'Yelp', color: '#ff0000' },
-  { text: 'Google Business', color: '#228b22' },
-  { text: 'Last Pass', color: '#808080' },
-  { text: 'Stripe', color: '#800080' },
-  { text: "Banking", color: '#8b0000' }
+  { link: "#", text: 'Create Customer', color: '#206bc4' },
+  { link: "#", text: 'Create Booking', color: '#206bc4' },
+  { link: "https://mail.google.com/chat/u/0/", text: 'Google Chat', color: '#0b956c' },
+  { link: "https://www.nextiva.com/ ", text: 'Nextiva', color: '#daa520' },
+  { link: "https://business.yelp.com/", text: 'Yelp', color: '#ff0000' },
+  { link: "https://www.google.com/business/ ", text: 'Google Business', color: '#228b22' },
+  { link: "https://www.lastpass.com/", text: 'Last Pass', color: '#808080' },
+  { link: "https://dashboard.stripe.com/login ", text: 'Stripe', color: '#800080' },
+  { link: "https://www.bankofamerica.com/smallbusiness/ ", text: "Banking", color: '#8b0000' }
 ]
 
 
@@ -194,13 +194,16 @@ const MainDashboard = () => {
                         pl: 1,
                         m: 1,
                         boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-                        // backdropFilter: ' blur(11.3px)',
+
                         border: '1px solid rgba(255, 255, 255, 0.4)',
-                        ":hover": { backdropFilter: ' blur(11.3px)', }
+                        "&:hover": { backdropFilter: ' blur(11.3px)', }
                       }}>
-                        {
-                          items.text
-                        }
+                        <Box component="a" href={items.link} >
+
+                          {
+                            items.text
+                          }
+                        </Box>
                       </Box>
                     </Grid>
                   )

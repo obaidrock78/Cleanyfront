@@ -82,7 +82,7 @@ const JwtLogin = () => {
 
           login(res?.data);
           setTimeout(() => {
-            navigate('/dashboard/default');
+            navigate('/main-dashboard/default');
           }, 1000);
 
           return res?.data?.message;
