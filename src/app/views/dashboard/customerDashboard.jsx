@@ -134,7 +134,13 @@ function CustomerDashboard() {
                 {currentBooking?.bod?.bod_service_location?.zip_code}
               </Grid>
               <Grid item xs={12} sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
-                <Button variant="contained" sx={{ fontWeight: 'bold' }} onClick={userBookingData}>
+                <Button
+                  variant="contained"
+                  sx={{ fontWeight: 'bold' }}
+                  onClick={() =>
+                    navigate(`/dashboard/booking-appointments/${currentBooking?.id}/details/`)
+                  }
+                >
                   View Details
                 </Button>
               </Grid>
