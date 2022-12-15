@@ -1,16 +1,11 @@
 import React, { useEffect } from 'react'
 import Box from '@mui/material/Box';
-import { Button, Grid, IconButton, styled } from '@mui/material';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import { Grid, styled } from '@mui/material';
 import StatCards from './shared/StatCards';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import { TabPanel } from '@mui/lab'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import SecondTab from './tabsPane/secondTab';
-import Chat from './tabsPane/thirdTab';
-import Scheduler from './tabsPane/firstTab';
+import AddTask from './tabsPane/AddTask';
+import Chat from './tabsPane/Chat';
+import Scheduler from './tabsPane/Scheduler';
 import axios from '../../../axios';
 import { BOOKING_NOTIFICATION } from 'app/api';
 import ReactWeather, { useWeatherBit } from 'react-open-weather';
@@ -108,15 +103,15 @@ const WeatherContent = styled(Box)(({ theme }) => ({
 
 }))
 const easyAccessContentItems = [
-  { link: 'Create Customer', color: '#206bc4' },
-  { link: 'Create Booking', color: '#206bc4' },
-  { link: 'Google Chat', color: '#0b956c' },
-  { link: 'Nextiva', color: '#daa520' },
-  { link: 'Yelp', color: '#ff0000' },
-  { link: 'Google Business', color: '#228b22' },
-  { link: 'Last Pass', color: '#808080' },
-  { link: 'Stripe', color: '#800080' },
-  { link: "Banking", color: '#8b0000' }
+  { text: 'Create Customer', color: '#206bc4' },
+  { text: 'Create Booking', color: '#206bc4' },
+  { text: 'Google Chat', color: '#0b956c' },
+  { text: 'Nextiva', color: '#daa520' },
+  { text: 'Yelp', color: '#ff0000' },
+  { text: 'Google Business', color: '#228b22' },
+  { text: 'Last Pass', color: '#808080' },
+  { text: 'Stripe', color: '#800080' },
+  { text: "Banking", color: '#8b0000' }
 ]
 
 
@@ -185,31 +180,38 @@ const MainDashboard = () => {
               Easy Access
             </EasyAccessHeading>
             <EasyAccessContent>
-              {easyAccessContentItems.map((items) => {
-                return (
-                  <Box component={'p'} sx={{
-                    backgroundColor: items.color,
-                    color: 'white',
-                    fontWeight: 900,
-                    fontSize: '19px',
-                    py: 1,
-                    pl: 1,
-                    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-                    backdropFilter: ' blur(11.3px)',
-                    border: '1px solid rgba(255, 255, 255, 0.4)'
-                  }}>
-                    {
-                      items.link
-                    }
-                  </Box>
-                )
-              })}
+              <Grid container >
+                {easyAccessContentItems.map((items) => {
+                  return (
+                    <Grid item md={6}>
+
+                      <Box component={'p'} sx={{
+                        backgroundColor: items.color,
+                        color: 'white',
+                        fontWeight: 900,
+                        fontSize: '15px',
+                        py: 1,
+                        pl: 1,
+                        m: 1,
+                        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+                        // backdropFilter: ' blur(11.3px)',
+                        border: '1px solid rgba(255, 255, 255, 0.4)',
+                        ":hover": { backdropFilter: ' blur(11.3px)', }
+                      }}>
+                        {
+                          items.text
+                        }
+                      </Box>
+                    </Grid>
+                  )
+                })}
+              </Grid>
             </EasyAccessContent>
           </EasyAccess>
         </Grid>
         <Grid item lg={9} md={9} sm={12} xs={12} >
           <StylesTabsArea>
-            <SecondTab />
+            <AddTask />
           </StylesTabsArea>
         </Grid>
         <Grid item lg={3} md={3} sm={12} xs={12} >
