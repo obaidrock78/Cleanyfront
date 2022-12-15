@@ -134,7 +134,7 @@ function CustomerDashboard() {
                 {currentBooking?.bod?.bod_service_location?.zip_code}
               </Grid>
               <Grid item xs={12} sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
-                <Button variant="contained" sx={{ fontWeight: 'bold' }}>
+                <Button variant="contained" sx={{ fontWeight: 'bold' }} onClick={userBookingData}>
                   View Details
                 </Button>
               </Grid>
