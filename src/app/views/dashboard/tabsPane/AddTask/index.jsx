@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, DialogContentText, Stack } from '@mui/material'
+import { Box, Button, Dialog, DialogTitle, DialogContent, TextField, Stack, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { GET_PROVIDER_LIST_TASK, CREATE_PROVIDER_LIST_TASK } from 'app/api';
 import axios from '../../../../../axios';
@@ -27,7 +27,7 @@ const columns = [
 ];
 
 
-const SecondTab = () => {
+const AddTask = () => {
 
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
@@ -91,6 +91,9 @@ const SecondTab = () => {
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box>
+          <Typography sx={{ fontWeight: 900, fontSize: '20px', textAlign: 'center', mb: 4, py: 2 }}>
+            Your Tasks
+          </Typography>
           <Button onClick={handleClickOpen}>
             Add Task
           </Button>
@@ -138,4 +141,4 @@ const SecondTab = () => {
   )
 }
 
-export default SecondTab
+export default AddTask 

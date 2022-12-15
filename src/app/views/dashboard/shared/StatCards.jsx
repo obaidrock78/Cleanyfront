@@ -3,13 +3,14 @@ import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/materia
 import { Small } from 'app/components/Typography';
 import { GET_CARD_DATA } from '../../../api';
 import axios from '../../../../axios'
+import Chart from "react-apexcharts";
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: '24px !important',
+  padding: ' 24px 14px 0px 14px !important',
   background: theme.palette.background.paper,
   [theme.breakpoints.down('sm')]: { padding: '16px !important' },
 }));
@@ -29,7 +30,10 @@ const Heading = styled('h6')(({ theme }) => ({
   fontWeight: '500',
   color: theme.palette.primary.main,
 }));
-
+const CardChart = styled(Box)(({ theme }) => ({
+  padding: '0px !important',
+  width: '100%'
+}))
 const StatCards = () => {
   const iconList = [
     'group',
@@ -39,7 +43,33 @@ const StatCards = () => {
     'alarm'
   ];
 
-  const [cardList, setCardList] = React.useState([])
+  const [cardList, setCardList] = React.useState([]);
+  const options = {
+    chart: {
+      id: "basic-bar",
+      height: 380,
+      grid: {
+        show: false,
+
+      }
+    },
+    xaxis: {
+      show: false,
+      // categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+    },
+    yaxis: {
+      show: false,
+      // categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+    },
+
+  }
+  const series = [
+    {
+      name: "series-1",
+      data: [30, 40, 45, 50, 49, 60, 70, 91]
+    }
+  ]
+
   React.useEffect(() => {
     getCardData()
   }, [])
@@ -69,12 +99,22 @@ const StatCards = () => {
               </Box>
             </ContentBox>
 
-            <Tooltip title="View Details" placement="top">
+            {/* <Tooltip title="View Details" placement="top">
               <IconButton>
                 <Icon>arrow_right_alt</Icon>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
+            <CardChart>
+
+              <Chart
+                options={options}
+                series={series}
+                type="bar"
+
+              />
+            </CardChart>
           </StyledCard>
+
         </Grid>
       ))}
     </Grid>

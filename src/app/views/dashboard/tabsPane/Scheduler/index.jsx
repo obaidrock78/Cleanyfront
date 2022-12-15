@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { GET_BOOKING_DASHBOARD } from '../../../../api'
 import axios from '../../../../../axios'
 import moment from 'moment';
-import { Box, Chip, Grid, Icon, Stack, Typography } from '@mui/material';
+import { Box, Grid, Icon, Stack, Typography } from '@mui/material';
 
 
 function Scheduler() {
   const [events, setEvents] = useState()
   const currentDate = new Date().toJSON().slice(0, 10)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => { getEvents() }, [])
   const getEvents = async () => {
     await axios
