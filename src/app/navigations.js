@@ -46,4 +46,6 @@ export const navigations =
           ],
         },
         { name: 'Pay Roll', path: '/dashboard/payroll', icon: ' money' },
+
+	{ name: 'Reports', path: '/dashboard/reports', icon: 'reports' },
       ];

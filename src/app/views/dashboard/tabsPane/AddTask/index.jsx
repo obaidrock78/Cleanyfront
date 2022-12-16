@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
-
+import { styled } from '@mui/material'
 const columns = [
   { field: 'id', headerName: 'ID', width: 150 },
   { field: 'description', headerName: 'Tasks', width: 150 },
@@ -26,6 +26,14 @@ const columns = [
   },
 ];
 
+
+const TaskHeading = styled('h3')(({ theme }) => ({
+
+  typography: 'body1',
+  color: theme.palette.text.secondary,
+  borderBottom: '1px solid',
+  borderBottomColor: theme.palette.text.secondary
+}))
 
 const AddTask = () => {
 
@@ -91,9 +99,9 @@ const AddTask = () => {
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box>
-          <Typography sx={{ fontWeight: 900, fontSize: '20px', textAlign: 'center', mb: 4, py: 2 }}>
+          <TaskHeading >
             Your Tasks
-          </Typography>
+          </TaskHeading>
           <Button onClick={handleClickOpen}>
             Add Task
           </Button>

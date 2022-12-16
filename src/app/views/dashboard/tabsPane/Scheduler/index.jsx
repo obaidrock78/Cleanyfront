@@ -2,9 +2,15 @@ import React, { useState } from 'react';
 import { GET_BOOKING_DASHBOARD } from '../../../../api'
 import axios from '../../../../../axios'
 import moment from 'moment';
-import { Box, Grid, Icon, Stack, Typography } from '@mui/material';
+import { Box, Grid, Icon, Stack, Typography, styled } from '@mui/material';
 
+const SchedulerHeading = styled('h3')(({ theme }) => ({
 
+  typography: 'body1',
+  color: theme.palette.text.secondary,
+  borderBottom: '1px solid',
+  borderBottomColor: theme.palette.text.secondary
+}))
 function Scheduler() {
   const [events, setEvents] = useState()
   const currentDate = new Date().toJSON().slice(0, 10)
@@ -28,9 +34,9 @@ function Scheduler() {
   }
   return (
     <Box>
-      <Typography sx={{ fontWeight: 900, fontSize: '20px', textAlign: 'center', mb: 4, py: 2 }}>
+      <SchedulerHeading >
         Your Scheduling Overview
-      </Typography>
+      </SchedulerHeading>
       <Grid container>
         {events?.slice(0, 5)?.map((ele) => {
           return (

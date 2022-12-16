@@ -18,9 +18,13 @@ import servicesRoutes from './views/services/Servicesroutes';
 import servicesProviderRoutes from './views/ServiceProvider/ProviderRoutes';
 import customerRoutes from './views/customers/CustomerRoutes';
 import Booking from './views/booking/Booking';
+
+import PayrollRoutes from './views/payRoll/PayrollRoutes';
+
 import bookingRoutes from './views/bookingOverview/BookingRoutes';
 import dispatcherRoutes from './views/dispatcher/dispatcherRoutes';
 import customerViewRoutes from './views/CustomerView/customerViewRoutes';
+
 
 const App = () => {
   const token = localStorage.getItem('accessToken');
@@ -38,6 +42,7 @@ const App = () => {
         ...settings,
         ...servicesRoutes,
         ...servicesProviderRoutes,
+        ...PayrollRoutes,
         ...customerRoutes,
         ...bookingRoutes,
         ...dispatcherRoutes,
@@ -48,7 +53,7 @@ const App = () => {
     {
       path: '/',
 
-      element: !token ? <Outlet /> : <Navigate replace to="/dashboard/default" />,
+      element: !token ? <Outlet /> : <Navigate replace to="/main-dashboard/default" />,
       children: [...sessionRoutes],
     },
     ...sessionRoutes,

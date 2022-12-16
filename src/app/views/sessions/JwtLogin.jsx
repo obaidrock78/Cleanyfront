@@ -83,7 +83,7 @@ const JwtLogin = () => {
           login(res?.data);
           window.location.reload();
           setTimeout(() => {
-            navigate('/dashboard/default');
+            navigate('/main-dashboard/default');
           }, 1000);
 
           return res?.data?.message;

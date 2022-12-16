@@ -1,12 +1,18 @@
 import React from 'react'
-import { Grid, Box, TextField, IconButton, Typography } from '@mui/material';
+import { Grid, Box, TextField, IconButton, Typography, styled } from '@mui/material';
 import { SendOutlined } from '@mui/icons-material';
 import { ADMIN_CHAT, GET_ADMIN_CHAT } from 'app/api';
 import axios from "../../../../../axios"
 import toast, { Toaster } from 'react-hot-toast';
-import { purple } from '@mui/material/colors';
 
 
+const ChatHeading = styled('h3')(({ theme }) => ({
+
+  typography: 'body1',
+  color: theme.palette.text.secondary,
+  borderBottom: '1px solid',
+  borderBottomColor: theme.palette.text.secondary
+}))
 
 const Chat = () => {
   const [users, setUsers] = React.useState([])
@@ -54,11 +60,11 @@ const Chat = () => {
   }
   return (
     <>
-      <Typography sx={{ fontWeight: 900, fontSize: '20px', textAlign: 'center', mb: 4, py: 2 }}>
+      <ChatHeading  >
         Chatting Room
-      </Typography>
+      </ChatHeading>
       <Grid container >
-        <Grid item md={4} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url(/assets/images/sidebar/sidebar-bg-dark.jpg) ', color: '#fff' }}>
+        <Grid item md={3} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url(/assets/images/sidebar/sidebar-bg-dark.jpg) ', color: '#fff' }}>
           <Grid container sx={{}}>
 
             {
@@ -79,10 +85,11 @@ const Chat = () => {
             }
           </Grid>
         </Grid>
-        <Grid item md={8} sx={{ p: 2 }}>
+        <Grid item md={9} sx={{ p: 2 }}>
           <Grid container>
             <Grid item md={12} sx={{ height: '600px', overflowY: 'scroll', height: '500px', display: 'flex', flexDirection: ' column', }}>
-              {noChatSelected ? <> Select a chat to start Conversation </> : <>
+              {noChatSelected ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                <Typography component='h3' variant='h4' sx={{ color: 'lightgray ' }}>   Select a chat to start Conversation </Typography></Box> : <>
                 {
                   selectedChat.map((chat) => {
                     return (
