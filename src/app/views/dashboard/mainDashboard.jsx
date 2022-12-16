@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Box from '@mui/material/Box';
-import { Grid, styled } from '@mui/material';
+import { Grid, styled, Button } from '@mui/material';
 import StatCards from './shared/StatCards';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import AddTask from './tabsPane/AddTask';
@@ -17,7 +17,9 @@ const StylesTabsArea = styled(Box)(({ theme }) => ({
   height: '540px',
   background: theme.palette.background.paper,
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
-  borderRadius: '10px'
+  borderRadius: '10px',
+  borderTop: '5px solid blue',
+  padding: '10px'
 }));
 const ChatArea = styled(Box)(({ theme }) => ({
   p: 3,
@@ -26,12 +28,16 @@ const ChatArea = styled(Box)(({ theme }) => ({
   height: '100%',
   background: theme.palette.background.paper,
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
-  borderRadius: '10px'
+  borderRadius: '10px',
+  padding: '10px',
+
+  borderTop: '5px solid blue'
 }));
 
 const EasyAccess = styled(Box)(({ theme }) => ({
   width: '100%',
-  // height: '300px',
+
+  borderTop: '5px solid blue',
   background: theme.palette.background.paper,
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
   borderRadius: '10px',
@@ -54,12 +60,14 @@ const EasyAccessContent = styled(Box)(({ theme }) => ({
 const Notifications = styled(Box)(({ theme }) => ({
 
   width: '100%',
-  height: '200px',
+  // height: '200px',
   background: theme.palette.background.paper,
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
   borderRadius: '10px',
   padding: "10px",
-  marginBottom: '10px'
+  marginBottom: '10px',
+
+  borderTop: '5px solid blue'
 }));
 
 const NotificationsHeading = styled('h3')(({ theme }) => ({
@@ -72,8 +80,8 @@ const NotificationsHeading = styled('h3')(({ theme }) => ({
 
 
 const NotificationsContent = styled(Box)(({ theme }) => ({
-  overflowY: 'scroll',
-  height: '100px'
+  // overflowY: 'scroll',
+  // height: '100px'
 
 }))
 
@@ -85,7 +93,9 @@ const Weather = styled(Box)(({ theme }) => ({
   boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
   borderRadius: '10px',
   padding: "10px",
-  marginBottom: '10px'
+  marginBottom: '10px',
+
+  borderTop: '5px solid blue'
 }));
 
 const WeatherHeading = styled('h3')(({ theme }) => ({
@@ -96,12 +106,30 @@ const WeatherHeading = styled('h3')(({ theme }) => ({
   borderBottomColor: theme.palette.text.secondary
 }))
 
-
 const WeatherContent = styled(Box)(({ theme }) => ({
   overflowY: 'scroll',
   height: '500px'
 
 }))
+
+const StatsArea = styled(Box)(({ theme }) => ({
+  p: 3,
+  width: '100%',
+  typography: 'body1',
+  background: theme.palette.background.paper,
+  boxShadow: '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
+  borderRadius: '10px',
+  padding: '10px',
+  borderTop: '5px solid blue'
+}));
+const StatHeading = styled('h3')(({ theme }) => ({
+
+  typography: 'body1',
+  color: theme.palette.text.secondary,
+  borderBottom: '1px solid',
+  borderBottomColor: theme.palette.text.secondary
+}))
+
 const easyAccessContentItems = [
   { link: "#", text: 'Create Customer', color: '#206bc4' },
   { link: "#", text: 'Create Booking', color: '#206bc4' },
@@ -150,13 +178,13 @@ const MainDashboard = () => {
   return (
     <Box sx={{ p: 4 }}>
       <Grid container spacing={3} rowSpacing={2}>
-        <Grid item lg={12} md={12} sm={12} xs={12}>
-          <StatCards />
-        </Grid>
-        <Grid item lg={9} md={9} sm={12} xs={12} >
-          <StylesTabsArea >
-            <Scheduler />
-          </StylesTabsArea>
+        <Grid item lg={9} md={9} sm={12} xs={12}>
+          <StatsArea>
+            <StatHeading>
+              Analytical Overview
+            </StatHeading>
+            <StatCards />
+          </StatsArea>
         </Grid>
         <Grid item lg={3} md={3} sm={12} xs={12}>
           <Notifications >
@@ -175,6 +203,14 @@ const MainDashboard = () => {
               })}
             </NotificationsContent>
           </Notifications>
+
+        </Grid>
+        <Grid item lg={9} md={9} sm={12} xs={12} >
+          <StylesTabsArea >
+            <Scheduler />
+          </StylesTabsArea>
+        </Grid>
+        <Grid item lg={3} md={3} sm={12} xs={12} >
           <EasyAccess >
             <EasyAccessHeading>
               Easy Access
@@ -183,27 +219,24 @@ const MainDashboard = () => {
               <Grid container >
                 {easyAccessContentItems.map((items) => {
                   return (
-                    <Grid item md={6}>
+                    <Grid item md={12}>
 
-                      <Box component={'p'} sx={{
-                        backgroundColor: items.color,
-                        color: 'white',
-                        fontWeight: 900,
-                        fontSize: '15px',
-                        py: 1,
-                        pl: 1,
-                        m: 1,
-                        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+                      <Box component={'p'}
+                      >
+                        <Button href={items.link} sx={{
+                          backgroundColor: items.color,
+                          color: 'white',
+                          "&.MuiButtonBase-root:hover": {
+                            bgcolor: "none"
+                          }
 
-                        border: '1px solid rgba(255, 255, 255, 0.4)',
-                        "&:hover": { backdropFilter: ' blur(11.3px)', }
-                      }}>
-                        <Box component="a" href={items.link} >
+
+                        }} >
 
                           {
                             items.text
                           }
-                        </Box>
+                        </Button>
                       </Box>
                     </Grid>
                   )
@@ -212,12 +245,13 @@ const MainDashboard = () => {
             </EasyAccessContent>
           </EasyAccess>
         </Grid>
-        <Grid item lg={9} md={9} sm={12} xs={12} >
+
+        <Grid item lg={8} md={8} sm={12} xs={12} >
           <StylesTabsArea>
             <AddTask />
           </StylesTabsArea>
         </Grid>
-        <Grid item lg={3} md={3} sm={12} xs={12} >
+        <Grid item lg={4} md={4} sm={12} xs={12} >
           <Weather >
             <WeatherHeading>
               Weather

@@ -1,12 +1,18 @@
 import React from 'react'
-import { Grid, Box, TextField, IconButton, Typography } from '@mui/material';
+import { Grid, Box, TextField, IconButton, Typography, styled } from '@mui/material';
 import { SendOutlined } from '@mui/icons-material';
 import { ADMIN_CHAT, GET_ADMIN_CHAT } from 'app/api';
 import axios from "../../../../../axios"
 import toast, { Toaster } from 'react-hot-toast';
-import { purple } from '@mui/material/colors';
 
 
+const ChatHeading = styled('h3')(({ theme }) => ({
+
+  typography: 'body1',
+  color: theme.palette.text.secondary,
+  borderBottom: '1px solid',
+  borderBottomColor: theme.palette.text.secondary
+}))
 
 const Chat = () => {
   const [users, setUsers] = React.useState([])
@@ -54,9 +60,9 @@ const Chat = () => {
   }
   return (
     <>
-      <Typography sx={{ fontWeight: 900, fontSize: '20px', textAlign: 'center', mb: 4, py: 2 }}>
+      <ChatHeading  >
         Chatting Room
-      </Typography>
+      </ChatHeading>
       <Grid container >
         <Grid item md={3} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url(/assets/images/sidebar/sidebar-bg-dark.jpg) ', color: '#fff' }}>
           <Grid container sx={{}}>
