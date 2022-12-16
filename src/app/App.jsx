@@ -25,7 +25,6 @@ import bookingRoutes from './views/bookingOverview/BookingRoutes';
 import dispatcherRoutes from './views/dispatcher/dispatcherRoutes';
 import customerViewRoutes from './views/CustomerView/customerViewRoutes';
 
-
 const App = () => {
   const token = localStorage.getItem('accessToken');
   const content = useRoutes([
@@ -53,7 +52,7 @@ const App = () => {
     {
       path: '/',
 
-      element: !token ? <Outlet /> : <Navigate replace to="/main-dashboard/default" />,
+      element: !token ? <Outlet /> : <Navigate replace to="/dashboard/default" />,
       children: [...sessionRoutes],
     },
     ...sessionRoutes,
