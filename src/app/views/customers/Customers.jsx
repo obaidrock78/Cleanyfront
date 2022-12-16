@@ -6,10 +6,9 @@ import { GET_SERVICE_PROVIDER_LIST } from 'app/api';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useNavigate } from 'react-router-dom';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -20,6 +19,7 @@ const Container = styled('div')(({ theme }) => ({
   },
 }));
 const DataTableBox = styled(Box)(() => ({
+  overflowX: 'auto',
   width: '100%',
   '& .MuiDataGrid-main': {},
   '& .MuiDataGrid-columnHeaders': {
@@ -65,7 +65,7 @@ const TableHeading = styled('p')(() => ({
   whiteSpace: 'break-spaces',
   margin: 'unset',
 }));
-function ServiceProvider() {
+function Customers() {
   const navigate = useNavigate();
   const [anchorEls, setAnchorEls] = useState({});
   const [serviceProviderList, setServiceProviderList] = useState([]);
@@ -130,21 +130,22 @@ function ServiceProvider() {
     },
     {
       field: 'user_profile',
-      headerName: 'Service Provider',
+      headerName: 'Customers',
       flex: 1,
       sortable: false,
+      minWidth: 220,
       renderCell: (item) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ borderRadius: '4px', height: '40px', width: '40px', background: '#e0e2e5' }}>
-              {/* {item?.row?.user_profile?.profile_picture && (
+            {/* <Box sx={{ borderRadius: '4px', height: '40px', width: '40px', background: '#e0e2e5' }}> */}
+            {/* {item?.row?.user_profile?.profile_picture && (
                 <img
                   style={{ width: '100%', height: '100%' }}
                   src={`https://api-cleany-backend.herokuapp.com${item?.row?.user_profile?.profile_picture}`}
                   alt="photo"
                 />
               )} */}
-            </Box>
+            {/* </Box> */}
             <Box>
               <TableHeading style={{ fontWeight: 'bold' }}>
                 {item?.value?.first_name} {item?.value?.last_name}
@@ -156,11 +157,13 @@ function ServiceProvider() {
         );
       },
     },
+
     {
       field: '',
-      headerName: 'Work Hours',
+      headerName: 'Upcoming Booking',
       flex: 1,
       sortable: false,
+      minWidth: 180,
       renderCell: (item) => {
         return (
           <TableHeading
@@ -177,10 +180,30 @@ function ServiceProvider() {
       },
     },
     {
+      field: 'role',
+      headerName: 'Address',
+      flex: 1,
+      sortable: false,
+      minWidth: 350,
+      renderCell: (item) => {
+        return (
+          <Box>
+            <TableHeading style={{ fontWeight: 'bold' }}>
+              {item?.row?.user_profile?.address}
+            </TableHeading>
+            <TableHeading>
+              {item?.row?.user_profile?.country} - {item?.row?.user_profile?.zip_code}
+            </TableHeading>
+          </Box>
+        );
+      },
+    },
+    {
       field: 'is_active',
       headerName: 'Status',
       flex: 1,
       sortable: false,
+      minWidth: 100,
       renderCell: (item) => {
         return (
           <TableHeading>
@@ -217,54 +240,24 @@ function ServiceProvider() {
     },
     {
       field: 'email',
-      headerName: '',
+      headerName: 'Action',
       flex: 1,
       sortable: false,
+      minWidth: 180,
       renderCell: (item) => {
         const index = item.api.getRowIndex(item.row.id);
         return (
           <Box display={'flex'} alignItems="center" gap={1}>
             <Button variant="outlined">View</Button>
-            <Box>
-              <Button
-                variant="outlined"
-                id={`basic-button${index}`}
-                aria-controls={Boolean(anchorEls[index]) ? `basic-menu${index}` : undefined}
-                aria-haspopup="true"
-                aria-expanded={Boolean(anchorEls[index]) ? 'true' : undefined}
-                onClick={(e) => openDropdown(e, index)}
-                endIcon={<ArrowDropDownIcon />}
-              >
-                Actions
-              </Button>
-              <Menu
-                id={`basic-menu${index}`}
-                MenuListProps={{
-                  'aria-labelledby': `basic-button${index}`,
-                }}
-                anchorEl={anchorEls[index]}
-                open={Boolean(anchorEls[index])}
-                onClose={() => closeDropdown(index)}
-              >
-                <MenuItem
-                  onClick={() => {
-                    navigate(`/dashboard/service-providers/${item?.row?.id}/work_calendar/`, {
-                      state: item?.row,
-                    });
-                  }}
-                >
-                  Work Calendar
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    closeDropdown(index);
-                    navigate('/dashboard/service-providers/update', { state: item?.row });
-                  }}
-                >
-                  Update
-                </MenuItem>
-              </Menu>
-            </Box>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                closeDropdown(index);
+                navigate('/dashboard/customers/update', { state: item?.row });
+              }}
+            >
+              Edit
+            </Button>
           </Box>
         );
       },
@@ -280,22 +273,28 @@ function ServiceProvider() {
       <Box className="breadcrumb">
         <Breadcrumb
           routeSegments={[
-            { name: 'Service Provider', path: '/dashboard/service-providers' },
-            { name: 'All Service Providers' },
+            { name: 'Customers', path: '/dashboard/customers' },
+            { name: 'All Customers' },
           ]}
         />
       </Box>
 
-      <Box display={'flex'} justifyContent={'end'}>
+      <Box display={'flex'} justifyContent={'end'} gap={2}>
         <StyledButton
           startIcon={<AddIcon />}
           variant="contained"
           color="primary"
           onClick={() => {
-            navigate('/dashboard/service-providers/create');
+            navigate('/dashboard/customers/create');
           }}
         >
           Create New
+        </StyledButton>
+        <StyledButton startIcon={<IosShareIcon />} variant="contained" color="primary">
+          Import Customers as CSV
+        </StyledButton>
+        <StyledButton startIcon={<SystemUpdateAltIcon />} variant="contained" color="primary">
+          Export
         </StyledButton>
       </Box>
 
@@ -318,4 +317,4 @@ function ServiceProvider() {
   );
 }
 
-export default ServiceProvider;
+export default Customers;

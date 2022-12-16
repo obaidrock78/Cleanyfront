@@ -16,8 +16,15 @@ import { Navigate } from 'react-router-dom';
 import MatxLayout from './components/MatxLayout/MatxLayout';
 import servicesRoutes from './views/services/Servicesroutes';
 import servicesProviderRoutes from './views/ServiceProvider/ProviderRoutes';
+import customerRoutes from './views/customers/CustomerRoutes';
 import Booking from './views/booking/Booking';
+
 import PayrollRoutes from './views/payRoll/PayrollRoutes';
+
+import bookingRoutes from './views/bookingOverview/BookingRoutes';
+import dispatcherRoutes from './views/dispatcher/dispatcherRoutes';
+import customerViewRoutes from './views/CustomerView/customerViewRoutes';
+
 
 const App = () => {
   const token = localStorage.getItem('accessToken');
@@ -35,7 +42,11 @@ const App = () => {
         ...settings,
         ...servicesRoutes,
         ...servicesProviderRoutes,
-        ...PayrollRoutes
+        ...PayrollRoutes,
+        ...customerRoutes,
+        ...bookingRoutes,
+        ...dispatcherRoutes,
+        ...customerViewRoutes,
       ],
     },
     { path: '/booking/:slug', element: <Booking /> },

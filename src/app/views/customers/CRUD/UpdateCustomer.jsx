@@ -29,7 +29,7 @@ const Container = styled('div')(({ theme }) => ({
   },
 }));
 
-function UpdateProvider() {
+function UpdateCustomer() {
   const navigate = useNavigate();
   const { state } = useLocation();
   let formData = new FormData();
@@ -151,10 +151,7 @@ function UpdateProvider() {
     setFieldValue('zip_code', state?.user_profile?.zip_code);
     setFieldValue('gender', state?.user_profile?.gender);
     setFieldValue('language', state?.user_profile?.language);
-    setFieldValue(
-      'profile_picture',
-      `https://api-cleany-backend.herokuapp.com${state?.user_profile?.profile_picture}`
-    );
+    setFieldValue('profile_picture', state?.user_profile?.profile_picture);
     setFieldValue('time_zone', state?.user_profile?.time_zone);
   }, []);
 
@@ -163,14 +160,14 @@ function UpdateProvider() {
       <Box className="breadcrumb">
         <Breadcrumb
           routeSegments={[
-            { name: 'Service Provider', path: '/dashboard/service-providers' },
-            { name: 'All Service Providers', path: '/dashboard/service-providers' },
-            { name: 'Update Service Provider' },
+            { name: 'Customers', path: '/dashboard/customers' },
+            { name: 'All Customers', path: '/dashboard/customers' },
+            { name: 'Update Customer' },
           ]}
         />
       </Box>
 
-      <SimpleCard title="Update Service Provider">
+      <SimpleCard title="Update Customer">
         <Box className="formMain">
           <Typography variant="h5" className="heading">
             Account Information:
@@ -346,7 +343,7 @@ function UpdateProvider() {
                     <MenuItem value={'+5'}>+5</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item lg={6} md={6} sm={12} xs={12}>
+                {/* <Grid item lg={6} md={6} sm={12} xs={12}>
                   <Typography gutterBottom variant="h6" component="div">
                     Profile Photo
                   </Typography>
@@ -367,7 +364,7 @@ function UpdateProvider() {
                     error={touched.profile_picture && Boolean(errors.profile_picture)}
                     helperText={touched.profile_picture && errors.profile_picture}
                   />
-                </Grid>
+                </Grid> */}
               </Grid>
 
               <LoadingButton
@@ -390,4 +387,4 @@ function UpdateProvider() {
   );
 }
 
-export default UpdateProvider;
+export default UpdateCustomer;
