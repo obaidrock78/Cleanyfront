@@ -243,11 +243,11 @@ function AllBookings() {
         <Breadcrumb routeSegments={[{ name: 'Customer Bookings' }]} />
       </Box>
 
-      <Box display={'flex'} justifyContent={'end'}>
+      {/* <Box display={'flex'} justifyContent={'end'}>
         <StyledButton startIcon={<AddIcon />} variant="contained" color="primary">
           Create Booking
         </StyledButton>
-      </Box>
+      </Box> */}
 
       <SimpleCard>
         <Box

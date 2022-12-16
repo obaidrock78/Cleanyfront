@@ -39,6 +39,8 @@ import RescheduleAppointment from '../Modals/Reappointment';
 import RaiseBookingProblem from '../Modals/RaiseBookingProblem';
 import EditBookingModal from '../Modals/EditBookingModal';
 
+import Chat from 'app/components/Chat';
+
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
@@ -58,6 +60,7 @@ const Container = styled('div')(({ theme }) => ({
 
 function BookingOrderDetails() {
   const navigate = useNavigate();
+  const { role } = JSON.parse(localStorage.getItem('user'));
   const params = useParams();
   const [value, setValue] = useState(0);
   const [bookindDetails, setBookindDetails] = useState(null);
@@ -293,47 +296,50 @@ function BookingOrderDetails() {
                       </Box>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} md={12}>
-                    <Box
-                      sx={{
-                        boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
-                        border: ' 1px solid rgba(98,105,118,.16)',
-                        background: '#fff',
-                        borderTop: ' 5px solid #1976d2',
-                        padding: ' 1rem 1rem',
-                        borderRadius: '4px',
-                        '& .headingSubTxt': {
-                          fontSize: '1rem',
-                          fontWeight: 'bold',
-                          paddingBottom: '1rem',
-                        },
-                        '& p': {
-                          margin: 'unset',
-                          paddingLeft: '5px',
-                        },
-                      }}
-                    >
-                      <Typography variant="h3" className="headingSubTxt">
-                        See Customer On Stripe
-                      </Typography>
+                  {role !== 'Customer' && (
+                    <Grid item xs={12} md={12}>
+                      <Box
+                        sx={{
+                          boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                          border: ' 1px solid rgba(98,105,118,.16)',
+                          background: '#fff',
+                          borderTop: ' 5px solid #1976d2',
+                          padding: ' 1rem 1rem',
+                          borderRadius: '4px',
+                          '& .headingSubTxt': {
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            paddingBottom: '1rem',
+                          },
+                          '& p': {
+                            margin: 'unset',
+                            paddingLeft: '5px',
+                          },
+                        }}
+                      >
+                        <Typography variant="h3" className="headingSubTxt">
+                          See Customer On Stripe
+                        </Typography>
 
-                      <Box display={'flex'} alignItems="center" paddingBottom="10px">
-                        <CreditCardOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>Card Details</p>
+                        <Box display={'flex'} alignItems="center" paddingBottom="10px">
+                          <CreditCardOutlinedIcon sx={{ paddingRight: '5px' }} />
+                          <p>Card Details</p>
+                        </Box>
+                        <Box textAlign={'right'}>
+                          <Button
+                            variant="text"
+                            startIcon={<CreditCardOutlinedIcon />}
+                            endIcon={<ArrowRightAltOutlinedIcon />}
+                            href="https://dashboard.stripe.com/login?redirect=%2Ftest%2Fcustomers%2Fcus_MXNagLEmS4YskQ"
+                            target={'_blank'}
+                          >
+                            Logs
+                          </Button>
+                        </Box>
                       </Box>
-                      <Box textAlign={'right'}>
-                        <Button
-                          variant="text"
-                          startIcon={<CreditCardOutlinedIcon />}
-                          endIcon={<ArrowRightAltOutlinedIcon />}
-                          href="https://dashboard.stripe.com/login?redirect=%2Ftest%2Fcustomers%2Fcus_MXNagLEmS4YskQ"
-                          target={'_blank'}
-                        >
-                          Logs
-                        </Button>
-                      </Box>
-                    </Box>
-                  </Grid>
+                    </Grid>
+                  )}
+
                   <Grid item xs={12} md={12}>
                     <Box
                       sx={{
@@ -717,48 +723,51 @@ function BookingOrderDetails() {
                       </Box>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} md={12}>
-                    <Box
-                      sx={{
-                        boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
-                        border: ' 1px solid rgba(98,105,118,.16)',
-                        background: '#fff',
-                        borderTop: ' 5px solid #1976d2',
-                        padding: ' 1rem 1rem',
-                        borderRadius: '4px',
-                        '& .headingSubTxt': {
-                          fontSize: '1rem',
-                          fontWeight: 'bold',
-                          paddingBottom: '1rem',
-                        },
-                        '& p': {
-                          margin: 'unset',
-                          paddingLeft: '5px',
-                        },
-                      }}
-                    >
-                      <Typography variant="h3" className="headingSubTxt">
-                        Payment Information
-                      </Typography>
-                      <Box display={'flex'} alignItems="center" justifyContent={'space-between'}>
-                        <Box display={'flex'} alignItems="center" paddingBottom="10px">
-                          <CreditCardOutlinedIcon sx={{ paddingRight: '5px' }} />
-                          <p>Preferred Payment Method</p>
+                  {role !== 'Customer' && (
+                    <Grid item xs={12} md={12}>
+                      <Box
+                        sx={{
+                          boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                          border: ' 1px solid rgba(98,105,118,.16)',
+                          background: '#fff',
+                          borderTop: ' 5px solid #1976d2',
+                          padding: ' 1rem 1rem',
+                          borderRadius: '4px',
+                          '& .headingSubTxt': {
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            paddingBottom: '1rem',
+                          },
+                          '& p': {
+                            margin: 'unset',
+                            paddingLeft: '5px',
+                          },
+                        }}
+                      >
+                        <Typography variant="h3" className="headingSubTxt">
+                          Payment Information
+                        </Typography>
+                        <Box display={'flex'} alignItems="center" justifyContent={'space-between'}>
+                          <Box display={'flex'} alignItems="center" paddingBottom="10px">
+                            <CreditCardOutlinedIcon sx={{ paddingRight: '5px' }} />
+                            <p>Preferred Payment Method</p>
+                          </Box>
+                          <Box paddingBottom="10px">Credit Card</Box>
                         </Box>
-                        <Box paddingBottom="10px">Credit Card</Box>
-                      </Box>
 
-                      <Box textAlign={'right'}>
-                        <Button
-                          variant="text"
-                          startIcon={<CreditCardOutlinedIcon />}
-                          endIcon={<ArrowRightAltOutlinedIcon />}
-                        >
-                          Payment Options
-                        </Button>
+                        <Box textAlign={'right'}>
+                          <Button
+                            variant="text"
+                            startIcon={<CreditCardOutlinedIcon />}
+                            endIcon={<ArrowRightAltOutlinedIcon />}
+                          >
+                            Payment Options
+                          </Button>
+                        </Box>
                       </Box>
-                    </Box>
-                  </Grid>
+                    </Grid>
+                  )}
+
                   <Grid item xs={12} md={12}>
                     <Box
                       sx={{
@@ -899,38 +908,41 @@ function BookingOrderDetails() {
             </Grid>
           </Grid>
           <Grid item xs={12} md={3} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            <Box
-              sx={{
-                boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
-                border: ' 1px solid rgba(98,105,118,.16)',
-                background: '#fff',
-                borderTop: ' 5px solid #1976d2',
-                padding: ' 0.7rem 1rem',
-                borderRadius: '4px',
-                textAlign: 'center',
-                '& .headingSubTxt': {
-                  fontSize: '1.2rem',
-                  fontWeight: 'bold',
-                  paddingBottom: '1px',
+            {role !== 'Customer' && (
+              <Box
+                sx={{
+                  boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                  border: ' 1px solid rgba(98,105,118,.16)',
+                  background: '#fff',
+                  borderTop: ' 5px solid #1976d2',
+                  padding: ' 0.7rem 1rem',
+                  borderRadius: '4px',
                   textAlign: 'center',
-                },
-                '& p': {
-                  margin: 'unset',
-                  paddingLeft: '5px',
-                },
-                '& button': {
-                  marginTop: '10px',
-                  fontWeight: 'bold',
-                },
-              }}
-            >
-              <Typography variant="h3" className="headingSubTxt">
-                Fully Charged
-              </Typography>
-              <Button variant="contained" color="inherit">
-                Charge Now
-              </Button>
-            </Box>
+                  '& .headingSubTxt': {
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    paddingBottom: '1px',
+                    textAlign: 'center',
+                  },
+                  '& p': {
+                    margin: 'unset',
+                    paddingLeft: '5px',
+                  },
+                  '& button': {
+                    marginTop: '10px',
+                    fontWeight: 'bold',
+                  },
+                }}
+              >
+                <Typography variant="h3" className="headingSubTxt">
+                  Fully Charged
+                </Typography>
+                <Button variant="contained" color="inherit">
+                  Charge Now
+                </Button>
+              </Box>
+            )}
+
             <Box
               sx={{
                 boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
@@ -956,9 +968,12 @@ function BookingOrderDetails() {
                 Actions
               </Typography>
               <Box display={'flex'} alignItems={'center'} flexDirection={'column'} gap={1}>
-                <Button fullWidth variant="contained" onClick={() => setEditBookingModal(true)}>
-                  Edit
-                </Button>
+                {role !== 'Customer' && (
+                  <Button fullWidth variant="contained" onClick={() => setEditBookingModal(true)}>
+                    Edit
+                  </Button>
+                )}
+
                 <Button
                   fullWidth
                   variant="contained"
@@ -984,12 +999,16 @@ function BookingOrderDetails() {
                 >
                   Attach File
                 </Button>
-                <Button fullWidth variant="contained" color="success">
-                  Charge Customer
-                </Button>
-                <Button fullWidth variant="contained">
-                  Mark Complete
-                </Button>
+                {role !== 'Customer' && (
+                  <Button fullWidth variant="contained" color="success">
+                    Charge Customer
+                  </Button>
+                )}
+                {role !== 'Customer' && (
+                  <Button fullWidth variant="contained">
+                    Mark Complete
+                  </Button>
+                )}
                 <Button fullWidth variant="contained">
                   Generate Invoice
                 </Button>
@@ -1049,46 +1068,48 @@ function BookingOrderDetails() {
                 <Typography variant="body1">$0.0</Typography>
               </Box>
             </Box>
-
-            <Box
-              sx={{
-                boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
-                border: ' 1px solid rgba(98,105,118,.16)',
-                background: '#fff',
-                borderTop: ' 5px solid #1976d2',
-                padding: ' 1rem 1rem',
-                borderRadius: '4px',
-                '& .headingSubTxt': {
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                  margin: 'unset',
-                  paddingTop: '1rem',
-                },
-                '& p': {
-                  margin: 'unset',
-                },
-                '& button': {
-                  fontWeight: 'bold',
-                },
-              }}
-            >
+            {role !== 'Customer' && (
               <Box
-                display={'flex'}
-                alignItems={'center'}
-                justifyContent="center"
-                flexDirection={'column'}
+                sx={{
+                  boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                  border: ' 1px solid rgba(98,105,118,.16)',
+                  background: '#fff',
+                  borderTop: ' 5px solid #1976d2',
+                  padding: ' 1rem 1rem',
+                  borderRadius: '4px',
+                  '& .headingSubTxt': {
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    margin: 'unset',
+                    paddingTop: '1rem',
+                  },
+                  '& p': {
+                    margin: 'unset',
+                  },
+                  '& button': {
+                    fontWeight: 'bold',
+                  },
+                }}
               >
                 <Box
-                  sx={{ width: '5rem', height: '5rem', borderRadius: '50%', background: 'gray' }}
-                ></Box>
-                <h4 className="headingSubTxt">Buyer test</h4>
-                <p>Customer</p>
-                <Divider sx={{ paddingTop: '1rem', marginBottom: '0.5rem', width: '100%' }} />
-                <Button fullWidth variant="text">
-                  Edit Profile
-                </Button>
+                  display={'flex'}
+                  alignItems={'center'}
+                  justifyContent="center"
+                  flexDirection={'column'}
+                >
+                  <Box
+                    sx={{ width: '5rem', height: '5rem', borderRadius: '50%', background: 'gray' }}
+                  ></Box>
+                  <h4 className="headingSubTxt">Buyer test</h4>
+                  <p>Customer</p>
+                  <Divider sx={{ paddingTop: '1rem', marginBottom: '0.5rem', width: '100%' }} />
+                  <Button fullWidth variant="text">
+                    Edit Profile
+                  </Button>
+                </Box>
               </Box>
-            </Box>
+            )}
+            <Chat />
           </Grid>
         </Grid>
       </Container>
