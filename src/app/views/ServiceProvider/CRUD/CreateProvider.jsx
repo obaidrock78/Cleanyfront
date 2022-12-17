@@ -103,6 +103,7 @@ function CreateProvider() {
       formData.append('document', values?.document[0]);
       formData.append('profile_picture', values?.profile_picture);
       formData.append('time_zone', values?.time_zone);
+      formData.append('role', 'Cleaner');
       setLoading(true);
       toast.promise(
         axios.post(`${CREATE_SERVICE_PROVIDER}`, formData, {

@@ -96,7 +96,7 @@ function UpdateProvider() {
       formData.append('zip_code', values?.zip_code);
       formData.append('gender', values?.gender);
       formData.append('language', values?.language);
-      console.log(typeof values?.profile_picture);
+      formData.append('role', 'Cleaner');
       if (typeof values?.profile_picture !== 'string') {
         formData.append('profile_picture', values?.profile_picture);
       }
