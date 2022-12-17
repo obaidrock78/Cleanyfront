@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { Grid, styled, Button } from '@mui/material';
-import StatCards from './shared/StatCards';
+import StatCards from './tabsPane/StatsCard/StatCards';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import AddTask from './tabsPane/AddTask';
 import Chat from './tabsPane/Chat';
@@ -14,7 +14,7 @@ const StylesTabsArea = styled(Box)(({ theme }) => ({
   p: 3,
   width: '100%',
   typography: 'body1',
-  height: '540px',
+  height: '660px',
   background: theme.palette.background.paper,
   boxShadow:
     '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
@@ -61,7 +61,7 @@ const EasyAccessContent = styled(Box)(({ theme }) => ({
 
 const Notifications = styled(Box)(({ theme }) => ({
   width: '100%',
-  // height: '200px',
+  height: '100%',
   background: theme.palette.background.paper,
   boxShadow:
     '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
@@ -140,6 +140,9 @@ const easyAccessContentItems = [
 ];
 
 const MainDashboard = () => {
+
+  const [bookingNotification, setBookingNotification] = React.useState();
+
   const { data, isLoading, errorMessage } = useWeatherBit({
     key: 'ac69bc70043f4c47aec73dfd3a19007e',
     lat: '27.6648',
@@ -147,36 +150,33 @@ const MainDashboard = () => {
     lang: 'en',
     unit: 'metric',
   });
-  const [value, setValue] = React.useState('1');
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   useEffect(() => {
+    const getNotification = async () => {
+      await axios
+        .get(`${BOOKING_NOTIFICATION}`)
+        .then((res) => {
+          const dataToMap = res?.data?.data;
+          setBookingNotification(dataToMap);
+        })
+        .catch((err) => console.log(err));
+    };
+
     getNotification();
   }, []);
-  const getNotification = async () => {
-    await axios
 
-      .get(`${BOOKING_NOTIFICATION}`)
-      .then((res) => {
-        const dataToMap = res?.data?.data;
-        setBookingNotification(dataToMap);
-      })
-      .catch((err) => console.log(err));
-  };
-  const [bookingNotification, setBookingNotification] = React.useState();
-  console.log(bookingNotification);
+
   return (
     <Box sx={{ p: 4 }}>
       <Grid container spacing={3} rowSpacing={2}>
+
         <Grid item lg={9} md={9} sm={12} xs={12}>
           <StatsArea>
             <StatHeading>Analytical Overview</StatHeading>
             <StatCards />
           </StatsArea>
         </Grid>
+
         <Grid item lg={3} md={3} sm={12} xs={12}>
           <Notifications>
             <NotificationsHeading>Notification's</NotificationsHeading>
@@ -187,11 +187,13 @@ const MainDashboard = () => {
             </NotificationsContent>
           </Notifications>
         </Grid>
+
         <Grid item lg={9} md={9} sm={12} xs={12}>
           <StylesTabsArea>
             <Scheduler />
           </StylesTabsArea>
         </Grid>
+
         <Grid item lg={3} md={3} sm={12} xs={12}>
           <EasyAccess>
             <EasyAccessHeading>Easy Access</EasyAccessHeading>
@@ -206,8 +208,8 @@ const MainDashboard = () => {
                           sx={{
                             backgroundColor: items.color,
                             color: 'white',
-                            '&.MuiButtonBase-root:hover': {
-                              bgcolor: 'none',
+                            '&.MuiButton-root:hover': {
+                              color: 'black'
                             },
                           }}
                           fullWidth
@@ -228,6 +230,7 @@ const MainDashboard = () => {
             <AddTask />
           </StylesTabsArea>
         </Grid>
+
         <Grid item lg={4} md={4} sm={12} xs={12}>
           <Weather>
             <WeatherHeading>Weather</WeatherHeading>
@@ -244,11 +247,13 @@ const MainDashboard = () => {
             </WeatherContent>
           </Weather>
         </Grid>
+
         <Grid item md={12}>
           <ChatArea>
             <Chat />
           </ChatArea>
         </Grid>
+
       </Grid>
     </Box>
   );

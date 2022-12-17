@@ -10,6 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material'
+
 const columns = [
   { field: 'id', headerName: 'ID', width: 150 },
   { field: 'description', headerName: 'Tasks', width: 150 },
@@ -28,7 +29,6 @@ const columns = [
 
 
 const TaskHeading = styled('h3')(({ theme }) => ({
-
   typography: 'body1',
   color: theme.palette.text.secondary,
   borderBottom: '1px solid',
@@ -44,18 +44,20 @@ const AddTask = () => {
 
 
   React.useEffect(() => {
+    const getEventList = async () => {
+      await axios
+        .get(`${GET_PROVIDER_LIST_TASK}`)
+        .then((res) => {
+
+          const dataToMap = res?.data?.data
+          setData(dataToMap);
+        })
+        .catch((err) => console.log(err));
+    };
+
     getEventList();
   }, []);
-  const getEventList = async () => {
-    await axios
-      .get(`${GET_PROVIDER_LIST_TASK}`)
-      .then((res) => {
 
-        const dataToMap = res?.data?.data
-        setData(dataToMap);
-      })
-      .catch((err) => console.log(err));
-  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -102,9 +104,11 @@ const AddTask = () => {
           <TaskHeading >
             Your Tasks
           </TaskHeading>
-          <Button onClick={handleClickOpen}>
-            Add Task
-          </Button>
+          <Box ml={'auto'} sx={{ p: 1 }}>
+            <Button onClick={handleClickOpen} variant="contained">
+              Add Task
+            </Button>
+          </Box>
           <Dialog open={open} onClose={handleClose} fullWidth={true} maxWidth={'md'} >
             <DialogTitle>Create a new Task</DialogTitle>
             <DialogContent>
@@ -126,7 +130,7 @@ const AddTask = () => {
                     onChange={handleDateChange}
                     renderInput={(params) => <TextField   {...params} />}
                   />
-                  <LoadingButton type='submit'>
+                  <LoadingButton type='submit' variant="contained">
                     Create Task
                   </LoadingButton>
                 </Stack>
@@ -134,7 +138,7 @@ const AddTask = () => {
             </DialogContent>
           </Dialog>
         </Box>
-        <div style={{ height: '300px', width: '100%', }}>
+        <div style={{ height: '450px', width: '100%', }}>
           <DataGrid
             rows={data}
             columns={columns}

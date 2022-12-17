@@ -24,7 +24,7 @@ import PayrollRoutes from './views/payRoll/PayrollRoutes';
 import bookingRoutes from './views/bookingOverview/BookingRoutes';
 import dispatcherRoutes from './views/dispatcher/dispatcherRoutes';
 import customerViewRoutes from './views/CustomerView/customerViewRoutes';
-
+import ReportsRoutes from './views/Reports/ReportsRoutes';
 const App = () => {
   const token = localStorage.getItem('accessToken');
   const content = useRoutes([
@@ -46,6 +46,7 @@ const App = () => {
         ...bookingRoutes,
         ...dispatcherRoutes,
         ...customerViewRoutes,
+        ...ReportsRoutes
       ],
     },
     { path: '/booking/:slug', element: <Booking /> },
