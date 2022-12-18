@@ -56,3 +56,5 @@ export const BOOKING_REPORTS = '/booking/booking_reports';
 export const GET_ADMIN_CHAT_LIST = '/booking/admin_chat_detail';
 export const POST_ADMIN_CUSTOMER_CHAT = '/booking/admin_chat';
 export const GET_USER_CHAT_LIST = '/booking/get_user_chat';
+export const GET_BOOKING_INVOICES = '/booking/invoices';
+export const GET_BOOKING_PAYROLL = '/booking/invoices';

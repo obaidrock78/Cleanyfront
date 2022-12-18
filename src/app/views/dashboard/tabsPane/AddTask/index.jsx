@@ -32,7 +32,10 @@ const TaskHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
   color: theme.palette.text.secondary,
   borderBottom: '1px solid',
-  borderBottomColor: theme.palette.text.secondary
+  borderBottomColor: theme.palette.text.secondary,
+  textAlign: 'center',
+  fontWeight: '700 !important',
+  fontSize: '24px !important'
 }))
 
 const AddTask = () => {
