@@ -88,7 +88,7 @@ const columns = [
   {
     field: 'scheduled',
     headerName: 'SCHEDULED',
-    width: 150,
+    width: 250,
     renderCell: (item) => {
       return (
         <Box>
@@ -129,9 +129,11 @@ const columns = [
     width: 150,
     renderCell: (item) => {
       return (
-        <Button sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
-          {item?.row?.bod?.total_amount}
-        </Button>
+        <Box sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
+          <TableHeading>
+            {item?.row?.bod?.total_amount}
+          </TableHeading>
+        </Box>
       );
     },
 
@@ -162,8 +164,9 @@ const Reports = () => {
       <Box className="breadcrumb">
         <Breadcrumb
           routeSegments={[
-            { name: 'Bookings', path: '/dashboard/booking-appointments' },
-            { name: 'Booking Appointments', path: '/dashboard/booking-appointments' },
+            { name: 'Home', path: '/' },
+            { name: 'Reports', path: '/dashboard/Reports' },
+
 
           ]}
         />
@@ -183,8 +186,7 @@ const Reports = () => {
             rowsPerPageOptions={[5]}
             getRowHeight={() => 'auto'}
             disableColumnMenu={true}
-            autoHeight={true}
-            hideFooter={true}
+            autoHeight={true} 
             checkboxSelection={false}
             disableSelectionOnClick
           />

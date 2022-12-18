@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid, Box, TextField, IconButton, Typography, styled } from '@mui/material';
 import { SendOutlined } from '@mui/icons-material';
 import { ADMIN_CHAT, GET_ADMIN_CHAT } from 'app/api';
-import axios from "../../../../../axios" 
+import axios from "../../../../../axios"
 
 
 const ChatHeading = styled('h3')(({ theme }) => ({
@@ -74,7 +74,7 @@ const Chat = () => {
                   >   <Box
                       component={'img'}
                       sx={{ width: '40px', height: '40px', borderRadius: '50%', mr: 1 }}
-                      src="https://pickaface.net/gallery/avatar/20151205_194059_2696_Chat.png" />{chat.user.email}</Grid>
+                      src="https://pickaface.net/gallery/avatar/20151205_194059_2696_Chat.png" />{chat.user.user_profile.first_name} {chat.user.user_profile.last_name} </Grid>
                 )
               })
             }
@@ -93,34 +93,33 @@ const Chat = () => {
                       <Box>
 
                         {chat?.user?.user_profile?.role === 'Admin' ?
-                          <Box  >
+                          <Box >
+                            <Box
+                              component='h4'
+                              variant='h4'
+                              sx={{ padding: 2, margin: 2, textAlign: 'left', display: 'flex', justifyContent: 'right', alignItems: 'center', }}
+                              key={chat.id} >
+
+                              <Box sx={{ bgcolor: 'darkblue', color: 'white', p: 2, borderRadius: '10px' }}>
+                                {chat.message}
+
+                              </Box>
+                            </Box>
+                          </Box>
+                          :
+                          <Box >
                             <Box
                               component='h4'
                               variant='h4'
                               sx={{ padding: 2, margin: 2, textAlign: 'right', display: 'flex', justifyContent: 'left', alignItems: 'center' }}
                               key={chat.id}>
-                              <Box
-                                component={'img'}
-                                sx={{ width: '40px', height: '40px', borderRadius: '50%', mr: 1 }}
-                                src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />
-                              {chat.message}
-                            </Box>
-                          </Box>
-                          :
-                          <Box  >
-                            <Box
-                              component='h4'
-                              variant='h4'
-                              sx={{ padding: 2, margin: 2, textAlign: 'left', display: 'flex', justifyContent: 'right', alignItems: 'center' }}
-                              key={chat.id} >
+                              <Box sx={{ bgcolor: 'blue', color: 'white', p: 2, borderRadius: '10px' }}>
+                                {chat.message}
 
-                              {chat.message}
-                              <Box
-                                component={'img'}
-                                sx={{ width: '40px', height: '40px', borderRadius: '50%', ml: 1 }}
-                                src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" />
+                              </Box>
                             </Box>
                           </Box>
+
                         }
                       </Box>
                     )
