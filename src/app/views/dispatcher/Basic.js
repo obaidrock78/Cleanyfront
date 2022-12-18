@@ -16,8 +16,7 @@ let schedulerData = new SchedulerData(
   false,
   {
     schedulerWidth: '72%',
-    // checkConflict: true,
-    // schedulerMaxHeight: 700,
+    resourceName: 'Resources',
     eventItemHeight: 49,
     eventItemLineHeight: 52,
     nonAgendaSlotMinHeight: 30,
@@ -65,7 +64,7 @@ class Basic extends Component {
       <Box
         sx={{
           '& .slot-text': {
-            whiteSpace: 'pre-wrap !important',
+            // whiteSpace: 'pre-wrap !important',
           },
         }}
         style={{ width: '100%', overflowX: 'auto' }}
