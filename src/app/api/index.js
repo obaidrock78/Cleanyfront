@@ -52,10 +52,7 @@ export const GET_ADMIN_CHAT = '/booking/get_admin_chat';
 export const ADMIN_CHAT = '/booking/admin_chat';
 export const CUSTOMER_ALL_BOOKINGS = '/booking/user_booking_listing';
 export const CUSTOMER_CURRENT_BOOKING = '/booking/user_current_booking';
-<<<<<<< HEAD
 export const BOOKING_REPORTS = '/booking/booking_reports';
-=======
 export const GET_ADMIN_CHAT_LIST = '/booking/admin_chat_detail';
 export const POST_ADMIN_CUSTOMER_CHAT = '/booking/admin_chat';
 export const GET_USER_CHAT_LIST = '/booking/get_user_chat';
->>>>>>> ce0eb84510d5f81dda8c6015ca91423dd2a7199c
