@@ -1,6 +1,6 @@
 const user = JSON.parse(window.localStorage.getItem('user'));
 export const navigations =
-	user.role === 'Customer'
+	user?.role === 'Customer'
 		? [
 				{ name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
 				{ label: 'PAGES', type: 'label' },

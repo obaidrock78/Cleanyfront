@@ -39,7 +39,8 @@ import RescheduleAppointment from '../Modals/Reappointment';
 import RaiseBookingProblem from '../Modals/RaiseBookingProblem';
 import EditBookingModal from '../Modals/EditBookingModal';
 
-import Chat from 'app/components/Chat';
+import Chat from 'app/components/Chat/adminChat';
+import CustomerChat from 'app/components/Chat/customerChat';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -1109,7 +1110,11 @@ function BookingOrderDetails() {
                 </Box>
               </Box>
             )}
-            <Chat />
+            {role === 'Customer' ? (
+              <CustomerChat bookindDetails={bookindDetails} />
+            ) : (
+              <Chat bookindDetails={bookindDetails} />
+            )}
           </Grid>
         </Grid>
       </Container>
