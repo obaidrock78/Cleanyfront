@@ -58,3 +58,7 @@ export const POST_ADMIN_CUSTOMER_CHAT = '/booking/admin_chat';
 export const GET_USER_CHAT_LIST = '/booking/get_user_chat';
 export const GET_BOOKING_INVOICES = '/booking/invoices';
 export const GET_BOOKING_PAYROLL = '/booking/invoices';
+export const CHARGE_CUSTOMER = '/booking/charge_booking';
+export const ADMIN_SIDE_CUSTOMER_LIST = '/service_provider/customer_list';
+export const ADMIN_SIDE_ADD_CUSTOMER = '/service_provider/create_customer';
+export const ADMIN_SIDE_Update_CUSTOMER = '/service_provider/update_customer';

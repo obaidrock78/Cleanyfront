@@ -1,4 +1,4 @@
-import { Box, Button, Grid, MenuItem, styled, TextField, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, styled, TextField, Typography } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
@@ -7,7 +7,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import axios from '../../../../axios';
-import { UPDATE_SERVICE_PROVIDER } from 'app/api';
+import { ADMIN_SIDE_Update_CUSTOMER } from 'app/api';
 import { ImageUpload } from 'app/components/DropZone/ImageUpload';
 import createNFTUpload from '../../../../assets/createNFTUpload.png';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -96,7 +96,7 @@ function UpdateCustomer() {
       formData.append('zip_code', values?.zip_code);
       formData.append('gender', values?.gender);
       formData.append('language', values?.language);
-      console.log(typeof values?.profile_picture);
+      formData.append('role', 'Customer');
       if (typeof values?.profile_picture !== 'string') {
         formData.append('profile_picture', values?.profile_picture);
       }
@@ -106,20 +106,20 @@ function UpdateCustomer() {
       formData.append('user', state?.user_profile?.user);
       setLoading(true);
       toast.promise(
-        axios.put(`${UPDATE_SERVICE_PROVIDER}`, formData, {
+        axios.put(`${ADMIN_SIDE_Update_CUSTOMER}`, formData, {
           headers: { 'Content-Type': 'application/json' },
         }),
         {
           loading: () => {
-            return `Updating Service Provider!`;
+            return `Updating Customer!`;
           },
           success: (res) => {
             setLoading(false);
             setTimeout(() => {
-              navigate('/dashboard/service-providers', { replace: true });
+              navigate('/dashboard/customers', { replace: true });
             }, 1000);
 
-            return 'Service Provider Updated Successfully!';
+            return 'Customer Updated Successfully!';
           },
           error: (err) => {
             setLoading(false);
@@ -151,7 +151,10 @@ function UpdateCustomer() {
     setFieldValue('zip_code', state?.user_profile?.zip_code);
     setFieldValue('gender', state?.user_profile?.gender);
     setFieldValue('language', state?.user_profile?.language);
-    setFieldValue('profile_picture', state?.user_profile?.profile_picture);
+    setFieldValue(
+      'profile_picture',
+      `https://api-cleany-backend.herokuapp.com${state?.user_profile?.profile_picture}`
+    );
     setFieldValue('time_zone', state?.user_profile?.time_zone);
   }, []);
 
@@ -162,12 +165,12 @@ function UpdateCustomer() {
           routeSegments={[
             { name: 'Customers', path: '/dashboard/customers' },
             { name: 'All Customers', path: '/dashboard/customers' },
-            { name: 'Update Customer' },
+            { name: state?.update_btn === true ? 'Customer Details' : 'Update Customer' },
           ]}
         />
       </Box>
 
-      <SimpleCard title="Update Customer">
+      <SimpleCard title={state?.update_btn === true ? 'Customer Details' : 'Update Customer'}>
         <Box className="formMain">
           <Typography variant="h5" className="heading">
             Account Information:
@@ -180,6 +183,7 @@ function UpdateCustomer() {
                     size="small"
                     fullWidth
                     type="text"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     label="First name*"
                     {...getFieldProps('first_name')}
                     error={Boolean(touched.first_name && errors.first_name)}
@@ -189,6 +193,7 @@ function UpdateCustomer() {
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                   <TextField
                     size="small"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     fullWidth
                     type="text"
                     label="Last name*"
@@ -217,6 +222,7 @@ function UpdateCustomer() {
                     size="small"
                     fullWidth
                     autoComplete="off"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     type="password"
                     label="Password*"
                     {...getFieldProps('password')}
@@ -229,6 +235,7 @@ function UpdateCustomer() {
                     size="small"
                     fullWidth
                     type="text"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     label="Phone*"
                     {...getFieldProps('phone')}
                     error={Boolean(touched.phone && errors.phone)}
@@ -245,6 +252,7 @@ function UpdateCustomer() {
                     size="small"
                     fullWidth
                     type="text"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     label="Address*"
                     {...getFieldProps('address')}
                     error={Boolean(touched.address && errors.address)}
@@ -258,6 +266,7 @@ function UpdateCustomer() {
                   <TextField
                     size="small"
                     fullWidth
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     type="text"
                     label="City*"
                     {...getFieldProps('city')}
@@ -269,6 +278,7 @@ function UpdateCustomer() {
                   <TextField
                     size="small"
                     fullWidth
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     type="text"
                     label="State*"
                     select
@@ -285,6 +295,7 @@ function UpdateCustomer() {
                     size="small"
                     fullWidth
                     type="number"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     label="Zip code*"
                     {...getFieldProps('zip_code')}
                     error={Boolean(touched.zip_code && errors.zip_code)}
@@ -294,6 +305,7 @@ function UpdateCustomer() {
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                   <TextField
                     size="small"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     select
                     name="gender"
                     label="Gender"
@@ -314,6 +326,7 @@ function UpdateCustomer() {
                   <TextField
                     size="small"
                     select
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     name="language"
                     label="Language"
                     variant="outlined"
@@ -330,6 +343,7 @@ function UpdateCustomer() {
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                   <TextField
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     size="small"
                     fullWidth
                     select
@@ -343,7 +357,7 @@ function UpdateCustomer() {
                     <MenuItem value={'+5'}>+5</MenuItem>
                   </TextField>
                 </Grid>
-                {/* <Grid item lg={6} md={6} sm={12} xs={12}>
+                <Grid item lg={6} md={6} sm={12} xs={12}>
                   <Typography gutterBottom variant="h6" component="div">
                     Profile Photo
                   </Typography>
@@ -364,19 +378,20 @@ function UpdateCustomer() {
                     error={touched.profile_picture && Boolean(errors.profile_picture)}
                     helperText={touched.profile_picture && errors.profile_picture}
                   />
-                </Grid> */}
+                </Grid>
               </Grid>
-
-              <LoadingButton
-                type="submit"
-                color="primary"
-                loading={loading}
-                variant="contained"
-                sx={{ mb: 2, mt: 3 }}
-                fullWidth
-              >
-                Update
-              </LoadingButton>
+              {state?.update_btn === true ? null : (
+                <LoadingButton
+                  type="submit"
+                  color="primary"
+                  loading={loading}
+                  variant="contained"
+                  sx={{ mb: 2, mt: 3 }}
+                  fullWidth
+                >
+                  Update
+                </LoadingButton>
+              )}
             </Form>
           </FormikProvider>
         </Box>

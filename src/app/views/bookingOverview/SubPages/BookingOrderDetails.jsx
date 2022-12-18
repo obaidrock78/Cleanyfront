@@ -41,6 +41,7 @@ import EditBookingModal from '../Modals/EditBookingModal';
 
 import Chat from 'app/components/Chat/adminChat';
 import CustomerChat from 'app/components/Chat/customerChat';
+import ChargeCustomerModal from '../Modals/ChargeCustomer';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -68,6 +69,7 @@ function BookingOrderDetails() {
   const [openRescheduleAppointment, setOpenRescheduleAppointment] = useState(false);
   const [openRaiseProblemModal, setOpenRaiseProblemModal] = useState(false);
   const [editBookingModal, setEditBookingModal] = useState(false);
+  const [chargeCustomer, setChargeCustomer] = useState(false);
   const [bookingProblems, setBookingProblems] = useState(null);
   const [bookingData, setBookingData] = useState({});
 
@@ -1001,7 +1003,12 @@ function BookingOrderDetails() {
                   Attach File
                 </Button>
                 {role !== 'Customer' && (
-                  <Button fullWidth variant="contained" color="success">
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="success"
+                    onClick={() => setChargeCustomer(true)}
+                  >
                     Charge Customer
                   </Button>
                 )}
@@ -1044,29 +1051,48 @@ function BookingOrderDetails() {
               </Typography>
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="body1">Type Cleaning</Typography>
-                <Typography variant="body1">None</Typography>
+                <Typography variant="body1" style={{ textTransform: 'capitalize' }}>
+                  {bookindDetails?.bod?.frequency?.type}
+                </Typography>
               </Box>
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="body1">Status</Typography>
-                <Typography variant="body1">completed</Typography>
+                <Typography variant="body1" style={{ textTransform: 'capitalize' }}>
+                  {bookindDetails?.outstanding?.status}
+                </Typography>
               </Box>
               <Divider sx={{ paddingTop: '1.5rem', marginBottom: '1.5rem' }} />
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="body1">Total</Typography>
-                <Typography variant="body1">15.0</Typography>
+                <Typography variant="body1">
+                  $ {bookindDetails?.outstanding?.total_amount}
+                </Typography>
               </Box>
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="body1">Required Time (Hrs)</Typography>
-                <Typography variant="body1">2.0</Typography>
+                <Typography variant="body1">
+                  {bookindDetails?.bod?.total_hours?.toFixed(1)}
+                </Typography>
               </Box>
               <Divider sx={{ paddingTop: '1.5rem', marginBottom: '1.5rem' }} />
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="body1">Charged</Typography>
-                <Typography variant="body1">$15.0</Typography>
+                <Typography variant="body1">
+                  $ {bookindDetails?.outstanding?.paid_amount}
+                </Typography>
               </Box>
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
-                <Typography variant="body1">Outstanding Balance</Typography>
-                <Typography variant="body1">$0.0</Typography>
+                <Typography variant="body1" style={{ width: 'fit-content' }}>
+                  Outstanding Balance
+                </Typography>
+                <Typography variant="body1">
+                  {bookindDetails?.outstanding?.paid_amount === null
+                    ? `$${bookindDetails?.outstanding?.total_amount}`
+                    : `$${
+                        bookindDetails?.outstanding?.total_amount -
+                        bookindDetails?.outstanding?.paid_amount
+                      }`}
+                </Typography>
               </Box>
             </Box>
             {role !== 'Customer' && (
@@ -1138,6 +1164,13 @@ function BookingOrderDetails() {
         getEventList={getEventList}
         bookingData={bookingData}
         getBookingData={getBookingData}
+      />
+      <ChargeCustomerModal
+        open={chargeCustomer}
+        handleClose={() => setChargeCustomer(false)}
+        bookindDetails={bookindDetails}
+        bookingProblems={bookingProblems}
+        getEventList={getEventList}
       />
     </>
   );

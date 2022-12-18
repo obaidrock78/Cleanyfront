@@ -165,12 +165,17 @@ function UpdateProvider() {
           routeSegments={[
             { name: 'Service Provider', path: '/dashboard/service-providers' },
             { name: 'All Service Providers', path: '/dashboard/service-providers' },
-            { name: 'Update Service Provider' },
+            {
+              name:
+                state?.update_btn === true ? 'Service Provider Details' : 'Update Service Provider',
+            },
           ]}
         />
       </Box>
 
-      <SimpleCard title="Update Service Provider">
+      <SimpleCard
+        title={state?.update_btn === true ? 'Service Provider Details' : 'Update Service Provider'}
+      >
         <Box className="formMain">
           <Typography variant="h5" className="heading">
             Account Information:
@@ -181,6 +186,7 @@ function UpdateProvider() {
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                   <TextField
                     size="small"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     fullWidth
                     type="text"
                     label="First name*"
@@ -192,6 +198,7 @@ function UpdateProvider() {
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                   <TextField
                     size="small"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     fullWidth
                     type="text"
                     label="Last name*"
@@ -218,6 +225,7 @@ function UpdateProvider() {
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                   <TextField
                     size="small"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     fullWidth
                     autoComplete="off"
                     type="password"
@@ -231,6 +239,7 @@ function UpdateProvider() {
                   <TextField
                     size="small"
                     fullWidth
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     type="text"
                     label="Phone*"
                     {...getFieldProps('phone')}
@@ -246,6 +255,7 @@ function UpdateProvider() {
                 <Grid item sm={12} xs={12}>
                   <TextField
                     size="small"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     fullWidth
                     type="text"
                     label="Address*"
@@ -263,6 +273,7 @@ function UpdateProvider() {
                     fullWidth
                     type="text"
                     label="City*"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     {...getFieldProps('city')}
                     error={Boolean(touched.city && errors.city)}
                     helperText={touched.city && errors.city}
@@ -275,6 +286,7 @@ function UpdateProvider() {
                     type="text"
                     label="State*"
                     select
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     {...getFieldProps('state')}
                     error={Boolean(touched.state && errors.state)}
                     helperText={touched.state && errors.state}
@@ -286,6 +298,7 @@ function UpdateProvider() {
                 <Grid item lg={6} md={6} sm={12} xs={12}>
                   <TextField
                     size="small"
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     fullWidth
                     type="number"
                     label="Zip code*"
@@ -302,6 +315,7 @@ function UpdateProvider() {
                     label="Gender"
                     variant="outlined"
                     onBlur={handleBlur}
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     value={values.gender}
                     onChange={handleChange}
                     fullWidth
@@ -323,6 +337,7 @@ function UpdateProvider() {
                     onBlur={handleBlur}
                     value={values.language}
                     onChange={handleChange}
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     fullWidth
                     helperText={touched.language && errors.language}
                     error={Boolean(errors.language && touched.language)}
@@ -335,6 +350,7 @@ function UpdateProvider() {
                   <TextField
                     size="small"
                     fullWidth
+                    inputProps={{ readOnly: state?.update_btn === true ? true : false }}
                     select
                     type="text"
                     label="Timezone*"
@@ -369,17 +385,18 @@ function UpdateProvider() {
                   />
                 </Grid>
               </Grid>
-
-              <LoadingButton
-                type="submit"
-                color="primary"
-                loading={loading}
-                variant="contained"
-                sx={{ mb: 2, mt: 3 }}
-                fullWidth
-              >
-                Update
-              </LoadingButton>
+              {state?.update_btn === true ? null : (
+                <LoadingButton
+                  type="submit"
+                  color="primary"
+                  loading={loading}
+                  variant="contained"
+                  sx={{ mb: 2, mt: 3 }}
+                  fullWidth
+                >
+                  Update
+                </LoadingButton>
+              )}
             </Form>
           </FormikProvider>
         </Box>

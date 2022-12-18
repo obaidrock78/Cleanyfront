@@ -2,7 +2,7 @@ import { Box, Button, Menu, MenuItem } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import axios from '../../../axios';
-import { GET_SERVICE_PROVIDER_LIST } from 'app/api';
+import { ADMIN_SIDE_CUSTOMER_LIST } from 'app/api';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -68,7 +68,7 @@ const TableHeading = styled('p')(() => ({
 function Customers() {
   const navigate = useNavigate();
   const [anchorEls, setAnchorEls] = useState({});
-  const [serviceProviderList, setServiceProviderList] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
   const [editData, setEditData] = useState(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteID, setDeleteID] = useState(null);
@@ -78,11 +78,11 @@ function Customers() {
 
   const serviceListAPI = async () => {
     await axios
-      .get(`${GET_SERVICE_PROVIDER_LIST}`, {
+      .get(`${ADMIN_SIDE_CUSTOMER_LIST}`, {
         headers: { 'Content-Type': 'application/json' },
       })
       .then((res) => {
-        setServiceProviderList(res?.data?.data);
+        setCustomerList(res?.data?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -137,21 +137,12 @@ function Customers() {
       renderCell: (item) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {/* <Box sx={{ borderRadius: '4px', height: '40px', width: '40px', background: '#e0e2e5' }}> */}
-            {/* {item?.row?.user_profile?.profile_picture && (
-                <img
-                  style={{ width: '100%', height: '100%' }}
-                  src={`https://api-cleany-backend.herokuapp.com${item?.row?.user_profile?.profile_picture}`}
-                  alt="photo"
-                />
-              )} */}
-            {/* </Box> */}
             <Box>
               <TableHeading style={{ fontWeight: 'bold' }}>
                 {item?.value?.first_name} {item?.value?.last_name}
               </TableHeading>
               <TableHeading>{item?.row?.email}</TableHeading>
-              <TableHeading>{item?.value?.phone_number} items</TableHeading>
+              <TableHeading>{item?.value?.phone_number}</TableHeading>
             </Box>
           </Box>
         );
@@ -246,9 +237,18 @@ function Customers() {
       minWidth: 180,
       renderCell: (item) => {
         const index = item.api.getRowIndex(item.row.id);
+        const obj = { ...item?.row, update_btn: true };
         return (
           <Box display={'flex'} alignItems="center" gap={1}>
-            <Button variant="outlined">View</Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                closeDropdown(index);
+                navigate('/dashboard/customers/update', { state: obj });
+              }}
+            >
+              View
+            </Button>
             <Button
               variant="outlined"
               onClick={() => {
@@ -264,10 +264,6 @@ function Customers() {
     },
   ];
 
-  const handleDelete = (item) => {
-    setDeleteID(item.id);
-    setDeleteOpen(true);
-  };
   return (
     <Container>
       <Box className="breadcrumb">
@@ -304,7 +300,7 @@ function Customers() {
             // getRowHeight={() => 'auto'}
             rowHeight={100}
             disableColumnMenu={true}
-            rows={serviceProviderList}
+            rows={customerList}
             columns={columns}
             autoHeight={true}
             hideFooter={true}

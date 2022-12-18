@@ -150,7 +150,7 @@ function ServiceProvider() {
                 {item?.value?.first_name} {item?.value?.last_name}
               </TableHeading>
               <TableHeading>{item?.row?.email}</TableHeading>
-              <TableHeading>{item?.value?.phone_number} items</TableHeading>
+              <TableHeading>{item?.value?.phone_number}</TableHeading>
             </Box>
           </Box>
         );
@@ -222,9 +222,18 @@ function ServiceProvider() {
       sortable: false,
       renderCell: (item) => {
         const index = item.api.getRowIndex(item.row.id);
+        const obj = { ...item?.row, update_btn: true };
         return (
           <Box display={'flex'} alignItems="center" gap={1}>
-            <Button variant="outlined">View</Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                closeDropdown(index);
+                navigate('/dashboard/service-providers/update', { state: obj });
+              }}
+            >
+              View
+            </Button>
             <Box>
               <Button
                 variant="outlined"

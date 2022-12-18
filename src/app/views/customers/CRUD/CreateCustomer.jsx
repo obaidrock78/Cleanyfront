@@ -7,7 +7,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import axios from '../../../../axios';
-import { CREATE_SERVICE_PROVIDER } from 'app/api';
+import { ADMIN_SIDE_ADD_CUSTOMER } from 'app/api';
 import { ImageUpload } from 'app/components/DropZone/ImageUpload';
 import createNFTUpload from '../../../../assets/createNFTUpload.png';
 import Dropzone from '../../../components/DropZone/Dropzone';
@@ -103,22 +103,23 @@ function CreateCustomer() {
       formData.append('document', values?.document[0]);
       formData.append('profile_picture', values?.profile_picture);
       formData.append('time_zone', values?.time_zone);
+      formData.append('role', 'Customer');
       setLoading(true);
       toast.promise(
-        axios.post(`${CREATE_SERVICE_PROVIDER}`, formData, {
+        axios.post(`${ADMIN_SIDE_ADD_CUSTOMER}`, formData, {
           headers: { 'Content-Type': 'application/json' },
         }),
         {
           loading: () => {
-            return `Creating Service Provider!`;
+            return `Creating Customer!`;
           },
           success: (res) => {
             setLoading(false);
             setTimeout(() => {
-              navigate('/dashboard/service-providers', { replace: true });
+              navigate('/dashboard/customers', { replace: true });
             }, 1000);
 
-            return 'Service Provider Created Successfully!';
+            return 'Customer Created Successfully!';
           },
           error: (err) => {
             setLoading(false);
@@ -151,7 +152,7 @@ function CreateCustomer() {
         />
       </Box>
 
-      <SimpleCard title="Create Customer">
+      <SimpleCard title="New Customer">
         <Box className="formMain">
           <Typography variant="h5" className="heading">
             Account Information:
@@ -326,7 +327,7 @@ function CreateCustomer() {
                     <MenuItem value={'+5'}>+5</MenuItem>
                   </TextField>
                 </Grid>
-                {/* <Grid item lg={6} md={6} sm={12} xs={12}>
+                <Grid item lg={6} md={6} sm={12} xs={12}>
                   <Typography gutterBottom variant="h6" component="div">
                     Profile Photo
                   </Typography>
@@ -363,7 +364,7 @@ function CreateCustomer() {
                   >
                     <ImageBox src={createNftDocuments} className="h-[249px] w-full" />
                   </Dropzone>
-                </Grid> */}
+                </Grid>
               </Grid>
 
               <LoadingButton
