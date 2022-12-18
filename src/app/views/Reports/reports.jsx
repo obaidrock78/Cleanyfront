@@ -7,7 +7,7 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import moment from 'moment';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import { styled, Button, Box, } from '@mui/material';
+import { styled, Button, Box, Typography, } from '@mui/material';
 
 import { Breadcrumb, SimpleCard } from 'app/components';
 
@@ -65,7 +65,10 @@ const columns = [
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box>
             <TableHeading>
-              {item?.row?.bod?.bod_contact_info?.first_name} {item?.row?.bod?.bod_contact_info?.last_name}
+              <Typography sx={{ fontWeight: 900 }}>
+
+                {item?.row?.bod?.bod_contact_info?.first_name} {item?.row?.bod?.bod_contact_info?.last_name}
+              </Typography>
             </TableHeading>
             <Box display={'flex'} alignItems="center">
               <EmailOutlinedIcon sx={{ paddingRight: '5px' }} />
@@ -138,6 +141,22 @@ const columns = [
     },
 
   },
+  {
+    field: 'action',
+    headerName: 'ACTIONS  ',
+    width: 150,
+    renderCell: (item) => {
+      return (
+        <Box sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
+          {console.log(item)}
+          <Button variant='contained'>
+            Edit
+          </Button>
+        </Box>
+      );
+    },
+
+  },
 ];
 
 
@@ -166,32 +185,33 @@ const Reports = () => {
           routeSegments={[
             { name: 'Home', path: '/' },
             { name: 'Reports', path: '/dashboard/Reports' },
-
-
           ]}
         />
       </Box>
-      <SimpleCard>
-        <DataTableBox >
+      <Box sx={{ mt: 5 }}>
 
-          <DataGrid
-            sx={{
-              [`& .${gridClasses.cell}`]: {
-                py: 1,
-              },
-            }}
-            rows={data}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[5]}
-            getRowHeight={() => 'auto'}
-            disableColumnMenu={true}
-            autoHeight={true} 
-            checkboxSelection={false}
-            disableSelectionOnClick
-          />
-        </DataTableBox>
-      </SimpleCard>
+        <SimpleCard>
+          <DataTableBox >
+
+            <DataGrid
+              sx={{
+                [`& .${gridClasses.cell}`]: {
+                  py: 1,
+                },
+              }}
+              rows={data}
+              columns={columns}
+              pageSize={10}
+              rowsPerPageOptions={[5]}
+              getRowHeight={() => 'auto'}
+              disableColumnMenu={true}
+              autoHeight={true}
+              checkboxSelection={false}
+              disableSelectionOnClick
+            />
+          </DataTableBox>
+        </SimpleCard>
+      </Box>
     </Box>
   )
 }
