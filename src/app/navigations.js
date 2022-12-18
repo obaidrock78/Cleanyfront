@@ -45,7 +45,18 @@ export const navigations =
 						{ name: 'Tax', iconText: 'T', path: '/dashboard/tax' },
 					],
 				},
-				{ name: 'Pay Roll', path: '/dashboard/payroll', icon: ' money' },
+				{
+					name: 'Pay Roll',
+					icon: ' money',
+					children: [
+						{ name: 'Invoice', iconText: 'invoice', path: '/dashboard/invoice' },
+						{
+							name: 'Service Providers Payroll',
+							iconText: 'payroll',
+							path: '/dashboard/service-provider-payroll',
+						},
+					],
+				},
 
 				{ name: 'Reports', path: '/dashboard/reports', icon: 'reports' },
 		  ];

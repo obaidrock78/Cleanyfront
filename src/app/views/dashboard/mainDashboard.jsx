@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
-import { Grid, styled, Button } from '@mui/material';
+import { Grid, styled, Button, responsiveFontSizes } from '@mui/material';
 import StatCards from './tabsPane/StatsCard/StatCards';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import AddTask from './tabsPane/AddTask';
@@ -52,6 +52,9 @@ const EasyAccessHeading = styled('h3')(({ theme }) => ({
   color: theme.palette.text.secondary,
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
+  textAlign: 'center',
+  fontWeight: '700 !important',
+  fontSize: '24px !important'
 }));
 
 const EasyAccessContent = styled(Box)(({ theme }) => ({
@@ -77,6 +80,9 @@ const NotificationsHeading = styled('h3')(({ theme }) => ({
   color: theme.palette.text.secondary,
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
+  textAlign: 'center',
+  fontWeight: '700 !important',
+  fontSize: '24px !important'
 }));
 
 const NotificationsContent = styled(Box)(({ theme }) => ({
@@ -102,6 +108,9 @@ const WeatherHeading = styled('h3')(({ theme }) => ({
   color: theme.palette.text.secondary,
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
+  textAlign: 'center',
+  fontWeight: '700 !important',
+  fontSize: '24px !important'
 }));
 
 const WeatherContent = styled(Box)(({ theme }) => ({
@@ -125,6 +134,9 @@ const StatHeading = styled('h3')(({ theme }) => ({
   color: theme.palette.text.secondary,
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
+  textAlign: 'center',
+  fontWeight: '700 !important',
+  fontSize: '24px !important'
 }));
 
 const easyAccessContentItems = [
