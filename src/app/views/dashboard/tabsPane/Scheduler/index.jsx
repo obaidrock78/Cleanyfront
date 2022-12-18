@@ -7,11 +7,11 @@ import { Box, Grid, Icon, Stack, Typography, styled } from '@mui/material';
 const SchedulerHeading = styled('h3')(({ theme }) => ({
 
   typography: 'body1',
-  color: theme.palette.text.secondary,
+ color: "black",
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
-  fontWeight: '700 !important',
+  fontWeight: '900 !important',
   fontSize: '24px !important'
 }))
 function Scheduler() {

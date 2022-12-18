@@ -72,53 +72,38 @@ const columns = [
             )
         }
     },
-
-
     {
         field: 'hourly_wage',
         headerName: 'HOURLY WAGE',
         width: 150,
-
     },
     {
         field: 'total_hours',
         headerName: 'TOTAL WORKED HOURS',
         width: 150,
-
-
     },
     {
         field: 'total_amount',
         headerName: 'AMOUNT',
         width: 150,
-
-
     },
     {
         field: 'paid_amount',
         headerName: 'PAID',
         width: 150,
-
-
     },
     {
         field: 'due_amount',
         headerName: 'DUE',
         width: 100,
-
-
     },
     {
         field: 'tip_amount',
         headerName: 'TOTAL TIPS	',
         width: 150,
-
-
     },
 
 ];
-
-
 
 const ServicesProviderPAyroll = () => {
     const [data, setData] = React.useState([]);

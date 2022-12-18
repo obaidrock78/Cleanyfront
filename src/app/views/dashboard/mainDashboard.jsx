@@ -49,11 +49,11 @@ const EasyAccess = styled(Box)(({ theme }) => ({
 
 const EasyAccessHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
-  color: theme.palette.text.secondary,
+  color: 'black',
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
-  fontWeight: '700 !important',
+  fontWeight: '900 !important',
   fontSize: '24px !important'
 }));
 
@@ -77,11 +77,11 @@ const Notifications = styled(Box)(({ theme }) => ({
 
 const NotificationsHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
-  color: theme.palette.text.secondary,
+  color: 'black',
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
-  fontWeight: '700 !important',
+  fontWeight: '900 !important',
   fontSize: '24px !important'
 }));
 
@@ -105,11 +105,11 @@ const Weather = styled(Box)(({ theme }) => ({
 
 const WeatherHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
-  color: theme.palette.text.secondary,
+ color:'black',
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
-  fontWeight: '700 !important',
+  fontWeight: '900 !important',
   fontSize: '24px !important'
 }));
 
@@ -131,11 +131,11 @@ const StatsArea = styled(Box)(({ theme }) => ({
 }));
 const StatHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
-  color: theme.palette.text.secondary,
+ color:'black',
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
-  fontWeight: '700 !important',
+  fontWeight: '900 !important',
   fontSize: '24px !important'
 }));
 

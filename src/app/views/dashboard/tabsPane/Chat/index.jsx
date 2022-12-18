@@ -7,11 +7,11 @@ import axios from "../../../../../axios"
 
 const ChatHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
-  color: theme.palette.text.secondary,
+ color: "black",
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
-  fontWeight: '700 !important',
+  fontWeight: '900 !important',
   fontSize: '24px !important'
 }))
 
@@ -82,7 +82,7 @@ const Chat = () => {
         </Grid>
         <Grid item md={9} sx={{ p: 0, }}>
           <Grid container>
-            <Grid item md={12} sx={{ height: '600px', overflowY: 'scroll', height: '500px', display: 'flex', flexDirection: ' column', bgcolor: 'lightgray' }}>
+            <Grid item md={12} sx={{ height: '600px', overflowY: 'scroll', height: '500px', display: 'flex', flexDirection: ' column', bgcolor: '#fbfbfb' }}>
               {noChatSelected ? <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
 
                 <Typography component='h3' variant='h4' sx={{ color: 'black' }}>   Select a chat to start Conversation </Typography>

@@ -128,7 +128,7 @@ const columns = [
   },
   {
     field: 'amount',
-    headerName: 'AMOUNT  ',
+    headerName: 'AMOUNT',
     width: 150,
     renderCell: (item) => {
       return (
@@ -143,7 +143,7 @@ const columns = [
   },
   {
     field: 'action',
-    headerName: 'ACTIONS  ',
+    headerName: 'ACTIONS',
     width: 150,
     renderCell: (item) => {
       return (
