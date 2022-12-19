@@ -80,7 +80,6 @@ function Scheduler() {
                       <>
                         <Box component="span" sx={{ bgcolor: 'blue', px: '10px', borderRadius: '20px', color: 'white', ml: .1 }}>
                           <a href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${e.bod.id}/details/`}>
-
                             {moment(e.bod.start_time, "hh").format('LT')}
                           </a>
                         </Box>
