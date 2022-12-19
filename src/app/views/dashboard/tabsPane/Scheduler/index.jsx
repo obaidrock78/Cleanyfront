@@ -7,7 +7,7 @@ import { Box, Grid, Icon, Stack, Typography, styled } from '@mui/material';
 const SchedulerHeading = styled('h3')(({ theme }) => ({
 
   typography: 'body1',
- color: "black",
+  color: "black",
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
@@ -78,8 +78,11 @@ function Scheduler() {
                         </Box>
                       </> :
                       <>
-                        <Box component="span" sx={{ bgcolor: 'blue', px: '10px', borderRadius: '20px', color: 'white' }}>
-                          {moment(e.bod.start_time, "hh").format('LT')}
+                        <Box component="span" sx={{ bgcolor: 'blue', px: '10px', borderRadius: '20px', color: 'white', ml: .1 }}>
+                          <a href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${e.bod.id}/details/`}>
+
+                            {moment(e.bod.start_time, "hh").format('LT')}
+                          </a>
                         </Box>
                       </>
                     }
