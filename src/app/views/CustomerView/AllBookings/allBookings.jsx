@@ -6,7 +6,7 @@ import { CUSTOMER_ALL_BOOKINGS } from 'app/api';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
@@ -72,6 +72,8 @@ const TableHeading = styled('p')(() => ({
 }));
 function AllBookings() {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  console.log(state);
   const [bookingList, setBookingList] = useState([]);
   const [dateChange, setDateChange] = useState('month');
   const [statusChange, setStatusChange] = useState('scheduled');

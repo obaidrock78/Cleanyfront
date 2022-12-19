@@ -165,7 +165,7 @@ function Customers() {
               },
             }}
             onClick={() => {
-              navigate('/dashboard/customer-booking');
+              navigate('/dashboard/customer-booking', { state: item?.row });
             }}
           >
             View
