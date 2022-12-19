@@ -21,6 +21,7 @@ import BadgeSelected from './BadgeSelected';
 const Label = styled(Span)(({ theme }) => ({
   fontWeight: 700,
   fontSize: '1rem',
+  width: '150px',
   cursor: 'pointer',
   borderRadius: '4px',
   marginBottom: '2.5rem',
@@ -103,7 +104,7 @@ const MatxCustomizer = () => {
     <Fragment>
       <Tooltip title="Theme Settings" placement="left">
         <Label className="open" onClick={tooglePanel}>
-          DEMOS
+          Change Theme
         </Label>
       </Tooltip>
 
@@ -137,13 +138,6 @@ const MatxCustomizer = () => {
                 sx={{ mr: 2 }}
               >
                 Demos
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => handleTabChange(1)}
-                color={tabIndex === 1 ? 'secondary' : 'primary'}
-              >
-                Settings
               </Button>
             </Box>
 

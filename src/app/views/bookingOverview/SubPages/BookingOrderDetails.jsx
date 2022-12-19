@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import moment from 'moment';
-import { Box, Button, Divider, Grid, styled, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, styled, Tab, Tabs, Tooltip, Typography } from '@mui/material';
 import { Breadcrumb } from 'app/components';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../../../axios';
 import {
   BOOKING_APPOINTMENT_DETAILS,
+  CLEANER_LOCATION,
   GET_BOOKING_DATA,
   GET_BOOKING_PROBLEMS,
-  GET_PROVIDER_WORK_LIST,
 } from 'app/api';
 import toast from 'react-hot-toast';
 import Stepper from '@mui/material/Stepper';
@@ -38,6 +38,7 @@ import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 import RescheduleAppointment from '../Modals/Reappointment';
 import RaiseBookingProblem from '../Modals/RaiseBookingProblem';
 import EditBookingModal from '../Modals/EditBookingModal';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 import Chat from 'app/components/Chat/adminChat';
 import CustomerChat from 'app/components/Chat/customerChat';
@@ -72,6 +73,7 @@ function BookingOrderDetails() {
   const [chargeCustomer, setChargeCustomer] = useState(false);
   const [bookingProblems, setBookingProblems] = useState(null);
   const [bookingData, setBookingData] = useState({});
+  const [cleanerLocation, setCleanerLocation] = useState([]);
 
   useEffect(() => {
     getEventList();
@@ -86,6 +88,12 @@ function BookingOrderDetails() {
       .get(`${GET_BOOKING_DATA}/${bookindDetails?.service?.slug}`)
       .then((res) => {
         setBookingData(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+    await axios
+      .get(`${CLEANER_LOCATION}?booking_id=${bookindDetails?.id}`)
+      .then((res) => {
+        setCleanerLocation(res?.data?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -451,6 +459,73 @@ function BookingOrderDetails() {
                       </Grid>
                     </Box>
                   </Grid>
+                  {role !== 'Customer' && (
+                    <Grid item xs={12} md={12}>
+                      <Box
+                        sx={{
+                          boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                          border: ' 1px solid rgba(98,105,118,.16)',
+                          background: '#fff',
+                          borderTop: ' 5px solid #1976d2',
+                          padding: ' 1rem 1rem',
+                          borderRadius: '4px',
+                          '& .headingSubTxt': {
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                            paddingBottom: '1rem',
+                          },
+                          '& p': {
+                            margin: 'unset',
+                            paddingLeft: '5px',
+                          },
+                        }}
+                      >
+                        <Typography variant="h3" className="headingSubTxt">
+                          Cleaner Location
+                        </Typography>
+                        <Grid container>
+                          <Grid item xs={3} fontWeight={'bold'}>
+                            Cleaner
+                          </Grid>
+                          <Grid item xs={3} fontWeight={'bold'}>
+                            Check in
+                          </Grid>
+                          <Grid item xs={3} fontWeight={'bold'}>
+                            Check out
+                          </Grid>
+                          <Grid item xs={3} fontWeight={'bold'}></Grid>
+                        </Grid>
+                        <Grid container>
+                          {!!cleanerLocation.length &&
+                            cleanerLocation.map((location) => (
+                              <>
+                                <Grid item xs={3}>
+                                  {location?.service_provider?.profile?.first_name}{' '}
+                                  {location?.service_provider?.profile?.last_name}
+                                </Grid>
+                                <Grid item xs={3}>
+                                  {moment.utc(location?.check_in).format('lll')}
+                                </Grid>
+                                <Grid item xs={3}>
+                                  {moment.utc(location?.check_out).format('lll')}
+                                </Grid>
+                                <Grid item xs={3}>
+                                  <Tooltip title="See location on Google Map">
+                                    <Button
+                                      variant="text"
+                                      href={`https://www.google.com/maps/search/?api=1&query=${location?.latitude},${location?.longitude}`}
+                                      target="_blank"
+                                    >
+                                      <LocationOnIcon />
+                                    </Button>
+                                  </Tooltip>
+                                </Grid>
+                              </>
+                            ))}
+                        </Grid>
+                      </Box>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
               <Grid item xs={12} md={6}>
@@ -538,9 +613,9 @@ function BookingOrderDetails() {
                         <EventOutlinedIcon sx={{ paddingRight: '5px' }} />
                         <p>
                           Since:{' '}
-                          {moment(bookindDetails?.bod?.bod_contact_info?.created_at).format(
-                            'MMM DD YYYY, h:mm a'
-                          )}
+                          {moment
+                            .utc(bookindDetails?.bod?.bod_contact_info?.created_at)
+                            .format('MMM DD YYYY, h:mm a')}
                         </p>
                       </Box>
                     </Box>
@@ -676,7 +751,9 @@ function BookingOrderDetails() {
                                   </Box>
                                 </Grid>
                                 <Grid item xs={8} textAlign="center">
-                                  <span>{moment(item?.appointment_date_time).format('lll')}</span>
+                                  <span>
+                                    {moment.utc(item?.appointment_date_time).format('lll')}
+                                  </span>
                                 </Grid>
                                 <Grid item xs={2} textAlign="center">
                                   <span>{item?.start_time}</span>
@@ -696,7 +773,9 @@ function BookingOrderDetails() {
                                   </Box>
                                 </Grid>
                                 <Grid item xs={8} textAlign="center">
-                                  <span>{moment(item?.appointment_date_time).format('lll')}</span>
+                                  <span>
+                                    {moment.utc(item?.appointment_date_time).format('lll')}
+                                  </span>
                                 </Grid>
                                 <Grid item xs={2} textAlign="center">
                                   <span>{item?.start_time}</span>
@@ -716,7 +795,9 @@ function BookingOrderDetails() {
                                   </Box>
                                 </Grid>
                                 <Grid item xs={8} textAlign="center">
-                                  <span>{moment(item?.appointment_date_time).format('lll')}</span>
+                                  <span>
+                                    {moment.utc(item?.appointment_date_time).format('lll')}
+                                  </span>
                                 </Grid>
                                 <Grid item xs={2} textAlign="center">
                                   <span>{item?.start_time}</span>

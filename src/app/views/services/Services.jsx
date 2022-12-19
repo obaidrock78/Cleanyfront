@@ -151,9 +151,7 @@ function Services() {
               },
             }}
           >
-            <a href={`/booking/${item?.row?.slug}`} target="blank">
-              Visit Page
-            </a>
+            <a href={`/booking/${item?.row?.slug}`}>Visit Page</a>
           </Button>
         );
       },

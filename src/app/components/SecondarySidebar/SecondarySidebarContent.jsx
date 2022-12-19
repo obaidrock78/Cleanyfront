@@ -44,15 +44,6 @@ const SecondarySidebarContent = () => {
       <Span sx={{ m: 'auto' }}></Span>
       <MatxCustomizer />
 
-      <ChatHead
-        icon={
-          <IconButton sx={{ my: '12px', color: textColor }} size="small">
-            <Icon>comments</Icon>
-          </IconButton>
-        }
-      >
-        <Chatbox />
-      </ChatHead>
       <Span sx={{ m: 'auto' }}></Span>
     </SidebarRoot>
   );

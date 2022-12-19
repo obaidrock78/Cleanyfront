@@ -2,6 +2,7 @@ import { AppBar, Button, ThemeProvider, Toolbar } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 import useSettings from 'app/hooks/useSettings';
 import { topBarHeight } from 'app/utils/constant';
+import moment from 'moment';
 import { Paragraph, Span } from './Typography';
 
 const AppFooter = styled(Toolbar)(() => ({
@@ -40,9 +41,11 @@ const Footer = () => {
       <AppBar color="primary" position="static" sx={{ zIndex: 96 }}>
         <AppFooter>
           <FooterContent>
-            Cleany
+            © Copyright {moment(new Date()).format('YYYY')} - Cleany
             <Span sx={{ m: 'auto' }}></Span>
-            <Paragraph sx={{ m: 0 }}>Copyright</Paragraph>
+            <Paragraph sx={{ m: 0 }}>
+              TimeZone {Intl.DateTimeFormat().resolvedOptions().timeZone}
+            </Paragraph>
           </FooterContent>
         </AppFooter>
       </AppBar>

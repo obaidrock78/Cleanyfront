@@ -6,7 +6,7 @@ import clsx from 'clsx';
 const Toggle = styled('div')(() => ({
   position: 'fixed',
   right: '30px',
-  bottom: '50px',
+  bottom: '70px',
   zIndex: 99,
   transition: 'all 0.15s ease',
   '&.open': {

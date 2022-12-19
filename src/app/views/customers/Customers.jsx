@@ -164,6 +164,9 @@ function Customers() {
                 textDecoration: 'underline',
               },
             }}
+            onClick={() => {
+              navigate('/dashboard/customer-booking');
+            }}
           >
             View
           </TableHeading>

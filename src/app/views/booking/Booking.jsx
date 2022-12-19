@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { CREATE_BOOKING, GET_BOOKING_DATA } from 'app/api';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from '../../../axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import LoginIcon from '@mui/icons-material/Login';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
@@ -99,6 +99,8 @@ const MainBox = styled(Box)(({ theme }) => ({
 }));
 
 function Booking() {
+  const token = localStorage.getItem('accessToken');
+  const navigate = useNavigate();
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [bookingData, setBookingData] = useState({});
@@ -149,11 +151,11 @@ function Booking() {
       zip_code: '',
       hear_about_us: '',
       promo_code: '',
-      additional_info: '',
-      how_to_enter_on_premise: '',
+      additional_info: 'Null',
+      how_to_enter_on_premise: 'Null',
       card_token: '',
       package_selection: '',
-      customer_notes: '',
+      customer_notes: 'Null',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -188,15 +190,23 @@ function Booking() {
         customer_notes: values?.customer_notes,
       };
       toast.promise(
-        axios.post(`${CREATE_BOOKING}/${bookingData?.id}`, objToSend, {
-          headers: { 'Content-Type': 'application/json' },
-        }),
+        axios.post(
+          `https://api-cleany-backend.herokuapp.com${CREATE_BOOKING}/${bookingData?.id}`,
+          objToSend,
+          {
+            headers: { 'Content-Type': 'application/json' },
+          }
+        ),
         {
           loading: () => {
             return `Creating Booking!`;
           },
           success: (res) => {
             setLoading(false);
+            setTimeout(() => {
+              navigate(token === null ? '/session/signup' : '/dashboard/default');
+            }, 500);
+
             return res?.data?.message;
           },
           error: (err) => {
@@ -210,7 +220,7 @@ function Booking() {
 
   useEffect(async () => {
     await axios
-      .get(`${GET_BOOKING_DATA}/${params?.slug}`)
+      .get(`https://api-cleany-backend.herokuapp.com${GET_BOOKING_DATA}/${params?.slug}`)
       .then((res) => {
         setBookingData(res?.data?.data);
       })
@@ -252,7 +262,7 @@ function Booking() {
     setSelectedExtras(dupArr);
   };
   const btnArray = [
-    { value: 'once', label: 'Onetime' },
+    { value: 'daily', label: 'Onetime' },
     { value: 'weekly', label: 'Weekly - 20% Off' },
     { value: 'biweekly', label: 'Biweekly - 15% Off' },
     { value: 'monthly', label: 'Monthly - 10% Off' },
