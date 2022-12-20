@@ -2,7 +2,7 @@ import { Box, Button, Menu, MenuItem, Pagination, TextField, Typography } from '
 import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import axios from '../../../../axios';
-import { CUSTOMER_ALL_BOOKINGS } from 'app/api';
+import { ADMIN_SIDE_CUSTOMER_BOOKINGS, CUSTOMER_ALL_BOOKINGS } from 'app/api';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -74,14 +74,30 @@ function AllBookings() {
   const navigate = useNavigate();
   const { state } = useLocation();
   console.log(state);
+  const user = JSON.parse(localStorage.getItem('user'));
   const [bookingList, setBookingList] = useState([]);
   const [dateChange, setDateChange] = useState('month');
   const [statusChange, setStatusChange] = useState('scheduled');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
+  useEffect(async () => {
+    if (user?.role !== 'Customer') {
+      await axios
+        .get(`${ADMIN_SIDE_CUSTOMER_BOOKINGS}?user=${state?.id}`, {
+          headers: { 'Content-Type': 'application/json' },
+        })
+        .then((res) => {
+          setBookingList(res?.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
+
   useEffect(() => {
-    serviceListAPI();
+    if (user?.role === 'Customer') {
+      serviceListAPI();
+    }
   }, [dateChange, statusChange, page, perPage]);
 
   const serviceListAPI = async () => {
@@ -252,56 +268,59 @@ function AllBookings() {
       </Box> */}
 
       <SimpleCard>
-        <Box
-          display="flex"
-          alignItems={'center'}
-          justifyContent="space-between"
-          paddingBottom={'1rem'}
-        >
+        {user?.role === 'Customer' && (
           <Box
             display="flex"
             alignItems={'center'}
-            gap={2}
-            sx={{
-              '& p': {
-                fontWeight: 'bold',
-                fontSize: '1rem',
-              },
-            }}
+            justifyContent="space-between"
+            paddingBottom={'1rem'}
           >
-            <Typography variant="body1">Scheduled for</Typography>
-            <TextField
-              size="small"
-              id="outlined-select-currency"
-              select
-              value={dateChange}
-              onChange={(e) => {
-                setPage(1);
-                setDateChange(e.target.value);
+            <Box
+              display="flex"
+              alignItems={'center'}
+              gap={2}
+              sx={{
+                '& p': {
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                },
               }}
             >
-              <MenuItem value={'week'}>This Week</MenuItem>
-              <MenuItem value={'month'}>This Month</MenuItem>
-            </TextField>
-            <Typography variant="body1">Booking Status</Typography>
-            <TextField
-              size="small"
-              id="outlined-select-currency"
-              select
-              value={statusChange}
-              onChange={(e) => {
-                setPage(1);
-                setStatusChange(e.target.value);
-              }}
-            >
-              <MenuItem value={'scheduled'}>Scheduled</MenuItem>
-              <MenuItem value={'unscheduled'}>Unscheduled</MenuItem>
-              <MenuItem value={'dispatched'}>Dispatched</MenuItem>
-              <MenuItem value={'complete'}>Complete</MenuItem>
-              <MenuItem value={'cancelled'}>Cancelled</MenuItem>
-            </TextField>
+              <Typography variant="body1">Scheduled for</Typography>
+              <TextField
+                size="small"
+                id="outlined-select-currency"
+                select
+                value={dateChange}
+                onChange={(e) => {
+                  setPage(1);
+                  setDateChange(e.target.value);
+                }}
+              >
+                <MenuItem value={'week'}>This Week</MenuItem>
+                <MenuItem value={'month'}>This Month</MenuItem>
+              </TextField>
+              <Typography variant="body1">Booking Status</Typography>
+              <TextField
+                size="small"
+                id="outlined-select-currency"
+                select
+                value={statusChange}
+                onChange={(e) => {
+                  setPage(1);
+                  setStatusChange(e.target.value);
+                }}
+              >
+                <MenuItem value={'scheduled'}>Scheduled</MenuItem>
+                <MenuItem value={'unscheduled'}>Unscheduled</MenuItem>
+                <MenuItem value={'dispatched'}>Dispatched</MenuItem>
+                <MenuItem value={'complete'}>Complete</MenuItem>
+                <MenuItem value={'cancelled'}>Cancelled</MenuItem>
+              </TextField>
+            </Box>
           </Box>
-        </Box>
+        )}
+
         <DataTableBox>
           <DataGrid
             sx={{
@@ -319,7 +338,7 @@ function AllBookings() {
             disableSelectionOnClick
           />
         </DataTableBox>
-        {!!bookingList?.data?.length && (
+        {!!bookingList?.data?.length && user?.role === 'Customer' && (
           <Box display="flex" alignItems={'center'} gap={3}>
             <Pagination
               sx={{

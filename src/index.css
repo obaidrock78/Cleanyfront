@@ -44,3 +44,9 @@ p {
     transform: translate3d(85px, 0, 0);
   }
 }
+.fc-icon {
+  background-image: url('https://cdn.podiumio.com/platform/entities/entity-employee-blue-100.png');
+  background-repeat: no-repeat;
+  width: 10px !important;
+  height: 20px !important;
+}

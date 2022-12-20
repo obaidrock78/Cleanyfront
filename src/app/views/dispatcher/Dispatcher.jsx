@@ -17,6 +17,7 @@ import Basic from './Basic.js';
 import * as _ from 'lodash';
 import Drawer from '@mui/material/Drawer';
 import CloseIcon from '@mui/icons-material/Close';
+import DemoApp from './fullCalendar';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -208,7 +209,8 @@ function Dispatcher() {
           />
         </Box>
         <SimpleCard>
-          {!loaderShow[0] && !loaderShow[1] ? (
+          <DemoApp />
+          {/* {!loaderShow[0] && !loaderShow[1] ? (
             <Basic
               myEvents={myEvents}
               myEventsTwo={myEventsTwo}
@@ -231,7 +233,7 @@ function Dispatcher() {
             >
               <CircularProgress />
             </Box>
-          )}
+          )} */}
         </SimpleCard>
       </Container>
       <Drawer

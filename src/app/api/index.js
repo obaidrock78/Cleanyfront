@@ -63,3 +63,7 @@ export const ADMIN_SIDE_CUSTOMER_LIST = '/service_provider/customer_list';
 export const ADMIN_SIDE_ADD_CUSTOMER = '/service_provider/create_customer';
 export const ADMIN_SIDE_Update_CUSTOMER = '/service_provider/update_customer';
 export const CLEANER_LOCATION = '/service_provider/cleaner_location';
+export const ADMIN_SIDE_CUSTOMER_BOOKINGS = '/booking/admin_user_booking';
+
+export const FULL_CALENDAR_EVENTS = '/booking/get_events';
+export const FULL_CALENDAR_RESOURCES = '/booking/get_resources';
