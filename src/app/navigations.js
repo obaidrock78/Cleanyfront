@@ -55,6 +55,12 @@ export const navigations =
 							iconText: 'payroll',
 							path: '/dashboard/service-provider-payroll',
 						},
+						{
+							name: 'Payments',
+							iconText: 'payment',
+							path: '/dashboard/Payments',
+						},
+					
 					],
 				},
 

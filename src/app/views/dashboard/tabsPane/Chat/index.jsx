@@ -7,7 +7,7 @@ import axios from "../../../../../axios"
 
 const ChatHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
- color: "black",
+  color: "black",
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
@@ -62,7 +62,7 @@ const Chat = () => {
       <Grid container >
         <Grid item md={3} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url(/assets/images/sidebar/sidebar-bg-dark.jpg) ', color: '#fff' }}>
           <Grid container >
-
+            <TextField id="search" label="search user" variant="filled" fullWidth sx ={{bgcolor:'#fbfbfb' ,mt:3 ,mx:2}} />
             {
               gettingChats.map((chat) => {
                 return (
@@ -71,10 +71,12 @@ const Chat = () => {
                       setSelectedChat(chat.chats);
                       setNoChatSelected(false);
                     }}
-                  >   <Box
+                  >
+
+                    <Box
                       component={'img'}
                       sx={{ width: '40px', height: '40px', borderRadius: '50%', mr: 1 }}
-                      src="https://pickaface.net/gallery/avatar/20151205_194059_2696_Chat.png" />{chat.user.user_profile.first_name} {chat.user.user_profile.last_name} </Grid>
+                      src="https://pickaface.net/gallery/avatar/20151205_194059_2696_Chat.png" />{chat?.user?.user_profile?.first_name} {chat?.user?.user_profile?.last_name} </Grid>
                 )
               })
             }
@@ -126,8 +128,6 @@ const Chat = () => {
                   })
                 }
               </>}
-
-
             </Grid>
             {!noChatSelected && <Grid md={12} item>
               <Box component='form' onSubmit={handleSubmit} width='100% '>
