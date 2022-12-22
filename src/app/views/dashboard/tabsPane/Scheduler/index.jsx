@@ -4,6 +4,21 @@ import axios from '../../../../../axios'
 import moment from 'moment';
 import { Box, Grid, Icon, Stack, Typography, styled } from '@mui/material';
 
+import Button from '@mui/material/Button';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
+
 const SchedulerHeading = styled('h3')(({ theme }) => ({
 
   typography: 'body1',
@@ -69,7 +84,9 @@ function Scheduler() {
                               </Typography>
                               <Stack>
                                 <Box sx={{ bgcolor: 'blue', px: '10px', borderRadius: '20px', color: 'white' }}>
-                                  {e.status}
+                                  <a href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${e.id}/details/`}>
+                                    {e.status}
+                                  </a>
                                 </Box>
                               </Stack>
                             </Box>
@@ -79,8 +96,20 @@ function Scheduler() {
                       </> :
                       <>
                         <Box component="span" sx={{ bgcolor: 'blue', px: '10px', borderRadius: '20px', color: 'white', ml: .1 }}>
-                          <a href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${e.bod.id}/details/`}>
-                            {moment(e.bod.start_time, "hh").format('LT')}
+                          <a href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${e.id}/details/`}>
+                            <HtmlTooltip
+                              title={
+                                <React.Fragment>
+                                  <Typography color="inherit" component={'h4'} variant='h5'>Booking  Details</Typography>
+                                  <Typography color="inherit">{e.bod.total_hours}(Hours)</Typography>
+                                  <Typography color="inherit">{e.id}</Typography>
+                                  <Typography color="inherit">{e.status}</Typography>
+
+                                </React.Fragment>
+                              }
+                            >
+                              <Button sx={{ color: 'white' }}> {moment(e.bod.start_time, "hh").format('LT')}</Button>
+                            </HtmlTooltip>
                           </a>
                         </Box>
                       </>
