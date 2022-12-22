@@ -110,42 +110,56 @@ function CustomerDashboard() {
             <p className="heading">Welcome Back {user?.full_name}!</p>
             <h2 className="subheading">Your Details</h2>
             <Grid container spacing={2}>
-              <Grid item xs={6} sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
-                {currentBooking?.bod?.type}
-                <br />
-                {moment.utc(currentBooking?.appointment_date_time).format('MMMM DD, YYYY h:mm a')}
-                <br />
-                0000-0015
-              </Grid>
-              <Grid
-                item
-                xs={6}
-                sx={{
-                  color: 'white',
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  padding: '0px 10px',
-                }}
-              >
-                At The Location
-                <br />
-                {currentBooking?.bod?.bod_service_location?.street_address},{' '}
-                {currentBooking?.bod?.bod_service_location?.city},{' '}
-                {currentBooking?.bod?.bod_service_location?.state}
-                <br />
-                {currentBooking?.bod?.bod_service_location?.zip_code}
-              </Grid>
-              <Grid item xs={12} sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
-                <Button
-                  variant="contained"
-                  sx={{ fontWeight: 'bold' }}
-                  onClick={() =>
-                    navigate(`/dashboard/booking-appointments/${currentBooking?.id}/details/`)
-                  }
-                >
-                  View Details
-                </Button>
-              </Grid>
+              {currentBooking != null && (
+                <>
+                  <Grid
+                    item
+                    xs={6}
+                    sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}
+                  >
+                    {currentBooking?.bod?.type}
+                    <br />
+                    {moment
+                      .utc(currentBooking?.appointment_date_time)
+                      .format('MMMM DD, YYYY h:mm a')}
+                    <br />
+                    0000-0015
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    sx={{
+                      color: 'white',
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      padding: '0px 10px',
+                    }}
+                  >
+                    At The Location
+                    <br />
+                    {currentBooking?.bod?.bod_service_location?.street_address},{' '}
+                    {currentBooking?.bod?.bod_service_location?.city},{' '}
+                    {currentBooking?.bod?.bod_service_location?.state}
+                    <br />
+                    {currentBooking?.bod?.bod_service_location?.zip_code}
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}
+                  >
+                    <Button
+                      variant="contained"
+                      sx={{ fontWeight: 'bold' }}
+                      onClick={() =>
+                        navigate(`/dashboard/booking-appointments/${currentBooking?.id}/details/`)
+                      }
+                    >
+                      View Details
+                    </Button>
+                  </Grid>
+                </>
+              )}
               <Grid item xs={12} sx={{ color: '#1e293b', textAlign: 'center', fontWeight: 'bold' }}>
                 <Box
                   display={'flex'}
