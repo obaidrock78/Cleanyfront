@@ -130,8 +130,7 @@ function Dispatcher() {
                 Customer
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                {selectedBooking?.bod?.bod_contact_info?.first_name}{' '}
-                {selectedBooking?.bod?.bod_contact_info?.last_name}
+                {selectedBooking?.customer_name}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Location

@@ -67,7 +67,7 @@ const EasyAccessHeading = styled('h3')(({ theme }) => ({
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
   fontWeight: '900 !important',
-  fontSize: '24px !important'
+  fontSize: '24px !important',
 }));
 
 const EasyAccessContent = styled(Box)(({ theme }) => ({
@@ -95,7 +95,7 @@ const NotificationsHeading = styled('h3')(({ theme }) => ({
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
   fontWeight: '900 !important',
-  fontSize: '24px !important'
+  fontSize: '24px !important',
 }));
 
 const NotificationsContent = styled(Box)(({ theme }) => ({
@@ -123,7 +123,7 @@ const WeatherHeading = styled('h3')(({ theme }) => ({
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
   fontWeight: '900 !important',
-  fontSize: '24px !important'
+  fontSize: '24px !important',
 }));
 
 const WeatherContent = styled(Box)(({ theme }) => ({
@@ -149,7 +149,7 @@ const StatHeading = styled('h3')(({ theme }) => ({
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
   fontWeight: '900 !important',
-  fontSize: '24px !important'
+  fontSize: '24px !important',
 }));
 
 const easyAccessContentItems = [
@@ -165,7 +165,6 @@ const easyAccessContentItems = [
 ];
 
 const MainDashboard = () => {
-
   const [bookingNotification, setBookingNotification] = React.useState();
 
   const { data, isLoading, errorMessage } = useWeatherBit({
@@ -190,11 +189,9 @@ const MainDashboard = () => {
     getNotification();
   }, []);
 
-
   return (
     <Box sx={{ p: 4 }}>
       <Grid container spacing={3} rowSpacing={2}>
-
         <Grid item lg={9} md={9} sm={12} xs={12}>
           <StatsArea>
             <StatHeading>Analytical Overview</StatHeading>
@@ -206,8 +203,8 @@ const MainDashboard = () => {
           <Notifications>
             <NotificationsHeading>Notification's</NotificationsHeading>
             <NotificationsContent>
-              {bookingNotification?.map((items) => {
-                return <p>{items.title}</p>;
+              {bookingNotification?.map((items, index) => {
+                return <p key={index}>{items.title}</p>;
               })}
             </NotificationsContent>
           </Notifications>
@@ -234,7 +231,7 @@ const MainDashboard = () => {
                             backgroundColor: items.color,
                             color: 'white',
                             '&.MuiButton-root:hover': {
-                              color: 'black'
+                              color: 'black',
                             },
                           }}
                           fullWidth
@@ -278,7 +275,6 @@ const MainDashboard = () => {
             <Chat />
           </ChatArea>
         </Grid>
-
       </Grid>
     </Box>
   );
