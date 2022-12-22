@@ -14,6 +14,7 @@ import Clock from 'react-live-clock';
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary,
+  mr:3
 }));
 
 const TopbarRoot = styled('div')(({ theme }) => ({
@@ -100,9 +101,10 @@ const Layout1Topbar = () => {
           <StyledIconButton onClick={handleSidebarToggle}>
             <Icon>menu</Icon>
           </StyledIconButton>
+          <Clock format={'h:mm:ssa'} style={{ fontSize: '1.5em' }} />
         </Box>
 
-        <Clock format={'h:mm:ssa'} style={{ fontSize: '1.5em' }} ticking={true} />
+
         <Box display="flex" alignItems="center">
           <MatxSearchBox />
 

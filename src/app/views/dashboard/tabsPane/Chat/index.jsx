@@ -63,7 +63,7 @@ const Chat = () => {
 				Chatting Room
 			</ChatHeading>
 			<Grid container >
-				<Grid item md={3} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url(/assets/images/sidebar/sidebar-bg-dark.jpg) ', color: '#fff' }}>
+				<Grid item md={3} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url( ) ', color: '#fff' }}>
 					<Grid container >
 						<TextField id="search" label="search user" variant="filled" fullWidth sx={{ bgcolor: '#fbfbfb', mt: 3, mx: 2 }} />
 						{

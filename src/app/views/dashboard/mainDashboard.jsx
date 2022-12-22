@@ -22,6 +22,19 @@ const StylesTabsArea = styled(Box)(({ theme }) => ({
   borderTop: '5px solid blue',
   padding: '10px',
 }));
+
+const TaskArea = styled(Box)(({ theme }) => ({
+  p: 3,
+  width: '100%',
+  typography: 'body1',
+  height: '660px',
+  background: theme.palette.background.paper,
+  boxShadow:
+    '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
+  borderRadius: '10px',
+  borderTop: '5px solid green',
+  padding: '10px',
+}));
 const ChatArea = styled(Box)(({ theme }) => ({
   p: 3,
   width: '100%',
@@ -33,13 +46,13 @@ const ChatArea = styled(Box)(({ theme }) => ({
   borderRadius: '10px',
   padding: '10px',
 
-  borderTop: '5px solid blue',
+  borderTop: '5px solid green',
 }));
 
 const EasyAccess = styled(Box)(({ theme }) => ({
   width: '100%',
 
-  borderTop: '5px solid blue',
+  borderTop: '5px solid orange ',
   background: theme.palette.background.paper,
   boxShadow:
     '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
@@ -72,7 +85,7 @@ const Notifications = styled(Box)(({ theme }) => ({
   padding: '10px',
   marginBottom: '10px',
 
-  borderTop: '5px solid blue',
+  borderTop: '5px solid red',
 }));
 
 const NotificationsHeading = styled('h3')(({ theme }) => ({
@@ -100,12 +113,12 @@ const Weather = styled(Box)(({ theme }) => ({
   padding: '10px',
   marginBottom: '10px',
 
-  borderTop: '5px solid blue',
+  borderTop: '5px solid  lightblue',
 }));
 
 const WeatherHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
- color:'black',
+  color: 'black',
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
@@ -127,11 +140,11 @@ const StatsArea = styled(Box)(({ theme }) => ({
     '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
   borderRadius: '10px',
   padding: '10px',
-  borderTop: '5px solid blue',
+  borderTop: '5px solid purple',
 }));
 const StatHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
- color:'black',
+  color: 'black',
   borderBottom: '1px solid',
   borderBottomColor: theme.palette.text.secondary,
   textAlign: 'center',
@@ -238,9 +251,9 @@ const MainDashboard = () => {
         </Grid>
 
         <Grid item lg={8} md={8} sm={12} xs={12}>
-          <StylesTabsArea>
+          <TaskArea>
             <AddTask />
-          </StylesTabsArea>
+          </TaskArea>
         </Grid>
 
         <Grid item lg={4} md={4} sm={12} xs={12}>

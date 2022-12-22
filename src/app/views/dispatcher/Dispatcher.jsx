@@ -57,7 +57,7 @@ function Dispatcher() {
   const navigate = useNavigate();
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [drawerState, setDrawerState] = useState(false);
-  console.log(selectedBooking);
+
   return (
     <>
       <Container>
@@ -106,7 +106,7 @@ function Dispatcher() {
                 Service Name
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                Cleany Miami - Maid Service
+                {selectedBooking?.service_name}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Booking Number
@@ -118,7 +118,7 @@ function Dispatcher() {
                 Schedule Id
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                {selectedBooking?.schedule?.id}
+                {selectedBooking?.schedule_id}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Dispatch Id
@@ -137,25 +137,25 @@ function Dispatcher() {
                 Location
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                {selectedBooking?.bod?.bod_service_location?.street_address}
+                {selectedBooking?.description}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Start
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                {moment.utc(selectedBooking?.schedule?.start_time).format('LLL')}
+                {moment.utc(selectedBooking?.start).format('LLL')}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 End
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                {moment.utc(selectedBooking?.schedule?.end_time).format('LLL')}
+                {moment.utc(selectedBooking?.end).format('LLL')}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Frequency
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'} textTransform="capitalize">
-                {selectedBooking?.bod?.frequency?.type}
+                {selectedBooking?.frequency}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Booking Notes
