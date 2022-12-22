@@ -5,6 +5,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../../axios';
+import ServiceModal from './CustomerDashboardModal/serviceModal';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -22,6 +23,7 @@ function CustomerDashboard() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
   const [currentBooking, setCurrentBooking] = useState(null);
+  const [selectService, setSelectService] = useState(false);
 
   useEffect(() => {
     userBookingData();
@@ -228,7 +230,6 @@ function CustomerDashboard() {
           justifyContent: 'space-around',
           borderRadius: '4px',
         }}
-        onClick={() => navigate('/dashboard/customer-booking')}
       >
         <Box
           sx={{
@@ -251,6 +252,7 @@ function CustomerDashboard() {
               color: 'white',
             },
           }}
+          onClick={() => navigate('/dashboard/customer-booking')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -270,6 +272,7 @@ function CustomerDashboard() {
           <p>See Bookings</p>
         </Box>
         <Box
+          onClick={() => setSelectService(true)}
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -353,6 +356,7 @@ function CustomerDashboard() {
           <p>Charge Tip</p>
         </Box>
       </Box>
+      <ServiceModal open={selectService} handleClose={() => setSelectService(false)} />
     </Container>
   );
 }

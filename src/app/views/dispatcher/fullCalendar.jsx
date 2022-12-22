@@ -164,7 +164,11 @@ function DemoApp({ setDrawerState, setSelectedBooking }) {
       return;
     }
     setDrawerState(true);
-    setSelectedBooking(info.event.extendedProps);
+    setSelectedBooking({
+      ...info.event.extendedProps,
+      start: info.event.start,
+      end: info.event.end,
+    });
   };
   return (
     <Box
