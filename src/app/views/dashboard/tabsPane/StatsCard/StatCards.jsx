@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
 import { Small } from 'app/components/Typography';
 import { GET_CARD_DATA } from '../../../../api';
-import axios from '../../../../../axios'
-import Chart from "react-apexcharts";
+import axios from '../../../../../axios';
+import Chart from 'react-apexcharts';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -37,18 +37,18 @@ const StatCards = () => {
     'attach_money',
     'store',
     'shopping_cart',
-    'alarm'
+    'alarm',
+    'accessibility_icon',
   ];
 
   const [cardList, setCardList] = React.useState([]);
   const options = {
     chart: {
-      id: "basic-bar",
+      id: 'basic-bar',
       height: 380,
       grid: {
         show: false,
-
-      }
+      },
     },
     xaxis: {
       show: false,
@@ -58,35 +58,34 @@ const StatCards = () => {
       show: false,
       // categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
     },
-
-  }
+  };
   const series = [
     {
-      name: "series-1",
-      data: [30, 40, 45, 50, 49, 60, 70, 91]
-    }
-  ]
+      name: 'series-1',
+      data: [30, 40, 45, 50, 49, 60, 70, 91],
+    },
+  ];
 
   React.useEffect(() => {
-    getCardData()
-  }, [])
+    getCardData();
+  }, []);
 
   const getCardData = async () => {
     await axios
       .get(`${GET_CARD_DATA}`)
       .then((res) => {
-        const dataToMap = res?.data?.data
+        const dataToMap = res?.data?.data;
         dataToMap.forEach((object, index) => {
           object.icon = iconList[index];
         });
         setCardList(dataToMap);
       })
       .catch((err) => console.log(err));
-  }
+  };
   return (
     <Grid container spacing={2} sx={{ mb: '24px' }}>
       {cardList.map((item, index) => (
-        <Grid item xs={12} md={3} key={index}>
+        <Grid item xs={4} md={4} lg={4} xl={3} key={index}>
           <StyledCard elevation={6}>
             <ContentBox>
               <Icon className="icon">{item.icon}</Icon>
@@ -101,9 +100,7 @@ const StatCards = () => {
                 <Icon>arrow_right_alt</Icon>
               </IconButton>
             </Tooltip> */}
-
           </StyledCard>
-
         </Grid>
       ))}
     </Grid>
