@@ -2,9 +2,19 @@ import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react'; // must go before plugins
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline'; // a plugin!
 import axios from '../../../axios';
-import { FULL_CALENDAR_EVENTS, FULL_CALENDAR_RESOURCES } from 'app/api';
+import {
+  ASSIGN_BOOKING_OLD_DISPATCH,
+  DELETE_BOOKING_OLD_DISPATCH,
+  FULL_CALENDAR_EVENTS,
+  FULL_CALENDAR_RESOURCES,
+  UPDATE_BOOKING_OLD_DISPATCH,
+} from 'app/api';
+import $ from 'jquery';
+import interactionPlugin from '@fullcalendar/interaction';
+import { toast, Toaster } from 'react-hot-toast';
+import { Box } from '@mui/material';
 
-function DemoApp() {
+function DemoApp({ setDrawerState, setSelectedBooking }) {
   const [resources, setResources] = useState([]);
   const [events, setEvents] = useState([]);
 
@@ -16,7 +26,7 @@ function DemoApp() {
     await axios
       .get(`${FULL_CALENDAR_EVENTS}`)
       .then((res) => {
-        debugger;
+        setEvents(res?.data?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -24,7 +34,7 @@ function DemoApp() {
     await axios
       .get(`${FULL_CALENDAR_RESOURCES}`)
       .then((res) => {
-        debugger;
+        setResources(res?.data?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -45,14 +55,6 @@ function DemoApp() {
     );
   };
   const eventRender = (info) => {
-    debugger;
-    // return (
-    //   <>
-    //     <b>{eventInfo.timeText}</b>
-    //     <i>{eventInfo.event.title}</i>
-    //   </>
-    // );
-    // return <span>Hello</span>;
     if (
       info.event.extendedProps.description != '' &&
       typeof info.event.extendedProps.description !== 'undefined'
@@ -75,59 +77,134 @@ function DemoApp() {
       } else {
         event_desc = '<br/>' + info.event.extendedProps.description;
       }
-      //   $(info.el).find('.fc-event-title').append(event_desc);
-      return event_desc;
+      $(info.el).find('.fc-event-title').append(event_desc);
     }
   };
+  const eventDrop = (info) => {
+    if (!info.event.extendedProps.draggable) {
+      info.revert();
+      return;
+    }
+    if (info.oldResource === null && info.newResource === null) {
+      info.revert();
+      return;
+    }
+
+    if (info.oldEvent.start.toISOString() !== info.event.start.toISOString()) {
+      info.revert();
+    } else {
+      if (info?.oldResource?.id === '0') {
+        if (info.oldEvent.start.toISOString() !== info.event.start.toISOString()) {
+          info.revert();
+        }
+        toast.promise(
+          axios.post(`${ASSIGN_BOOKING_OLD_DISPATCH}`, {
+            schedule_id: info.event.extendedProps.schedule_id,
+            cleaner_id: info.newResource.id,
+          }),
+          {
+            loading: () => {
+              return `Assigning Booking!`;
+            },
+            success: (res) => {
+              getEvents();
+              return res?.data?.message;
+            },
+            error: (err) => {
+              info.revert();
+              return err?.message;
+            },
+          }
+        );
+      } else if (info?.newResource?.id === '0') {
+        toast.promise(
+          axios.delete(
+            `${DELETE_BOOKING_OLD_DISPATCH}?dispatch_id=${info.event.extendedProps.dispatch_id}`
+          ),
+          {
+            loading: () => {
+              return `Unassigning Booking!`;
+            },
+            success: (res) => {
+              getEvents();
+              return res?.data?.message;
+            },
+            error: (err) => {
+              info.revert();
+              return err?.message;
+            },
+          }
+        );
+      } else {
+        toast.promise(
+          axios.put(`${UPDATE_BOOKING_OLD_DISPATCH}`, {
+            schedule_id: info.event.extendedProps.schedule_id,
+            dispatch_id: info.event.extendedProps.dispatch_id,
+            cleaner_id: info?.newResource?.id,
+          }),
+          {
+            loading: () => {
+              return `Assigning Booking to Other Cleaners!`;
+            },
+            success: (res) => {
+              getEvents();
+              return res?.data?.message;
+            },
+            error: (err) => {
+              info.revert();
+              return err?.message;
+            },
+          }
+        );
+      }
+    }
+  };
+  const eventClick = (info) => {
+    if (!info.event.extendedProps.draggable) {
+      return;
+    }
+    setDrawerState(true);
+    setSelectedBooking(info.event.extendedProps);
+  };
   return (
-    <FullCalendar
-      schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
-      plugins={[resourceTimelinePlugin]}
-      headerToolbar={{
-        right: 'today prev,next',
-        center: 'title',
-        left: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth',
+    <Box
+      sx={{
+        '& .fc-datagrid-cell-cushion': {
+          overflow: 'auto !important',
+          width: 'fit-content !important',
+        },
       }}
-      resourceAreaWidth="20%"
-      contentHeight="auto"
-      aspectRatio={1.5}
-      initialView="resourceTimelineDay"
-      scrollTime="06=00"
-      resourceGroupField="building"
-      timeZone="utc"
-      slotDuration="00:30:00"
-      snapDuration="00:30:00"
-      editable={false}
-      eventResourceEditable={true}
-      eventDurationEditable={false}
-      dayMaxEvents={true}
-      resources={[
-        { id: '0', building: 'None', title: 'Unassigned', eventColor: 'orange', sort: 0 },
-        {
-          id: 1,
-          building: 'Active',
-          title: 'obaidsa Rehman',
-          ph: '+923034142927',
-          sort: 1,
-          html: '<i class="material-icons">edit</i>',
-        },
-      ]}
-      events={[
-        {
-          resourceId: 1,
-          dispatch_id: 1,
-          booking_id: 72,
-          title: 'fcgvhjb fgvhbjk, 22:32 - 23:32',
-          description: 'vgh, jkjk',
-          recur: true,
-          draggable: true,
-          start: '2022-12-19T22:32:55+00:00',
-          end: '2022-12-19T23:32:58+00:00',
-        },
-      ]}
-      resourceLabelContent={(args) => resourceContent(args)}
-      eventContent={(info) => eventRender(info)}
-    />
+    >
+      <FullCalendar
+        schedulerLicenseKey="CC-Attribution-NonCommercial-NoDerivatives"
+        plugins={[resourceTimelinePlugin, interactionPlugin]}
+        headerToolbar={{
+          right: 'today prev,next',
+          center: 'title',
+          left: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth',
+        }}
+        // resourceAreaWidth="20%"
+        contentHeight="auto"
+        aspectRatio={1.5}
+        initialView="resourceTimelineDay"
+        scrollTime="06=00"
+        resourceGroupField="building"
+        timeZone="utc"
+        slotDuration="00:30:00"
+        snapDuration="00:30:00"
+        editable={false}
+        eventResourceEditable={true}
+        eventDurationEditable={false}
+        dayMaxEvents={true}
+        resources={resources}
+        events={events}
+        resourceLabelContent={(args) => resourceContent(args)}
+        eventDidMount={(info) => eventRender(info)}
+        eventDrop={(info) => eventDrop(info)}
+        eventClick={(info) => eventClick(info)}
+      />
+      <Toaster position="top-right" />
+    </Box>
   );
 }
 

@@ -509,7 +509,15 @@ function BookingOrderDetails() {
                                 <Grid item xs={3}>
                                   {moment.utc(location?.check_out).format('lll')}
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid
+                                  item
+                                  xs={3}
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                  }}
+                                >
                                   <Tooltip title="See location on Google Map">
                                     <Button
                                       variant="text"

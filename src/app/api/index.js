@@ -67,3 +67,6 @@ export const ADMIN_SIDE_CUSTOMER_BOOKINGS = '/booking/admin_user_booking';
 
 export const FULL_CALENDAR_EVENTS = '/booking/get_events';
 export const FULL_CALENDAR_RESOURCES = '/booking/get_resources';
+export const ASSIGN_BOOKING_OLD_DISPATCH = '/booking/new_dispatcher_ajax';
+export const DELETE_BOOKING_OLD_DISPATCH = '/booking/remove_dispatcher';
+export const UPDATE_BOOKING_OLD_DISPATCH = '/booking/update_dispatcher_ajax';

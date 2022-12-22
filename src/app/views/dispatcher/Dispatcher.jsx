@@ -13,7 +13,6 @@ import {
 } from 'app/api';
 import toast, { Toaster } from 'react-hot-toast';
 import 'react-big-scheduler/lib/css/style.css';
-import Basic from './Basic.js';
 import * as _ from 'lodash';
 import Drawer from '@mui/material/Drawer';
 import CloseIcon from '@mui/icons-material/Close';
@@ -56,147 +55,9 @@ const DrawerMain = styled('div')(({ theme }) => ({
 function Dispatcher() {
   const params = useParams();
   const navigate = useNavigate();
-  const [myEvents, setMyEvents] = useState([]);
-  const [serviceProviderList, setServiceProviderList] = useState([]);
-  const [leaveTime, setLeaveTime] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [drawerState, setDrawerState] = useState(false);
-  const [myEventsTwo, setMyEventsTwo] = useState([]);
-  const [compareEvents, setCompareEvents] = useState([]);
-  const [loaderShow, setLoaderShow] = useState([false, false]);
-
-  useEffect(() => {
-    serviceListAPI();
-    getEventList();
-  }, []);
-  const getEventList = async () => {
-    setLoaderShow([true, true]);
-    await axios
-      .get(`${BOOKING_DISPATCH_TWO}`)
-      .then((res) => {
-        const mapData = res.data.data.map((item) => {
-          return {
-            ...item,
-            id: item?.booking?.id,
-            start: moment.utc(item?.booking?.schedule?.start_time).format('YYYY-MM-DD HH:mm:ss'),
-            end: moment.utc(item?.booking?.schedule?.end_time).format('YYYY-MM-DD HH:mm:ss'),
-            resourceId: item?.service_provider === null ? 'r1' : item?.service_provider,
-            title: `${item?.booking?.bod?.bod_contact_info?.first_name} ${item?.booking?.bod?.bod_contact_info?.last_name}`,
-            // rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
-            resizable: false,
-            bgColor: '#488FAB',
-            type: 1,
-            bod: item?.booking?.bod,
-            schedule: item?.booking?.schedule,
-            dispatch_id: item?.id,
-            customer_notes: item?.booking?.customer_notes,
-            cleaner_notes: item?.booking?.cleaner_notes,
-          };
-        });
-        setMyEventsTwo(_.sortBy(mapData, ['start']));
-        setLoaderShow([false, true]);
-      })
-      .catch((err) => console.log(err));
-    await axios
-      .get(`${BOOKING_DISPATCH}`)
-      .then((res) => {
-        const mapData = res.data.data.map((item) => {
-          return {
-            ...item,
-            id: item?.schedule?.booking,
-            start: moment.utc(item?.schedule?.start_time).format('YYYY-MM-DD HH:mm:ss'),
-            end: moment.utc(item?.schedule?.end_time).format('YYYY-MM-DD HH:mm:ss'),
-            resourceId: item?.service_provider === null ? 'r1' : item?.service_provider,
-            title: `${item?.bod?.bod_contact_info?.first_name} ${item?.bod?.bod_contact_info?.last_name}`,
-            // rrule: 'FREQ=WEEKLY;DTSTART=20171219T013000Z;BYDAY=TU,FR',
-            resizable: false,
-            bgColor: '#488FAB',
-            type: 1,
-          };
-        });
-        setCompareEvents(mapData);
-        setMyEvents(
-          _.sortBy(
-            mapData.filter((obj) => obj.status === 'scheduled' && obj.resourceId === 'r1'),
-            ['start']
-          )
-        );
-        setLoaderShow([false, false]);
-      })
-      .catch((err) => console.log(err));
-  };
-  const serviceListAPI = async () => {
-    const dupEvent = [];
-    await axios
-      .get(`${GET_SERVICE_PROVIDER_LIST}`, {
-        headers: { 'Content-Type': 'application/json' },
-      })
-      .then((res) => {
-        let arr = [
-          {
-            id: 'r0',
-            name: 'None',
-            groupOnly: true,
-          },
-          {
-            id: 'r1',
-            name: 'Unassigned',
-            parentId: 'r0',
-          },
-          {
-            id: 'r2',
-            name: 'Active',
-            groupOnly: true,
-          },
-          {
-            id: 'r3',
-            name: 'Inactive',
-            groupOnly: true,
-          },
-        ];
-        res?.data?.data?.map((item) => {
-          if (item.leave_time.length > 0) {
-            item.leave_time.forEach((leave) => {
-              dupEvent.push({
-                id: `leave${leave.id}`,
-                start: moment.utc(leave?.start).format('YYYY-MM-DD HH:mm:ss'),
-                end: moment.utc(leave?.end).format('YYYY-MM-DD HH:mm:ss'),
-                resourceId: leave?.service_provider,
-                title: leave?.title,
-                resizable: false,
-                bgColor: 'rgb(217, 35, 53)',
-                movable: false,
-                type: 3,
-                schedule: { start_time: leave?.start, end_time: leave?.end },
-              });
-            });
-          }
-
-          if (item?.is_active === true) {
-            arr.push({
-              ...item,
-              id: item?.id,
-              name: `${item?.user_profile?.first_name} ${item?.user_profile?.last_name}`,
-              parentId: 'r2',
-            });
-          } else {
-            arr.push({
-              ...item,
-              id: item?.id,
-              name:
-                `${item?.user_profile?.first_name} ${item?.user_profile?.last_name}` +
-                '\n' +
-                `${item?.user_profile?.phone_number}`,
-              parentId: 'r3',
-            });
-          }
-        });
-        setLeaveTime(dupEvent);
-        setServiceProviderList(arr);
-      })
-      .catch((err) => console.log(err));
-  };
-
+  console.log(selectedBooking);
   return (
     <>
       <Container>
@@ -209,31 +70,7 @@ function Dispatcher() {
           />
         </Box>
         <SimpleCard>
-          <DemoApp />
-          {/* {!loaderShow[0] && !loaderShow[1] ? (
-            <Basic
-              myEvents={myEvents}
-              myEventsTwo={myEventsTwo}
-              leaveTimeList={leaveTime}
-              serviceProviderList={serviceProviderList}
-              getEventList={getEventList}
-              setDrawerState={setDrawerState}
-              setSelectedBooking={setSelectedBooking}
-              compareEvents={compareEvents}
-            />
-          ) : (
-            <Box
-              sx={{
-                display: 'flex',
-                width: '100%',
-                height: '50vh',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          )} */}
+          <DemoApp setDrawerState={setDrawerState} setSelectedBooking={setSelectedBooking} />
         </SimpleCard>
       </Container>
       <Drawer
@@ -275,7 +112,7 @@ function Dispatcher() {
                 Booking Number
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                {selectedBooking?.id}
+                {selectedBooking?.booking_id}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Schedule Id
@@ -345,7 +182,9 @@ function Dispatcher() {
                 variant="contained"
                 color="primary"
                 onClick={() =>
-                  navigate(`/dashboard/booking-appointments/${selectedBooking?.id}/details/`)
+                  navigate(
+                    `/dashboard/booking-appointments/${selectedBooking?.booking_id}/details/`
+                  )
                 }
               >
                 View Details
