@@ -9,11 +9,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { CREATE_BOOKING, GET_BOOKING_DATA } from 'app/api';
+import { CREATE_CUSTOMER_SIDE_BOOKING, GET_BOOKING_DATA, USER_CARD_DETAILS } from 'app/api';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import LoginIcon from '@mui/icons-material/Login';
+import axios from '../../../axios';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import Logo from '../../../assets/logo.png';
@@ -25,22 +24,12 @@ import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import moment from 'moment';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { ElementsConsumer, CardElement } from '@stripe/react-stripe-js';
 import { LoadingButton } from '@mui/lab';
 import * as _ from 'lodash';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-
-const stripePromise = loadStripe(
-  'pk_test_51LuzvBImI0pxinz8Q2l9HUY7blFIb0wsUFwh12FrPGbdAlXITe0rsfJJxU2hEAcjHkf0Q4i4qvKM1UcwZ9MVg6ul00w2pt5wL1'
-);
 
 const MainBox = styled(Box)(({ theme }) => ({
   '& .topHeader': {
@@ -108,6 +97,7 @@ function CustomerBooking() {
   const [selectedExtras, setSelectedExtras] = useState([]);
   const [frequency, setFrequency] = useState('biweekly');
   const [expanded, setExpanded] = useState(false);
+  const [userCardDetails, setUserCardDetails] = useState(null);
 
   const handleChangeAccordian = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -132,7 +122,6 @@ function CustomerBooking() {
     additional_info: Yup.string().required('Additional information is required!'),
     customer_notes: Yup.string().required('Customer notes are required!'),
     how_to_enter_on_premise: Yup.string().required('This field is required!'),
-    card_token: Yup.string().required('Card details are required!'),
     package_selection: Yup.string().required('Select minimum 1 package!'),
   });
 
@@ -153,7 +142,6 @@ function CustomerBooking() {
       promo_code: '',
       additional_info: 'Null',
       how_to_enter_on_premise: 'Null',
-      card_token: '',
       package_selection: '',
       customer_notes: 'Null',
     },
@@ -186,17 +174,12 @@ function CustomerBooking() {
         start_time: values?.start_time,
         start_date: values?.start_date,
         additional_info: values?.additional_info,
-        card_token: values?.card_token,
         customer_notes: values?.customer_notes,
       };
       toast.promise(
-        axios.post(
-          `https://api-cleany-backend.herokuapp.com${CREATE_BOOKING}/${bookingData?.id}`,
-          objToSend,
-          {
-            headers: { 'Content-Type': 'application/json' },
-          }
-        ),
+        axios.post(`${CREATE_CUSTOMER_SIDE_BOOKING}/${bookingData?.id}`, objToSend, {
+          headers: { 'Content-Type': 'application/json' },
+        }),
         {
           loading: () => {
             return `Creating Booking!`;
@@ -220,9 +203,16 @@ function CustomerBooking() {
 
   useEffect(async () => {
     await axios
-      .get(`https://api-cleany-backend.herokuapp.com${GET_BOOKING_DATA}/${params?.slug}`)
+      .get(`${GET_BOOKING_DATA}/${params?.slug}`)
       .then((res) => {
         setBookingData(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+
+    await axios
+      .get(`${USER_CARD_DETAILS}`)
+      .then((res) => {
+        setUserCardDetails(res?.data?.data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -277,49 +267,18 @@ function CustomerBooking() {
     handleChange,
     handleBlur,
   } = formik;
-  const handleCardSubmit = async (stripe, elements) => {
-    if (!stripe || !elements) {
-      return;
-    }
 
-    const card = elements.getElement(CardElement);
-    const result = await stripe.createToken(card);
-    if (result.error) {
-      toast.error(result.error.message);
-      setFieldValue('card_token', '');
-    } else {
-      toast.success('Card successfully applied!');
-      setFieldValue('card_token', result.token.id);
-    }
-  };
-  const CARD_ELEMENT_OPTIONS = {
-    style: {
-      base: {
-        border: '1px solid gray',
-        color: '#303238',
-        fontSize: '16px',
-        fontFamily: 'sans-serif',
-        fontSmoothing: 'antialiased',
-        '::placeholder': {
-          color: '#818082',
-        },
-      },
-      invalid: {
-        color: '#e5424d',
-        ':focus': {
-          color: '#303238',
-        },
-      },
-    },
-  };
   return (
     <MainBox>
       <Box className="topHeader">
         <Container maxWidth="lg">
-          <Box display={'flex'} alignItems="center" justifyContent={'space-between'}>
-            <Button variant="text" startIcon={<LoginIcon />} className="signInBtn">
-              Customer Sign in
-            </Button>
+          <Box
+            display={'flex'}
+            sx={{ height: '40px' }}
+            alignItems="center"
+            justifyContent={'space-between'}
+          >
+            <Box></Box>
             <Box display={'flex'} alignItems="center">
               <Box display={'flex'} alignItems="center">
                 <PhoneIcon className="bodyTxt" />
@@ -824,73 +783,53 @@ function CustomerBooking() {
                     <Typography variant="body1" style={{ paddingBottom: '1rem' }}>
                       First apply card then click on book now!
                     </Typography>
+                    <Box
+                      sx={{
+                        width: '100%',
+                        '& h4': {
+                          margin: 'unset',
+                        },
+                        '& p': {
+                          margin: 'unset',
+                        },
+                      }}
+                    >
+                      <Grid container rowGap={2}>
+                        <Grid item xs={6}>
+                          <h4>Card name</h4>
+                          <p>{userCardDetails?.brand}</p>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <h4>Card no</h4>
+                          <p>**** **** **** {userCardDetails?.card}</p>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <h4>Expiry month</h4>
+                          <p>{userCardDetails?.exp_month}</p>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <h4>Expiry year</h4>
+                          <p>{userCardDetails?.exp_year}</p>
+                        </Grid>
+                      </Grid>
+                    </Box>
 
-                    <Elements stripe={stripePromise}>
-                      <ElementsConsumer>
-                        {({ stripe, elements }) => (
-                          <>
-                            <Box
-                              sx={{
-                                borderRadius: '4px',
-                                border: Boolean(errors.card_token)
-                                  ? '1px solid #e5424d'
-                                  : '1px solid rgba(0, 0, 0, 0.23);',
-                              }}
-                            >
-                              <CardElement options={CARD_ELEMENT_OPTIONS} />
-                            </Box>
-                            {Boolean(errors.card_token) && (
-                              <Box
-                                sx={{
-                                  color: '#FF3D57',
-                                  fontWeight: '400',
-                                  fontSize: '0.75rem',
-                                  letterSpacing: '0.03333em',
-                                  marginTop: '4px',
-                                  marginBottom: '0',
-                                  marginLeft: '14px',
-                                }}
-                              >
-                                {errors.card_token}
-                              </Box>
-                            )}
-                            <Box textAlign={'center'} paddingTop="1rem">
-                              <Button
-                                variant="contained"
-                                color="inherit"
-                                onClick={() => handleCardSubmit(stripe, elements)}
-                              >
-                                Apply Card
-                              </Button>
-                            </Box>
-                            <FormGroup sx={{ marginTop: '2rem' }}>
-                              <FormControlLabel
-                                control={<Checkbox defaultChecked />}
-                                label="By clicking the button below, I understand that I am purchasing a recurring/onetime service subject to Cleany's Terms of Use and Cancellation Policy and my payment method will be charged before each booking."
-                              />
-                            </FormGroup>
-                            <LoadingButton
-                              type="submit"
-                              size="large"
-                              color="primary"
-                              loading={loading}
-                              variant="contained"
-                              sx={{ mb: 2, mt: 3 }}
-                              fullWidth
-                              onClick={() => {
-                                if (Object.keys(errors).length > 0) {
-                                  toast.error(
-                                    'There are some fields missing. Please fill data properly!'
-                                  );
-                                }
-                              }}
-                            >
-                              Book Now
-                            </LoadingButton>
-                          </>
-                        )}
-                      </ElementsConsumer>
-                    </Elements>
+                    <LoadingButton
+                      type="submit"
+                      size="large"
+                      color="primary"
+                      loading={loading}
+                      variant="contained"
+                      sx={{ mb: 2, mt: 3 }}
+                      fullWidth
+                      onClick={() => {
+                        if (Object.keys(errors).length > 0) {
+                          toast.error('There are some fields missing. Please fill data properly!');
+                        }
+                      }}
+                    >
+                      Book Now
+                    </LoadingButton>
                   </Form>
                 </FormikProvider>
               </Box>

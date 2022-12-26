@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Box, Button, CircularProgress, Divider, styled, Typography } from '@mui/material';
+import { Box, Button, Divider, styled, Typography } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from '../../../axios';
-import {
-  BOOKING_DISPATCH,
-  BOOKING_DISPATCH_TWO,
-  GET_PROVIDER_WORK_LIST,
-  GET_SERVICE_PROVIDER_LIST,
-} from 'app/api';
+
 import toast, { Toaster } from 'react-hot-toast';
-import 'react-big-scheduler/lib/css/style.css';
 import * as _ from 'lodash';
 import Drawer from '@mui/material/Drawer';
 import CloseIcon from '@mui/icons-material/Close';
@@ -130,8 +123,7 @@ function Dispatcher() {
                 Customer
               </Typography>
               <Typography variant="body1" paddingBottom={'0.5rem'}>
-                {selectedBooking?.bod?.bod_contact_info?.first_name}{' '}
-                {selectedBooking?.bod?.bod_contact_info?.last_name}
+                {selectedBooking?.customer_name}
               </Typography>
               <Typography variant="body1" fontWeight={'bold'} fontSize={'14px'}>
                 Location

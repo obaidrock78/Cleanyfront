@@ -1,7 +1,4 @@
 export { default as Breadcrumb } from './Breadcrumb';
-export { default as ChatAvatar } from './ChatAvatar';
-export { default as Chatbox } from './Chatbox';
-export { default as ChatHead } from './ChatHead';
 export { default as ConfirmationDialog } from './ConfirmationDialog';
 export { default as FacebookIcon } from './icons/FacebookIcon';
 export { default as GoogleIcon } from './icons/GoogleIcon';
@@ -18,7 +15,6 @@ export { default as MatxSidenavContainer } from './MatxSidenav/MatxSidenavContai
 export { default as MatxSidenavContent } from './MatxSidenav/MatxSidenavContent';
 // export { default as MatxSnackbar } from './MatxSnackbar';
 export { default as MatxSuspense } from './MatxSuspense';
-export { EchartTheme } from './MatxTheme/EchartTheme';
 export { default as MatxTheme } from './MatxTheme/MatxTheme';
 // export { default as MatxToolbarMenu } from './MatxToolbarMenu';
 export { default as MatxVerticalNav } from './MatxVerticalNav/MatxVerticalNav';

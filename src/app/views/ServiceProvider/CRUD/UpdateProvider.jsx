@@ -11,6 +11,7 @@ import { UPDATE_SERVICE_PROVIDER } from 'app/api';
 import { ImageUpload } from 'app/components/DropZone/ImageUpload';
 import createNFTUpload from '../../../../assets/createNFTUpload.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { MuiColorInput } from 'mui-color-input';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -65,6 +66,11 @@ function UpdateProvider() {
         return true;
       }),
     time_zone: Yup.string().required('Timezone is required'),
+    hourly_rate: Yup.number('Hourly rate is required!')
+      .min(0, 'Hourly rate cannot be negative!')
+      .required('Hourly rate is required!')
+      .nullable(),
+    color: Yup.string().required('Color is required'),
   });
 
   const formik = useFormik({
@@ -78,10 +84,12 @@ function UpdateProvider() {
       city: '',
       state: 'Florida',
       zip_code: '',
+      hourly_rate: '',
       gender: 'male',
       language: 'english',
       profile_picture: '',
       time_zone: '-6',
+      color: '#fff000',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -94,9 +102,11 @@ function UpdateProvider() {
       formData.append('city', values?.city);
       formData.append('state', values?.state);
       formData.append('zip_code', values?.zip_code);
+      formData.append('hourly_rate', values?.hourly_rate);
       formData.append('gender', values?.gender);
       formData.append('language', values?.language);
       formData.append('role', 'Cleaner');
+      formData.append('color', values?.color);
       if (typeof values?.profile_picture !== 'string') {
         formData.append('profile_picture', values?.profile_picture);
       }
@@ -151,6 +161,8 @@ function UpdateProvider() {
     setFieldValue('zip_code', state?.user_profile?.zip_code);
     setFieldValue('gender', state?.user_profile?.gender);
     setFieldValue('language', state?.user_profile?.language);
+    setFieldValue('hourly_rate', state?.user_profile?.hourly_rate);
+    setFieldValue('color', state?.user_profile?.color);
     setFieldValue(
       'profile_picture',
       `https://api-cleany-backend.herokuapp.com${state?.user_profile?.profile_picture}`
@@ -246,6 +258,28 @@ function UpdateProvider() {
                     error={Boolean(touched.phone && errors.phone)}
                     helperText={touched.phone && errors.phone}
                   ></TextField>
+                </Grid>
+                <Grid item lg={6} md={6} sm={12} xs={12}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    type="number"
+                    label="Hourly Rate*"
+                    {...getFieldProps('hourly_rate')}
+                    error={Boolean(touched.hourly_rate && errors.hourly_rate)}
+                    helperText={touched.hourly_rate && errors.hourly_rate}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <MuiColorInput
+                    format="hex"
+                    size="small"
+                    value={values.color}
+                    error={Boolean(touched.color && errors.color)}
+                    helperText={touched.color && errors.color}
+                    onChange={(color) => setFieldValue('color', color)}
+                    fullWidth
+                  />
                 </Grid>
               </Grid>
               <Typography variant="h5" className="heading">

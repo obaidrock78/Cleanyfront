@@ -23,12 +23,18 @@ function DemoApp({ setDrawerState, setSelectedBooking }) {
     getResources();
   }, []);
   const getEvents = async () => {
-    await axios
-      .get(`${FULL_CALENDAR_EVENTS}`)
-      .then((res) => {
+    toast.promise(axios.get(`${FULL_CALENDAR_EVENTS}`), {
+      loading: () => {
+        return `Getting Bookings in Dispatcher!`;
+      },
+      success: (res) => {
         setEvents(res?.data?.data);
-      })
-      .catch((err) => console.log(err));
+        return 'Bookings Updated!';
+      },
+      error: (err) => {
+        return err?.message;
+      },
+    });
   };
   const getResources = async () => {
     await axios
@@ -39,18 +45,37 @@ function DemoApp({ setDrawerState, setSelectedBooking }) {
       .catch((err) => console.log(err));
   };
   const resourceContent = (arg) => {
+    const color = arg?.resource?._resource?.extendedProps?.color;
     return (
       <span>
         {arg.resource.title !== 'Unassigned' && (
-          <img
-            style={{ marginBottom: '-5px', width: '24px', height: '24px' }}
-            src="https://cdn.podiumio.com/platform/entities/entity-employee-blue-100.png"
-          />
+          <>
+            <img
+              style={{ marginBottom: '-5px', width: '24px', height: '24px' }}
+              src="https://cdn.podiumio.com/platform/entities/entity-employee-blue-100.png"
+            />
+            <span
+              style={{
+                borderRadius: '10px',
+                padding: '5px 10px',
+                background: color === undefined ? '' : color,
+                fontWeight: 'bold',
+                margin: 'unset',
+                marginLeft: '5px',
+                color: 'white',
+              }}
+            >
+              {arg.resource.title}
+            </span>
+          </>
         )}
-
-        <span style={{ fontWeight: 'bold', fontSize: '1rem', paddingLeft: '5px', margin: 'unset' }}>
-          {arg.resource.title}
-        </span>
+        {arg.resource.title === 'Unassigned' && (
+          <span
+            style={{ fontWeight: 'bold', fontSize: '1rem', paddingLeft: '5px', margin: 'unset' }}
+          >
+            {arg.resource.title}
+          </span>
+        )}
       </span>
     );
   };

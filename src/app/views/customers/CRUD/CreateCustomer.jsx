@@ -14,6 +14,7 @@ import Dropzone from '../../../components/DropZone/Dropzone';
 import createNftDocuments from '../../../../assets/createNftDocuments.png';
 import ImageBox from '../../../components/DropZone/ImageBox';
 import { useNavigate } from 'react-router-dom';
+import { MuiColorInput } from 'mui-color-input';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -68,6 +69,7 @@ function CreateCustomer() {
       }),
     time_zone: Yup.string().required('Timezone is required'),
     document: Yup.array().min(1, 'Document is required!').required('Document is required!'),
+    color: Yup.string().required('Color is required'),
   });
 
   const formik = useFormik({
@@ -86,6 +88,7 @@ function CreateCustomer() {
       document: null,
       profile_picture: '',
       time_zone: '-6',
+      color: '#fff000',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -104,6 +107,7 @@ function CreateCustomer() {
       formData.append('profile_picture', values?.profile_picture);
       formData.append('time_zone', values?.time_zone);
       formData.append('role', 'Customer');
+      formData.append('color', values?.color);
       setLoading(true);
       toast.promise(
         axios.post(`${ADMIN_SIDE_ADD_CUSTOMER}`, formData, {
@@ -218,6 +222,17 @@ function CreateCustomer() {
                     error={Boolean(touched.phone && errors.phone)}
                     helperText={touched.phone && errors.phone}
                   ></TextField>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <MuiColorInput
+                    format="hex"
+                    size="small"
+                    value={values.color}
+                    error={Boolean(touched.color && errors.color)}
+                    helperText={touched.color && errors.color}
+                    onChange={(color) => setFieldValue('color', color)}
+                    fullWidth
+                  />
                 </Grid>
               </Grid>
               <Typography variant="h5" className="heading">

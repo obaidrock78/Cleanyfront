@@ -3,11 +3,9 @@ import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import axios from '../../../axios';
 import { GET_SERVICE_PROVIDER_LIST } from 'app/api';
-import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useNavigate } from 'react-router-dom';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -20,6 +18,7 @@ const Container = styled('div')(({ theme }) => ({
   },
 }));
 const DataTableBox = styled(Box)(() => ({
+  overflowX: 'auto',
   width: '100%',
   '& .MuiDataGrid-main': {},
   '& .MuiDataGrid-columnHeaders': {
@@ -133,6 +132,7 @@ function ServiceProvider() {
       headerName: 'Service Provider',
       flex: 1,
       sortable: false,
+      minWidth: 300,
       renderCell: (item) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -161,6 +161,7 @@ function ServiceProvider() {
       headerName: 'Work Hours',
       flex: 1,
       sortable: false,
+      minWidth: 120,
       renderCell: (item) => {
         return (
           <TableHeading
@@ -177,10 +178,43 @@ function ServiceProvider() {
       },
     },
     {
+      field: 'is_leave',
+      headerName: 'Hourly Rate',
+      flex: 1,
+      sortable: false,
+      minWidth: 120,
+      renderCell: (item) => {
+        return <TableHeading>{item?.row?.user_profile?.hourly_rate}</TableHeading>;
+      },
+    },
+    {
+      field: 'leave_time',
+      headerName: 'Color',
+      flex: 1,
+      minWidth: 120,
+      renderCell: (item) => {
+        return (
+          <Box
+            sx={{
+              background: `${item?.row?.user_profile?.color} !important`,
+              width: '100%',
+              pl: 2,
+              py: 2,
+            }}
+          >
+            <TableHeading style={{ color: '#c8cdcc' }}>
+              {item?.row?.user_profile?.color}
+            </TableHeading>
+          </Box>
+        );
+      },
+    },
+    {
       field: 'is_active',
       headerName: 'Status',
       flex: 1,
       sortable: false,
+      minWidth: 130,
       renderCell: (item) => {
         return (
           <TableHeading>
@@ -219,6 +253,8 @@ function ServiceProvider() {
       field: 'email',
       headerName: '',
       flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
       sortable: false,
       renderCell: (item) => {
         const index = item.api.getRowIndex(item.row.id);
