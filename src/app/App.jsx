@@ -6,10 +6,8 @@ import { AuthProvider } from './contexts/JWTAuthContext';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { Store } from './redux/Store';
 import AuthGuard from 'app/auth/AuthGuard';
-import chartsRoute from 'app/views/charts/ChartsRoute';
 import dashboardRoutes from 'app/views/dashboard/DashboardRoutes';
 import settings from 'app/views/Setting/SettingRoutes';
-import materialRoutes from 'app/views/material-kit/MaterialRoutes';
 import NotFound from 'app/views/sessions/NotFound';
 import sessionRoutes from 'app/views/sessions/SessionRoutes';
 import { Navigate } from 'react-router-dom';
@@ -37,8 +35,6 @@ const App = () => {
       ),
       children: [
         ...dashboardRoutes,
-        ...chartsRoute,
-        ...materialRoutes,
         ...settings,
         ...servicesRoutes,
         ...servicesProviderRoutes,

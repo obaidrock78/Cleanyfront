@@ -18,7 +18,6 @@ export { default as MatxSidenavContainer } from './MatxSidenav/MatxSidenavContai
 export { default as MatxSidenavContent } from './MatxSidenav/MatxSidenavContent';
 // export { default as MatxSnackbar } from './MatxSnackbar';
 export { default as MatxSuspense } from './MatxSuspense';
-export { EchartTheme } from './MatxTheme/EchartTheme';
 export { default as MatxTheme } from './MatxTheme/MatxTheme';
 // export { default as MatxToolbarMenu } from './MatxToolbarMenu';
 export { default as MatxVerticalNav } from './MatxVerticalNav/MatxVerticalNav';

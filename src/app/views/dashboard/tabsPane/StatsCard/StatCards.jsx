@@ -1,9 +1,8 @@
 import React from 'react';
-import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
+import { Box, Card, Grid, Icon, styled } from '@mui/material';
 import { Small } from 'app/components/Typography';
 import { GET_CARD_DATA } from '../../../../api';
 import axios from '../../../../../axios';
-import Chart from 'react-apexcharts';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
