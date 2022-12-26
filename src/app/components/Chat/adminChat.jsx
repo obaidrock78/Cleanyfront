@@ -114,6 +114,7 @@ function Chat({ bookindDetails }) {
           height: '60vh',
           padding: '20px 20px 0px 0px',
           overflowY: 'auto',
+          overflowX: 'hidden',
           '& ul': {
             marginBottom: 'unset',
           },
@@ -159,6 +160,8 @@ function Chat({ bookindDetails }) {
                         maxWidth: '100%',
                         position: 'relative',
                         borderTopLeftRadius: '0px !important',
+                        wordBreak: 'break-all',
+                        whiteSpace: 'break-spaces',
                       }}
                     >
                       <Box
@@ -217,6 +220,8 @@ function Chat({ bookindDetails }) {
                         position: 'relative',
                         borderTopRightRadius: '0px !important',
                         marginLeft: 'auto',
+                        wordBreak: 'break-all',
+                        whiteSpace: 'break-spaces',
                       }}
                     >
                       <Box

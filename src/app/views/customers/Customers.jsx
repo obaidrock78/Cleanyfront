@@ -193,6 +193,28 @@ function Customers() {
       },
     },
     {
+      field: 'is_leave',
+      headerName: 'Color',
+      flex: 1,
+      minWidth: 120,
+      renderCell: (item) => {
+        return (
+          <Box
+            sx={{
+              background: `${item?.row?.user_profile?.color} !important`,
+              width: '100%',
+              pl: 2,
+              py: 2,
+            }}
+          >
+            <TableHeading style={{ color: '#c8cdcc' }}>
+              {item?.row?.user_profile?.color}
+            </TableHeading>
+          </Box>
+        );
+      },
+    },
+    {
       field: 'is_active',
       headerName: 'Status',
       flex: 1,

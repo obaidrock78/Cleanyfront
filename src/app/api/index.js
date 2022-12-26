@@ -73,3 +73,5 @@ export const UPDATE_BOOKING_OLD_DISPATCH = '/booking/update_dispatcher_ajax';
 
 export const USER_CARD_DETAILS = '/booking/user_card_details';
 export const CREATE_CUSTOMER_SIDE_BOOKING = '/booking/user_create_booking';
+export const GET_CUSTOMER_PROFILE = '/mobile_side/cleaner/profile';
+export const UPDATE_CUSTOMER_PROFILE = '/user_module/update_profile';

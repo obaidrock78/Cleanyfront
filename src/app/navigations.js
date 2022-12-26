@@ -13,7 +13,7 @@ export const navigations =
         {
           name: 'Settings',
           icon: 'settings_icon',
-          children: [{ name: 'Profile', iconText: 'CP', path: '/dashboard/company' }],
+          children: [{ name: 'Profile', iconText: 'CP', path: '/dashboard/settings/profile' }],
         },
       ]
     : [

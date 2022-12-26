@@ -11,6 +11,7 @@ import { ADMIN_SIDE_Update_CUSTOMER } from 'app/api';
 import { ImageUpload } from 'app/components/DropZone/ImageUpload';
 import createNFTUpload from '../../../../assets/createNFTUpload.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { MuiColorInput } from 'mui-color-input';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -65,6 +66,7 @@ function UpdateCustomer() {
         return true;
       }),
     time_zone: Yup.string().required('Timezone is required'),
+    color: Yup.string().required('Color is required'),
   });
 
   const formik = useFormik({
@@ -82,6 +84,7 @@ function UpdateCustomer() {
       language: 'english',
       profile_picture: '',
       time_zone: '-6',
+      color: '#fff000',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -104,6 +107,7 @@ function UpdateCustomer() {
       formData.append('time_zone', values?.time_zone);
       formData.append('id', state?.user_profile?.id);
       formData.append('user', state?.user_profile?.user);
+      formData.append('color', values?.color);
       setLoading(true);
       toast.promise(
         axios.put(`${ADMIN_SIDE_Update_CUSTOMER}`, formData, {
@@ -156,6 +160,7 @@ function UpdateCustomer() {
       `https://api-cleany-backend.herokuapp.com${state?.user_profile?.profile_picture}`
     );
     setFieldValue('time_zone', state?.user_profile?.time_zone);
+    setFieldValue('color', state?.user_profile?.color);
   }, []);
 
   return (
@@ -241,6 +246,17 @@ function UpdateCustomer() {
                     error={Boolean(touched.phone && errors.phone)}
                     helperText={touched.phone && errors.phone}
                   ></TextField>
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <MuiColorInput
+                    format="hex"
+                    size="small"
+                    value={values.color}
+                    error={Boolean(touched.color && errors.color)}
+                    helperText={touched.color && errors.color}
+                    onChange={(color) => setFieldValue('color', color)}
+                    fullWidth
+                  />
                 </Grid>
               </Grid>
               <Typography variant="h5" className="heading">
