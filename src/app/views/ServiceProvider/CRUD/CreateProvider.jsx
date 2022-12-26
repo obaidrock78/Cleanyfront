@@ -1,6 +1,6 @@
-import { Box, Button, Grid, MenuItem, styled, TextField, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, styled, TextField, Typography } from '@mui/material';
 import { Breadcrumb, SimpleCard } from 'app/components';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as Yup from 'yup';
 
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -14,6 +14,7 @@ import Dropzone from '../../../components/DropZone/Dropzone';
 import createNftDocuments from '../../../../assets/createNftDocuments.png';
 import ImageBox from '../../../components/DropZone/ImageBox';
 import { useNavigate } from 'react-router-dom';
+import { MuiColorInput } from 'mui-color-input';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -68,6 +69,11 @@ function CreateProvider() {
       }),
     time_zone: Yup.string().required('Timezone is required'),
     document: Yup.array().min(1, 'Document is required!').required('Document is required!'),
+    hourly_rate: Yup.number('Hourly rate is required!')
+      .min(0, 'Hourly rate cannot be negative!')
+      .required('Hourly rate is required!')
+      .nullable(),
+    color: Yup.string().required('Color is required'),
   });
 
   const formik = useFormik({
@@ -81,11 +87,13 @@ function CreateProvider() {
       city: '',
       state: 'Florida',
       zip_code: '',
+      hourly_rate: '',
       gender: 'male',
       language: 'english',
       document: null,
       profile_picture: '',
       time_zone: '-6',
+      color: '#fff000',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -98,12 +106,14 @@ function CreateProvider() {
       formData.append('city', values?.city);
       formData.append('state', values?.state);
       formData.append('zip_code', values?.zip_code);
+      formData.append('hourly_rate', values?.hourly_rate);
       formData.append('gender', values?.gender);
       formData.append('language', values?.language);
       formData.append('document', values?.document[0]);
       formData.append('profile_picture', values?.profile_picture);
       formData.append('time_zone', values?.time_zone);
       formData.append('role', 'Cleaner');
+      formData.append('color', values?.color);
       setLoading(true);
       toast.promise(
         axios.post(`${CREATE_SERVICE_PROVIDER}`, formData, {
@@ -187,6 +197,7 @@ function CreateProvider() {
                     size="small"
                     fullWidth
                     type="text"
+                    autoComplete="off"
                     label="Email*"
                     {...getFieldProps('email')}
                     error={Boolean(touched.email && errors.email)}
@@ -218,6 +229,28 @@ function CreateProvider() {
                     error={Boolean(touched.phone && errors.phone)}
                     helperText={touched.phone && errors.phone}
                   ></TextField>
+                </Grid>
+                <Grid item lg={6} md={6} sm={12} xs={12}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    type="number"
+                    label="Hourly Rate*"
+                    {...getFieldProps('hourly_rate')}
+                    error={Boolean(touched.hourly_rate && errors.hourly_rate)}
+                    helperText={touched.hourly_rate && errors.hourly_rate}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <MuiColorInput
+                    format="hex"
+                    size="small"
+                    value={values.color}
+                    error={Boolean(touched.color && errors.color)}
+                    helperText={touched.color && errors.color}
+                    onChange={(color) => setFieldValue('color', color)}
+                    fullWidth
+                  />
                 </Grid>
               </Grid>
               <Typography variant="h5" className="heading">

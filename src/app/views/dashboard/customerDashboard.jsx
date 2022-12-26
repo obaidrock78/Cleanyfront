@@ -5,6 +5,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../../axios';
+import ChargeTipModal from '../bookingOverview/Modals/ChargeTip';
 import ServiceModal from './CustomerDashboardModal/serviceModal';
 
 const Container = styled('div')(({ theme }) => ({
@@ -24,6 +25,7 @@ function CustomerDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
   const [currentBooking, setCurrentBooking] = useState(null);
   const [selectService, setSelectService] = useState(false);
+  const [chargeTip, setChargeTip] = useState(false);
 
   useEffect(() => {
     userBookingData();
@@ -328,6 +330,7 @@ function CustomerDashboard() {
           <p>Book Now</p>
         </Box>
         <Box
+          onClick={() => setChargeTip(true)}
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -371,6 +374,12 @@ function CustomerDashboard() {
         </Box>
       </Box>
       <ServiceModal open={selectService} handleClose={() => setSelectService(false)} />
+      <ChargeTipModal
+        open={chargeTip}
+        handleClose={() => setChargeTip(false)}
+        bookindDetails={currentBooking}
+        getEventList={userBookingData}
+      />
     </Container>
   );
 }

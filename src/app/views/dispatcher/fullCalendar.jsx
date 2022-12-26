@@ -23,12 +23,18 @@ function DemoApp({ setDrawerState, setSelectedBooking }) {
     getResources();
   }, []);
   const getEvents = async () => {
-    await axios
-      .get(`${FULL_CALENDAR_EVENTS}`)
-      .then((res) => {
+    toast.promise(axios.get(`${FULL_CALENDAR_EVENTS}`), {
+      loading: () => {
+        return `Getting Bookings in Dispatcher!`;
+      },
+      success: (res) => {
         setEvents(res?.data?.data);
-      })
-      .catch((err) => console.log(err));
+        return 'Bookings Updated!';
+      },
+      error: (err) => {
+        return err?.message;
+      },
+    });
   };
   const getResources = async () => {
     await axios

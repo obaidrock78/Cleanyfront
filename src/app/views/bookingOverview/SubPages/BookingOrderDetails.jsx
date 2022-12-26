@@ -43,6 +43,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Chat from 'app/components/Chat/adminChat';
 import CustomerChat from 'app/components/Chat/customerChat';
 import ChargeCustomerModal from '../Modals/ChargeCustomer';
+import ChargeTipModal from '../Modals/ChargeTip';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -71,6 +72,7 @@ function BookingOrderDetails() {
   const [openRaiseProblemModal, setOpenRaiseProblemModal] = useState(false);
   const [editBookingModal, setEditBookingModal] = useState(false);
   const [chargeCustomer, setChargeCustomer] = useState(false);
+  const [chargeTip, setChargeTip] = useState(false);
   const [bookingProblems, setBookingProblems] = useState(null);
   const [bookingData, setBookingData] = useState({});
   const [cleanerLocation, setCleanerLocation] = useState([]);
@@ -1109,7 +1111,12 @@ function BookingOrderDetails() {
                 <Button fullWidth variant="contained">
                   Generate Invoice
                 </Button>
-                <Button fullWidth variant="contained" color="success">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="success"
+                  onClick={() => setChargeTip(true)}
+                >
                   Charge Tip
                 </Button>
                 <Button fullWidth variant="contained" color="warning">
@@ -1259,6 +1266,12 @@ function BookingOrderDetails() {
         handleClose={() => setChargeCustomer(false)}
         bookindDetails={bookindDetails}
         bookingProblems={bookingProblems}
+        getEventList={getEventList}
+      />
+      <ChargeTipModal
+        open={chargeTip}
+        handleClose={() => setChargeTip(false)}
+        bookindDetails={bookindDetails}
         getEventList={getEventList}
       />
     </>
