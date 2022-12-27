@@ -44,6 +44,7 @@ import Chat from 'app/components/Chat/adminChat';
 import CustomerChat from 'app/components/Chat/customerChat';
 import ChargeCustomerModal from '../Modals/ChargeCustomer';
 import ChargeTipModal from '../Modals/ChargeTip';
+import GenerateInvoice from '../Modals/GenerateInvoice';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -73,6 +74,7 @@ function BookingOrderDetails() {
   const [editBookingModal, setEditBookingModal] = useState(false);
   const [chargeCustomer, setChargeCustomer] = useState(false);
   const [chargeTip, setChargeTip] = useState(false);
+  const [invoiceModal, setInvoiceModal] = useState(false);
   const [bookingProblems, setBookingProblems] = useState(null);
   const [bookingData, setBookingData] = useState({});
   const [cleanerLocation, setCleanerLocation] = useState([]);
@@ -1108,7 +1110,7 @@ function BookingOrderDetails() {
                     Mark Complete
                   </Button>
                 )}
-                <Button fullWidth variant="contained">
+                <Button fullWidth variant="contained" onClick={() => setInvoiceModal(true)}>
                   Generate Invoice
                 </Button>
                 <Button
@@ -1273,6 +1275,11 @@ function BookingOrderDetails() {
         handleClose={() => setChargeTip(false)}
         bookindDetails={bookindDetails}
         getEventList={getEventList}
+      />
+      <GenerateInvoice
+        open={invoiceModal}
+        handleClose={() => setInvoiceModal(false)}
+        bookindDetails={bookindDetails}
       />
     </>
   );

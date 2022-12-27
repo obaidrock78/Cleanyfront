@@ -2,7 +2,11 @@ import { Box, Button, Menu, MenuItem, Pagination, TextField, Typography } from '
 import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import axios from '../../../../axios';
-import { ADMIN_SIDE_CUSTOMER_BOOKINGS, CUSTOMER_ALL_BOOKINGS } from 'app/api';
+import {
+  ADMIN_SIDE_CUSTOMER_BOOKINGS,
+  BOOKING_APPOINTMENT_DETAILS,
+  CUSTOMER_ALL_BOOKINGS,
+} from 'app/api';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -12,8 +16,10 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import moment from 'moment';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import GenerateInvoice from 'app/views/bookingOverview/Modals/GenerateInvoice';
 
 const Container = styled('div')(({ theme }) => ({
+  overflowX: 'auto',
   margin: '30px',
   [theme.breakpoints.down('sm')]: { margin: '16px' },
   '& .breadcrumb': {
@@ -78,6 +84,8 @@ function Invoices() {
   const [statusChange, setStatusChange] = useState('scheduled');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
+  const [bookindDetails, setBookindDetails] = useState(null);
+  const [invoiceModal, setInvoiceModal] = useState(false);
 
   useEffect(() => {
     serviceListAPI();
@@ -102,8 +110,8 @@ function Invoices() {
       headerName: 'ID',
       flex: 1,
       sortable: false,
-      minWidth: 50,
-      maxWidth: 50,
+      minWidth: 60,
+      maxWidth: 60,
       renderCell: (item) => {
         return (
           <TableHeading>
@@ -114,7 +122,6 @@ function Invoices() {
                 borderRadius: '4px',
                 color: 'white',
                 height: '25px',
-                width: '25px',
                 fontSize: '13px',
                 textAlign: 'center',
               }}
@@ -129,6 +136,7 @@ function Invoices() {
       field: 'bod',
       headerName: 'Customer',
       flex: 1,
+      minWidth: 250,
       sortable: false,
       renderCell: (item) => {
         return (
@@ -155,6 +163,7 @@ function Invoices() {
       field: '',
       headerName: 'Scheduled',
       flex: 1,
+      minWidth: 200,
       sortable: false,
       renderCell: (item) => {
         return (
@@ -182,8 +191,8 @@ function Invoices() {
       field: 'status',
       headerName: 'Status',
       flex: 1,
-      minWidth: 120,
-      maxWidth: 120,
+      minWidth: 130,
+      maxWidth: 130,
       sortable: false,
       renderCell: (item) => {
         return (
@@ -197,7 +206,7 @@ function Invoices() {
       field: 'type',
       headerName: 'Location',
       flex: 1,
-      minWidth: 150,
+      minWidth: 300,
       sortable: false,
       renderCell: (item) => {
         return (
@@ -220,14 +229,17 @@ function Invoices() {
       headerName: '',
       flex: 1,
       sortable: false,
-      minWidth: 90,
-      maxWidth: 90,
+      minWidth: 140,
+      maxWidth: 140,
       renderCell: (item) => {
         return (
           <Box display={'flex'} alignItems="center" gap={1}>
             <Button
               variant="outlined"
-              onClick={() => navigate(`/dashboard/booking-appointments/${item?.row?.id}/details/`)}
+              onClick={() => {
+                getBookingDetails(item?.row?.id);
+                setInvoiceModal(true);
+              }}
             >
               Show invoice
             </Button>
@@ -236,7 +248,14 @@ function Invoices() {
       },
     },
   ];
-
+  const getBookingDetails = async (id) => {
+    await axios
+      .get(`${BOOKING_APPOINTMENT_DETAILS}/${id}`)
+      .then((res) => {
+        setBookindDetails(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <Container>
       <Box className="breadcrumb">
@@ -348,6 +367,11 @@ function Invoices() {
           </Box>
         )}
       </SimpleCard>
+      <GenerateInvoice
+        open={invoiceModal}
+        handleClose={() => setInvoiceModal(false)}
+        bookindDetails={bookindDetails}
+      />
     </Container>
   );
 }
