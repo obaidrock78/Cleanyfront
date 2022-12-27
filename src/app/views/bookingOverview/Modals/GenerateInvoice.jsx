@@ -13,7 +13,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
 } from '@mui/material';
@@ -147,7 +146,9 @@ function GenerateInvoice({ open, handleClose, bookindDetails }) {
                           <TableCell>{row.title}</TableCell>
                           <TableCell align="right">{row.discount_percent}%</TableCell>
                           <TableCell align="right">${row.price}</TableCell>
-                          <TableCell align="right">${row.price}</TableCell>
+                          <TableCell align="right">
+                            ${+row.price - (+row.price * row.discount_percent) / 100}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
