@@ -7,7 +7,7 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import moment from 'moment';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import { styled, Button, Box, Typography, } from '@mui/material';
+import { styled, Button, Box, Typography, Pagination, TextField } from '@mui/material';
 
 import { Breadcrumb, SimpleCard } from 'app/components';
 
@@ -150,7 +150,7 @@ const columns = [
         <Box sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
           {console.log(item)}
           <Button variant='contained'>
-            Edit
+            Charge
           </Button>
         </Box>
       );
@@ -163,21 +163,23 @@ const columns = [
 
 const Reports = () => {
   const [data, setData] = React.useState([]);
+  const [page, setPage] = React.useState(1);
+  const [perPage, setPerPage] = React.useState(5);
 
   React.useEffect(() => {
     const getEventList = async () => {
       await axios
-        .get(`${BOOKING_REPORTS}?booking_status=scheduled`)
+        .get(`${BOOKING_REPORTS}?booking_status=scheduled&page=${page}&per_page=${perPage}`)
         .then((res) => {
 
-          const dataToMap = res?.data?.data
+          const dataToMap = res?.data
           setData(dataToMap);
         })
         .catch((err) => console.log(err));
     };
 
     getEventList();
-  }, []);
+  }, [page, perPage]);
   return (
     <Box sx={{ p: 4 }}>
       <Box className="breadcrumb">
@@ -199,17 +201,49 @@ const Reports = () => {
                   py: 1,
                 },
               }}
-              rows={data}
+              rows={data?.data || []}
               columns={columns}
-              pageSize={10}
-              rowsPerPageOptions={[5]}
+
               getRowHeight={() => 'auto'}
               disableColumnMenu={true}
               autoHeight={true}
+              hideFooter={true}
               checkboxSelection={false}
               disableSelectionOnClick
             />
           </DataTableBox>
+          {!!data?.data?.length && (
+            <Box display="flex" alignItems={'center'} gap={3}>
+              <Pagination
+                sx={{
+                  '& .Mui-selected': {
+                    background: '#1976d2 !important',
+                    color: 'white',
+                  },
+                }}
+                count={data?.total_page}
+                page={page}
+                onChange={(event, value) => setPage(value)}
+                variant="contained"
+                color="primary"
+                shape="rounded"
+              />
+              <Box>Rows per page {data?.total_page} </Box>
+              <TextField
+                sx={{ width: '6rem' }}
+                size="small"
+                type={'number'}
+                inputProps={{ min: 0 }}
+                placeholder="Enter rows"
+                id="outlined-select-currency"
+                value={perPage}
+                onChange={(e) => {
+                  setPage(1);
+                  setPerPage(e.target.value);
+                }}
+              />
+            </Box>
+          )}
         </SimpleCard>
       </Box>
     </Box>

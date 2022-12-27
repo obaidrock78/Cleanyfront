@@ -20,17 +20,20 @@ const Chat = () => {
 	const [selectedChat, setSelectedChatMessages] = React.useState([])
 	const [noChatSelected, setNoChatSelected] = React.useState(true)
 	const [message, setMessage] = React.useState('')
-
-	React.useEffect(() => { getAdminChats() }, [])
 	const getAdminChats = async () => {
 		await axios
 			.get(`${GET_ADMIN_CHAT}`)
 			.then((res) => {
 				const dataToMap = res?.data?.data
 				setGettingChats(dataToMap)
+				return dataToMap
 			})
 			.catch((err) => console.log(err));
 	};
+	React.useEffect(() => {
+		getAdminChats()
+	}, [setGettingChats])
+
 	const customerID = selectedChat.filter((customer) => {
 		return customer?.user?.user_profile?.role === "Customer" && customer?.user
 	});
@@ -38,18 +41,22 @@ const Chat = () => {
 
 		const values = {
 			"message": message,
-			"is_read": true,
+			"is_read": false,
 			"user": customerID[0].id,
 			"collection": selectedChat[0].collection,
 			"parent_id": null,
 		}
-		await axios.post(`${ADMIN_CHAT}`, values, {
+		const data = await axios.post(`${ADMIN_CHAT}`, values, {
 			headers: { 'Content-Type': 'application/json' },
-		}).then(() => {
-			getAdminChats();
-		}).catch((error) => {
-			console.log(error)
 		})
+		const res = await data.data
+		if (res.status_code === 200) {
+			axios
+				.get(`${GET_ADMIN_CHAT}`).then((res) => {
+					console.log(res.data.data)
+					setGettingChats(res.data.data)
+				})
+		}
 		setMessage('')
 
 	}
@@ -63,7 +70,7 @@ const Chat = () => {
 				Chatting Room
 			</ChatHeading>
 			<Grid container >
-				<Grid item md={3} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url( ) ', color: '#fff' }}>
+				<Grid item md={3} sx={{ borderRight: '1px   lightgray', height: '500px', backgroundImage: 'linear-gradient(to bottom, rgba(34,42,69, 0.96), rgba(34,42,69, 0.96)),url( ) ', color: '#fff', overflow: 'scroll' }}>
 					<Grid container >
 						<TextField id="search" label="search user" variant="filled" fullWidth sx={{ bgcolor: '#fbfbfb', mt: 3, mx: 2 }} />
 						{

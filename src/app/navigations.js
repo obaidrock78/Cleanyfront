@@ -74,5 +74,16 @@ export const navigations =
           ],
         },
 
-        { name: 'Reports', path: '/dashboard/reports', icon: 'reports' },
+        {
+          name: 'Reports',
+          icon: 'reports',
+          children: [
+            { name: 'Pending Reports ', iconText: 'reports', path: '/dashboard/reports' },
+            // {
+            // 	name: 'Pending Reports ',
+            // 	iconText: 'payroll',
+            // 	path: '/dashboard/pending-reports',
+            // },
+          ],
+        },
       ];
