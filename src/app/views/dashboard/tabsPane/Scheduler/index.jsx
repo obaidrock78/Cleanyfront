@@ -31,8 +31,7 @@ const SchedulerHeading = styled('h3')(({ theme }) => ({
 }))
 function Scheduler() {
   const [events, setEvents] = useState()
-  const currentDate = new Date().toJSON().slice(0, 10)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const currentDate = new Date().toJSON().slice(0, 10) 
   React.useEffect(() => { getEvents() }, [])
   const getEvents = async () => {
     await axios
