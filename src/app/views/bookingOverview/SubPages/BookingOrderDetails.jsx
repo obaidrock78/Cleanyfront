@@ -114,7 +114,7 @@ function BookingOrderDetails() {
       })
       .catch((err) => console.log(err));
   };
-  const steps = ['Unscheduled', 'Scheduled', 'Dispatched', 'Complete', 'cancelled'];
+  const steps = ['Unscheduled', 'Scheduled', 'Dispatched', 'Complete', 'Cancelled'];
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -149,15 +149,15 @@ function BookingOrderDetails() {
                 >
                   <Stepper
                     activeStep={
-                      bookindDetails?.status === 'unscheduled'
+                      bookindDetails?.status?.toLowerCase() === 'unscheduled'
                         ? 0
-                        : bookindDetails?.status === 'scheduled'
+                        : bookindDetails?.status?.toLowerCase() === 'scheduled'
                         ? 1
-                        : bookindDetails?.status === 'dispatched'
+                        : bookindDetails?.status?.toLowerCase() === 'dispatched'
                         ? 2
-                        : bookindDetails?.status === 'complete'
+                        : bookindDetails?.status?.toLowerCase() === 'complete'
                         ? 3
-                        : bookindDetails?.status === 'complete'
+                        : bookindDetails?.status?.toLowerCase() === 'cancelled'
                         ? 4
                         : null
                     }
