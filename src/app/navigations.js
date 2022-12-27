@@ -9,7 +9,7 @@ export const navigations =
           icon: 'sign_language_outlined_icon',
           path: '/dashboard/appreciate',
         },
-        { name: 'Invoice', icon: 'money', path: '/dashboard/invoice' },
+        { name: 'Invoices', icon: 'money', path: '/dashboard/customer/invoices' },
         {
           name: 'Settings',
           icon: 'settings_icon',
