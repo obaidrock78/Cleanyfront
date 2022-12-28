@@ -239,7 +239,6 @@ function BookingOrders() {
                 borderRadius: '4px',
                 color: 'white',
                 height: '25px',
-                width: '25px',
                 fontSize: '13px',
                 textAlign: 'center',
               }}

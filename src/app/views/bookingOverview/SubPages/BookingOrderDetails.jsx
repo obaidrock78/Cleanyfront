@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../../../axios';
 import {
   BOOKING_APPOINTMENT_DETAILS,
+  CANCEL_BOOKING,
   CLEANER_LOCATION,
   GET_BOOKING_DATA,
   GET_BOOKING_PROBLEMS,
@@ -120,6 +121,30 @@ function BookingOrderDetails() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleCancelBooking = () => {
+    toast.promise(
+      axios.post(
+        `${CANCEL_BOOKING}`,
+        { booking_id: bookindDetails?.id },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      ),
+      {
+        loading: () => {
+          return `Cancelling Booking`;
+        },
+        success: (res) => {
+          getEventList();
+          return res?.data?.message;
+        },
+        error: (err) => {
+          return err?.message;
+        },
+      }
+    );
   };
 
   return (
@@ -1121,7 +1146,13 @@ function BookingOrderDetails() {
                 >
                   Charge Tip
                 </Button>
-                <Button fullWidth variant="contained" color="warning">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="warning"
+                  onClick={handleCancelBooking}
+                  disabled={bookindDetails?.is_cancelled}
+                >
                   Cancel Booking
                 </Button>
               </Box>
@@ -1163,7 +1194,7 @@ function BookingOrderDetails() {
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="body1">Total</Typography>
                 <Typography variant="body1">
-                  $ {bookindDetails?.outstanding?.total_amount}
+                  $ {bookindDetails?.outstanding?.total_amount?.toFixed(2)}
                 </Typography>
               </Box>
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
@@ -1176,7 +1207,7 @@ function BookingOrderDetails() {
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
                 <Typography variant="body1">Charged</Typography>
                 <Typography variant="body1">
-                  $ {bookindDetails?.outstanding?.paid_amount}
+                  $ {bookindDetails?.outstanding?.paid_amount?.toFixed(2)}
                 </Typography>
               </Box>
               <Box display="flex" alignItems={'center'} justifyContent="space-between">
@@ -1185,11 +1216,11 @@ function BookingOrderDetails() {
                 </Typography>
                 <Typography variant="body1">
                   {bookindDetails?.outstanding?.paid_amount === null
-                    ? `$${bookindDetails?.outstanding?.total_amount}`
-                    : `$${
+                    ? `$${bookindDetails?.outstanding?.total_amount?.toFixed(2)}`
+                    : `$${(
                         bookindDetails?.outstanding?.total_amount -
                         bookindDetails?.outstanding?.paid_amount
-                      }`}
+                      )?.toFixed(2)}`}
                 </Typography>
               </Box>
             </Box>

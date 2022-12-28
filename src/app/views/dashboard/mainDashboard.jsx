@@ -161,7 +161,11 @@ const StatHeading = styled('h3')(({ theme }) => ({
 }));
 
 const easyAccessContentItems = [
-  { link: 'https://cleany-app.netlify.app/dashboard/customers/create', text: 'Create Customer', color: '#206bc4' },
+  {
+    link: 'https://cleany-app.netlify.app/dashboard/customers/create',
+    text: 'Create Customer',
+    color: '#206bc4',
+  },
   { link: '#', text: 'Create Booking', color: '#206bc4' },
   { link: 'https://mail.google.com/chat/u/0/', text: 'Google Chat', color: '#0b956c' },
   { link: 'https://www.nextiva.com/ ', text: 'Nextiva', color: '#daa520' },
@@ -211,24 +215,32 @@ const MainDashboard = () => {
           <Notifications>
             <NotificationsHeading>Notification's</NotificationsHeading>
             <NotificationsContent>
-              <List sx={{ width: '100%', maxWidth: 360, }}>
+              <List sx={{ width: '100%', overflowY: 'auto', maxHeight: '220px', height: '220px' }}>
                 {bookingNotification?.map((items) => {
                   return (
-                    <ListItem sx={{
-                      mb: 1.5, borderRadius: '10px', boxShadow:
-                        '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
-                    }}>
+                    <ListItem
+                      sx={{
+                        mb: 1.5,
+                        borderRadius: '10px',
+                        boxShadow:
+                          '0px 3px 3px -2px rgb(0 0 0 / 6%),0px 3px 4px 0px rgb(0 0 0 / 4%),0px 1px 8px 0px rgb(0 0 0 / 4%)!important',
+                      }}
+                    >
                       <ListItemAvatar>
                         <Avatar>
                           <ImageIcon />
                         </Avatar>
                       </ListItemAvatar>
-                      <a href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${items.booking_id}/details/`}>
-                        <ListItemText primary={items.title} secondary={new Date(items.created_at).toJSON().slice(0, 10)} />
+                      <a
+                        href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${items.booking_id}/details/`}
+                      >
+                        <ListItemText
+                          primary={items.title}
+                          secondary={new Date(items.created_at).toJSON().slice(0, 10)}
+                        />
                       </a>
                     </ListItem>
-
-                  )
+                  );
                 })}
               </List>
             </NotificationsContent>

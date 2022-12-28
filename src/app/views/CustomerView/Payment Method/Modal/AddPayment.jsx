@@ -6,47 +6,58 @@ import DialogTitle from '@mui/material/DialogTitle';
 import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import { Box } from '@mui/system';
-import axios from '../../../../axios';
+import axios from '../../../../../axios';
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { Grid, MenuItem, TextField } from '@mui/material';
-import { CHARGE_CUSTOMER } from 'app/api';
+import { Grid, TextField } from '@mui/material';
+import { USER_SIDE_ADD_CARDS } from 'app/api';
 
-function ChargeCustomerModal({ open, handleClose, bookindDetails, getEventList }) {
+function AddPaymentCard({ open, handleClose, getCardList }) {
   const [loading, setLoading] = useState(false);
 
   const schema = Yup.object().shape({
-    amount: Yup.number()
-      .required('Amount is Required')
-      .max(
-        bookindDetails?.outstanding?.paid_amount === null
-          ? bookindDetails?.outstanding?.total_amount
-          : bookindDetails?.outstanding?.total_amount - bookindDetails?.outstanding?.paid_amount,
-        'Total Cost must be less than or equal to Remaining Amount!'
-      )
-      .min(1),
+    name: Yup.string().required('Full name is required!'),
+    card_no: Yup.string()
+      .required('Card no is Required!')
+      .test('Digits only', 'Must be digits only!', (value) => /^\d+$/.test(value))
+      .test('card_no', 'Must be exactly 16 characters', (val) => val?.length === 16),
+
+    exp_m: Yup.string()
+      .required('Expiry month is Required!')
+      .test('Digits only', 'Must be digits only!', (value) => /^\d+$/.test(value))
+      .test('card_no', 'Must be exactly 2 characters', (val) => val?.length === 2),
+    exp_y: Yup.string()
+      .required('Expiry year is Required!')
+      .test('Digits only', 'Must be digits only!', (value) => /^\d+$/.test(value))
+      .test('card_no', 'Must be exactly 4 characters', (val) => val?.length === 4),
+    cvc: Yup.string()
+      .required('CVC is Required!')
+      .test('Digits only', 'Must be digits only!', (value) => /^\d+$/.test(value))
+      .test('card_no', 'Must be exactly 3 characters', (val) => val?.length === 3),
   });
   const formik = useFormik({
     initialValues: {
-      id: bookindDetails?.id,
-      amount: null,
-      payment_mode: 'card',
+      name: '',
+      card_no: '',
+      exp_m: '',
+      exp_y: '',
+      cvc: '',
     },
     validationSchema: schema,
     onSubmit: (values) => {
       setLoading(true);
       toast.promise(
-        axios.post(`${CHARGE_CUSTOMER}`, values, {
+        axios.post(`${USER_SIDE_ADD_CARDS}`, values, {
           headers: { 'Content-Type': 'application/json' },
         }),
         {
           loading: () => {
-            return `Creating Problem!`;
+            return `Adding Card!`;
           },
           success: (res) => {
             setLoading(false);
             resetForm();
-            getEventList();
+            getCardList();
             setTimeout(() => {
               handleClose();
             }, 200);
@@ -63,16 +74,6 @@ function ChargeCustomerModal({ open, handleClose, bookindDetails, getEventList }
   });
 
   const { errors, touched, resetForm, setFieldValue, handleSubmit, getFieldProps, values } = formik;
-  useEffect(() => {
-    setFieldValue('booking_id', bookindDetails?.id);
-    setFieldValue(
-      'amount',
-      bookindDetails?.outstanding?.paid_amount === null
-        ? bookindDetails?.outstanding?.total_amount
-        : bookindDetails?.outstanding?.total_amount - bookindDetails?.outstanding?.paid_amount
-    );
-  }, [bookindDetails, open]);
-
   return (
     <>
       <Dialog
@@ -87,65 +88,76 @@ function ChargeCustomerModal({ open, handleClose, bookindDetails, getEventList }
         aria-describedby="package-item-description"
       >
         <DialogTitle id="package-item" style={{ fontSize: '1.5rem' }}>
-          Charge Customer
+          Add Card Details
         </DialogTitle>
         <DialogContent>
-          Do you want to charge the customer or record a collection?
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-              <Grid container spacing={4} sx={{ marginTop: '2px' }}>
+              <Grid container spacing={2} sx={{ marginTop: '2px' }}>
                 <Grid item xs={4}>
-                  Remaining Amount
-                </Grid>
-                <Grid item sm={8} xs={8} sx={{ fontWeight: 'bold' }}>
-                  {'$ '}
-                  {bookindDetails?.outstanding?.paid_amount === null
-                    ? bookindDetails?.outstanding?.total_amount
-                    : bookindDetails?.outstanding?.total_amount -
-                      bookindDetails?.outstanding?.paid_amount}
-                </Grid>
-                <Grid item xs={4}>
-                  Status
-                </Grid>
-                <Grid item sm={8} xs={8} sx={{ fontWeight: 'bold' }}>
-                  {bookindDetails?.outstanding?.status}
-                </Grid>
-                <Grid item xs={4}>
-                  Total-Amount
-                </Grid>
-                <Grid item sm={8} xs={8} sx={{ fontWeight: 'bold' }}>
-                  {'$ '}
-                  {bookindDetails?.outstanding?.total_amount}
-                </Grid>
-                <Grid item xs={4}>
-                  Payment Option
+                  Full Name
                 </Grid>
                 <Grid item sm={8} xs={8}>
                   <TextField
                     size="small"
-                    select
-                    {...getFieldProps('payment_mode')}
+                    type="text"
+                    {...getFieldProps('name')}
                     sx={{ width: '100%' }}
-                    error={Boolean(touched.payment_mode && errors.payment_mode)}
-                    helperText={touched.payment_mode && errors.payment_mode}
-                  >
-                    <MenuItem value={'card'}>Visa</MenuItem>
-                    <MenuItem value={'cash'}>Cash</MenuItem>
-                  </TextField>
+                    error={Boolean(touched.name && errors.name)}
+                    helperText={touched.name && errors.name}
+                  />
                 </Grid>
                 <Grid item xs={4}>
-                  Total Cost
+                  Card No
                 </Grid>
                 <Grid item sm={8} xs={8}>
                   <TextField
-                    inputProps={{ readOnly: bookindDetails?.outstanding?.is_first, min: 0 }}
                     size="small"
-                    type="number"
-                    {...getFieldProps('amount')}
+                    type="text"
+                    {...getFieldProps('card_no')}
                     sx={{ width: '100%' }}
-                    error={Boolean(touched.amount && errors.amount)}
-                    helperText={touched.amount && errors.amount}
-                  ></TextField>
+                    error={Boolean(touched.card_no && errors.card_no)}
+                    helperText={touched.card_no && errors.card_no}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  Expiry Month
+                </Grid>
+                <Grid item sm={8} xs={8}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    {...getFieldProps('exp_m')}
+                    sx={{ width: '100%' }}
+                    error={Boolean(touched.exp_m && errors.exp_m)}
+                    helperText={touched.exp_m && errors.exp_m}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  Expiry Year
+                </Grid>
+                <Grid item sm={8} xs={8}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    {...getFieldProps('exp_y')}
+                    sx={{ width: '100%' }}
+                    error={Boolean(touched.exp_y && errors.exp_y)}
+                    helperText={touched.exp_y && errors.exp_y}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  CVC
+                </Grid>
+                <Grid item sm={8} xs={8}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    {...getFieldProps('cvc')}
+                    sx={{ width: '100%' }}
+                    error={Boolean(touched.cvc && errors.cvc)}
+                    helperText={touched.cvc && errors.cvc}
+                  />
                 </Grid>
               </Grid>
 
@@ -179,4 +191,4 @@ function ChargeCustomerModal({ open, handleClose, bookindDetails, getEventList }
   );
 }
 
-export default ChargeCustomerModal;
+export default AddPaymentCard;

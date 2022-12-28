@@ -4,11 +4,13 @@ export const navigations =
     ? [
         { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
         { label: 'PAGES', type: 'label' },
+        { name: 'Payment Method', icon: 'add_card_icon', path: '/dashboard/payment-methods' },
         {
           name: 'Appreciate Us',
           icon: 'sign_language_outlined_icon',
           path: '/dashboard/appreciate',
         },
+
         { name: 'Invoices', icon: 'money', path: '/dashboard/customer/invoices' },
         {
           name: 'Settings',

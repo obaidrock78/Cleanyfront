@@ -64,6 +64,7 @@ export const ADMIN_SIDE_ADD_CUSTOMER = '/service_provider/create_customer';
 export const ADMIN_SIDE_Update_CUSTOMER = '/service_provider/update_customer';
 export const CLEANER_LOCATION = '/service_provider/cleaner_location';
 export const ADMIN_SIDE_CUSTOMER_BOOKINGS = '/booking/admin_user_booking';
+export const CANCEL_BOOKING = '/booking/cancel_booking';
 
 export const FULL_CALENDAR_EVENTS = '/booking/get_events';
 export const FULL_CALENDAR_RESOURCES = '/booking/get_resources';
@@ -76,3 +77,5 @@ export const CREATE_CUSTOMER_SIDE_BOOKING = '/booking/user_create_booking';
 export const GET_CUSTOMER_PROFILE = '/mobile_side/cleaner/profile';
 export const UPDATE_CUSTOMER_PROFILE = '/user_module/update_profile';
 export const CHARGE_TIP_FROM_CUSTOMER = '/booking/charge_tip';
+export const USER_SIDE_GET_CARDS = '/user_module/user_card_list';
+export const USER_SIDE_ADD_CARDS = '/user_module/add_user_card';
