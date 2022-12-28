@@ -36,6 +36,7 @@ function GenerateInvoice({ open, handleClose, bookindDetails }) {
       <Dialog
         open={open}
         maxWidth={'sm'}
+        onClose={handleClose}
         PaperProps={{
           sx: {
             width: '100%',
@@ -208,7 +209,7 @@ function GenerateInvoice({ open, handleClose, bookindDetails }) {
                 </Grid>
                 <Grid item xs={6}></Grid>
                 <Grid item xs={3} sx={{ fontWeight: 'bold' }}>
-                  Tax({bookindDetails?.service?.tax}%)
+                  Tax({bookindDetails?.service?.tax_amount}%)
                 </Grid>
                 <Grid item xs={3} sx={{ textAlign: 'right' }}>
                   $
@@ -230,7 +231,7 @@ function GenerateInvoice({ open, handleClose, bookindDetails }) {
                         .reduce((accumulator, value) => {
                           return +accumulator + +value;
                         }, 0)) *
-                      bookindDetails?.service?.tax) /
+                      bookindDetails?.service?.tax_amount) /
                     100
                   ).toFixed(2)}
                 </Grid>
@@ -275,7 +276,7 @@ function GenerateInvoice({ open, handleClose, bookindDetails }) {
                         .reduce((accumulator, value) => {
                           return +accumulator + +value;
                         }, 0)) *
-                      bookindDetails?.service?.tax) /
+                      bookindDetails?.service?.tax_amount) /
                       100
                   ).toFixed(2)}
                 </Grid>
