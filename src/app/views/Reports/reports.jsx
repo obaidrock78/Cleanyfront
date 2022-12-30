@@ -80,6 +80,7 @@ const Reports = () => {
       field: 'customer',
       headerName: 'CUSTOMER',
       width: 250,
+      sortable: false,
       height: 250,
       renderCell: (item) => {
         return (
@@ -108,6 +109,7 @@ const Reports = () => {
       field: 'scheduled',
       headerName: 'SCHEDULED',
       width: 250,
+      sortable: false,
       renderCell: (item) => {
         return (
           <Box>
@@ -134,6 +136,7 @@ const Reports = () => {
       field: 'status',
       headerName: 'STATUS',
       width: 150,
+      sortable: false,
       renderCell: (item) => {
         return (
           <Button sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
@@ -146,6 +149,7 @@ const Reports = () => {
       field: 'amount',
       headerName: 'AMOUNT',
       width: 150,
+      sortable: false,
       renderCell: (item) => {
         return (
           <Box sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
@@ -155,9 +159,38 @@ const Reports = () => {
       },
     },
     {
+      field: 'outstanding',
+      headerName: 'PAID AMOUNT',
+      width: 150,
+      sortable: false,
+      renderCell: (item) => {
+        return (
+          <Box sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
+            <TableHeading>
+              {item?.value?.paid_amount === null ? 0 : item?.value?.paid_amount?.toFixed(2)}
+            </TableHeading>
+          </Box>
+        );
+      },
+    },
+    {
+      field: 'payment_status',
+      headerName: 'PAYMENT STATUS',
+      width: 180,
+      sortable: false,
+      renderCell: (item) => {
+        return (
+          <Box sx={{ textTransform: 'capitalize' }} variant="contained" color="primary">
+            <TableHeading>{item?.row?.outstanding?.status}</TableHeading>
+          </Box>
+        );
+      },
+    },
+    {
       field: 'action',
       headerName: 'ACTIONS',
       width: 150,
+      sortable: false,
       renderCell: (item) => {
         return (
           <Box sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">

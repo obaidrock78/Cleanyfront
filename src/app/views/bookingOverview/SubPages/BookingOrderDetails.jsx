@@ -8,6 +8,7 @@ import {
   BOOKING_APPOINTMENT_DETAILS,
   CANCEL_BOOKING,
   CLEANER_LOCATION,
+  COMPLETE_BOOKING,
   GET_BOOKING_DATA,
   GET_BOOKING_PROBLEMS,
 } from 'app/api';
@@ -135,6 +136,29 @@ function BookingOrderDetails() {
       {
         loading: () => {
           return `Cancelling Booking`;
+        },
+        success: (res) => {
+          getEventList();
+          return res?.data?.message;
+        },
+        error: (err) => {
+          return err?.message;
+        },
+      }
+    );
+  };
+  const handleCompleteBooking = () => {
+    toast.promise(
+      axios.post(
+        `${COMPLETE_BOOKING}`,
+        { booking_id: bookindDetails?.id },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      ),
+      {
+        loading: () => {
+          return `Marking Booking Complete!`;
         },
         success: (res) => {
           getEventList();
@@ -1058,7 +1082,7 @@ function BookingOrderDetails() {
                 <Typography variant="h3" className="headingSubTxt">
                   Fully Charged
                 </Typography>
-                <Button variant="contained" color="inherit">
+                <Button variant="contained" color="inherit" onClick={() => setChargeCustomer(true)}>
                   Charge Now
                 </Button>
               </Box>
@@ -1131,7 +1155,7 @@ function BookingOrderDetails() {
                   </Button>
                 )}
                 {role !== 'Customer' && (
-                  <Button fullWidth variant="contained">
+                  <Button fullWidth variant="contained" onClick={handleCompleteBooking}>
                     Mark Complete
                   </Button>
                 )}
