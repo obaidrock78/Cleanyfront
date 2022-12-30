@@ -156,7 +156,7 @@ function EditBookingModal({
       bookingData?.extras?.forEach((a, index) => {
         bookindDetails?.extras?.forEach((b) => {
           if (a.id === b.id) {
-            dupExtras[index] = { extra_id: b.id, quantity: 1, price: b?.price };
+            dupExtras[index] = { extra_id: b.id, quantity: b?.quantity, price: b?.price };
           }
         });
       });

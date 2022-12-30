@@ -41,7 +41,7 @@ function ChargeCustomerModal({ open, handleClose, bookindDetails, getEventList }
         }),
         {
           loading: () => {
-            return `Creating Problem!`;
+            return `Charge Customer!`;
           },
           success: (res) => {
             setLoading(false);
