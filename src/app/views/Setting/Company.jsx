@@ -67,6 +67,7 @@ function Company() {
     linkedin: Yup.string().url('Url is invalid'),
     twitter: Yup.string().url('Url is invalid'),
     instagram: Yup.string().url('Url is invalid'),
+    weather: Yup.string().required('Weather is required!'),
   });
 
   const formik = useFormik({
@@ -85,6 +86,7 @@ function Company() {
       twitter: '',
       instagram: '',
       id: '',
+      weather: '',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -130,6 +132,7 @@ function Company() {
     setFieldValue('linkedin', formData[0]?.linkedin);
     setFieldValue('twitter', formData[0]?.twitter);
     setFieldValue('instagram', formData[0]?.instagram);
+    setFieldValue('weather', formData[0]?.weather);
   }, [formData]);
 
   return (
@@ -264,6 +267,17 @@ function Company() {
                     {...getFieldProps('zip_code')}
                     error={Boolean(touched.zip_code && errors.zip_code)}
                     helperText={touched.zip_code && errors.zip_code}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    type="url"
+                    label="weather"
+                    {...getFieldProps('weather')}
+                    error={Boolean(touched.weather && errors.weather)}
+                    helperText={touched.weather && errors.weather}
                   />
                 </Grid>
                 <Grid item sm={12} xs={12}>

@@ -9,18 +9,31 @@ import { Box } from '@mui/system';
 import axios from '../../../../axios';
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { Grid, TextField } from '@mui/material';
-import { CHARGE_TIP_FROM_CUSTOMER } from 'app/api';
+import { Grid, MenuItem, TextField } from '@mui/material';
+import { CHARGE_TIP_FROM_CUSTOMER, CUSTOMER_ALL_BOOKINGS } from 'app/api';
 
-function ChargeTipModal({ open, handleClose, bookindDetails, getEventList }) {
+function CustomerChargeTipModal({ open, handleClose, bookindDetails, getEventList }) {
   const [loading, setLoading] = useState(false);
+  const [bookingList, setBookingList] = useState([]);
+
+  useEffect(async () => {
+    await axios
+      .get(`${CUSTOMER_ALL_BOOKINGS}`, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((res) => {
+        setBookingList(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const schema = Yup.object().shape({
     amount: Yup.number().required('Amount is Required').min(1),
+    booking_id: Yup.number().required('Booking id is Required'),
   });
   const formik = useFormik({
     initialValues: {
-      id: bookindDetails?.id,
+      booking_id: null,
       amount: null,
     },
     validationSchema: schema,
@@ -54,9 +67,6 @@ function ChargeTipModal({ open, handleClose, bookindDetails, getEventList }) {
   });
 
   const { errors, touched, resetForm, setFieldValue, handleSubmit, getFieldProps, values } = formik;
-  useEffect(() => {
-    setFieldValue('booking_id', bookindDetails?.id);
-  }, [bookindDetails, open]);
 
   return (
     <>
@@ -72,13 +82,34 @@ function ChargeTipModal({ open, handleClose, bookindDetails, getEventList }) {
         aria-describedby="package-item-description"
       >
         <DialogTitle id="package-item" style={{ fontSize: '1.5rem' }}>
-          Charge Tip from Customer
+          Charge Tip
         </DialogTitle>
         <DialogContent>
           Do you want to charge tip from the customer or record a collection?
           <FormikProvider value={formik}>
             <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
               <Grid container spacing={4} sx={{ marginTop: '2px' }}>
+                <Grid item xs={4}>
+                  Booking id
+                </Grid>
+                <Grid item sm={8} xs={8}>
+                  <TextField
+                    inputProps={{ min: 0 }}
+                    size="small"
+                    type="number"
+                    select
+                    {...getFieldProps('booking_id')}
+                    sx={{ width: '100%' }}
+                    error={Boolean(touched.booking_id && errors.booking_id)}
+                    helperText={touched.booking_id && errors.booking_id}
+                  >
+                    {bookingList?.map((booking, index) => (
+                      <MenuItem key={index} value={booking?.id}>
+                        {booking?.id}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
                 <Grid item xs={4}>
                   Total Tip Amount
                 </Grid>
@@ -125,4 +156,4 @@ function ChargeTipModal({ open, handleClose, bookindDetails, getEventList }) {
   );
 }
 
-export default ChargeTipModal;
+export default CustomerChargeTipModal;

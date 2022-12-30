@@ -5,7 +5,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../../axios';
-import ChargeTipModal from '../bookingOverview/Modals/ChargeTip';
+import CustomerChargeTipModal from './CustomerDashboardModal/customerChargeTipModal';
 import ServiceModal from './CustomerDashboardModal/serviceModal';
 
 const Container = styled('div')(({ theme }) => ({
@@ -374,11 +374,12 @@ function CustomerDashboard() {
         </Box>
       </Box>
       <ServiceModal open={selectService} handleClose={() => setSelectService(false)} />
-      <ChargeTipModal
+      <CustomerChargeTipModal
         open={chargeTip}
         handleClose={() => setChargeTip(false)}
         bookindDetails={currentBooking}
         getEventList={userBookingData}
+        customerSide={'customer-side'}
       />
     </Container>
   );

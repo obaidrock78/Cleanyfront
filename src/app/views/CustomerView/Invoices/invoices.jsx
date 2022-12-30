@@ -197,7 +197,7 @@ function Invoices() {
       renderCell: (item) => {
         return (
           <Button sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
-            {item?.row?.bod?.status}
+            {item?.row?.status}
           </Button>
         );
       },

@@ -179,7 +179,7 @@ function AddPaymentCard({ open, handleClose, getCardList }) {
                   Cancel
                 </Button>
                 <LoadingButton type="submit" color="primary" loading={loading} variant="contained">
-                  Charge Now
+                  Add Now
                 </LoadingButton>
               </Box>
             </Form>

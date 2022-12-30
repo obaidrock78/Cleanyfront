@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Grid, Box, TextField, IconButton, Typography, styled } from '@mui/material';
 import { SendOutlined } from '@mui/icons-material';
 import { ADMIN_CHAT, GET_ADMIN_CHAT } from 'app/api';
@@ -15,6 +15,7 @@ const ChatHeading = styled('h3')(({ theme }) => ({
 }));
 
 const Chat = () => {
+  const bottomRef = useRef(null);
   const [gettingChats, setGettingChats] = React.useState([]);
   const [selectedChat, setSelectedChatMessages] = React.useState([]);
   const [noChatSelected, setNoChatSelected] = React.useState(true);
@@ -62,6 +63,9 @@ const Chat = () => {
     e.preventDefault();
     PostAdminChat();
   };
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedChat]);
   return (
     <>
       <ChatHeading>Chatting Room</ChatHeading>
@@ -121,6 +125,7 @@ const Chat = () => {
           <Grid container>
             <Grid
               item
+              ref={bottomRef}
               md={12}
               sx={{
                 height: '600px',
@@ -204,6 +209,7 @@ const Chat = () => {
                       </Box>
                     );
                   })}
+                  <div ref={bottomRef} />
                 </>
               )}
             </Grid>

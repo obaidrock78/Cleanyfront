@@ -213,7 +213,7 @@ const MainDashboard = () => {
 
         <Grid item lg={3} md={3} sm={12} xs={12}>
           <Notifications>
-            <NotificationsHeading>Notification's</NotificationsHeading>
+            <NotificationsHeading>Recent Activity</NotificationsHeading>
             <NotificationsContent>
               <List sx={{ width: '100%', overflowY: 'auto', maxHeight: '220px', height: '220px' }}>
                 {bookingNotification?.map((items) => {

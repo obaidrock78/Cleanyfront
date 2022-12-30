@@ -73,7 +73,6 @@ const TableHeading = styled('p')(() => ({
 function AllBookings() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  console.log(state);
   const user = JSON.parse(localStorage.getItem('user'));
   const [bookingList, setBookingList] = useState([]);
   const [dateChange, setDateChange] = useState('month');
@@ -205,7 +204,7 @@ function AllBookings() {
       renderCell: (item) => {
         return (
           <Button sx={{ textTransform: 'uppercase' }} variant="contained" color="primary">
-            {item?.row?.bod?.status}
+            {item?.row?.status}
           </Button>
         );
       },
