@@ -3,6 +3,7 @@ import { Grid, Box, TextField, IconButton, Typography, styled } from '@mui/mater
 import { SendOutlined } from '@mui/icons-material';
 import { ADMIN_CHAT, GET_ADMIN_CHAT } from 'app/api';
 import axios from '../../../../../axios';
+import ChatAvatar from '../../../../../assets/chat-avatar.png';
 
 const ChatHeading = styled('h3')(({ theme }) => ({
   typography: 'body1',
@@ -21,6 +22,8 @@ const Chat = () => {
   const [noChatSelected, setNoChatSelected] = React.useState(true);
   const [selectedChatID, setSelectedChatID] = useState(null);
   const [message, setMessage] = React.useState('');
+  const [searchText, setSearchText] = useState('');
+
   const getAdminChats = async () => {
     await axios
       .get(`${GET_ADMIN_CHAT}`)
@@ -88,37 +91,48 @@ const Chat = () => {
               label="search user"
               variant="filled"
               fullWidth
+              onChange={(e) => setSearchText(e.target.value)}
               sx={{ bgcolor: '#fbfbfb', mt: 3, mx: 2 }}
             />
-            {gettingChats.map((chat) => {
-              return (
-                <Grid
-                  item
-                  md={12}
-                  sx={{
-                    p: 1,
-                    border: '1px   lightgray',
-                    display: 'flex',
-                    alignItems: 'center',
-                    m: 2,
-                    height: '50px',
-                    '&:hover': { background: 'darkblue', cursor: 'pointer' },
-                  }}
-                  onClick={() => {
-                    setSelectedChatID(chat.id);
-                    setSelectedChatMessages(chat.chats);
-                    setNoChatSelected(false);
-                  }}
-                >
-                  <Box
-                    component={'img'}
-                    sx={{ width: '40px', height: '40px', borderRadius: '50%', mr: 1 }}
-                    src="https://pickaface.net/gallery/avatar/20151205_194059_2696_Chat.png"
-                  />
-                  {chat?.user?.user_profile?.first_name} {chat?.user?.user_profile?.last_name}{' '}
-                </Grid>
-              );
-            })}
+            {gettingChats
+              ?.filter(
+                (s) =>
+                  s?.user?.user_profile?.first_name
+                    ?.toLocaleLowerCase()
+                    ?.includes(searchText?.toLocaleLowerCase()) ||
+                  s?.user?.user_profile?.last_name
+                    ?.toLocaleLowerCase()
+                    ?.includes(searchText?.toLocaleLowerCase())
+              )
+              .map((chat) => {
+                return (
+                  <Grid
+                    item
+                    md={12}
+                    sx={{
+                      p: 1,
+                      border: '1px   lightgray',
+                      display: 'flex',
+                      alignItems: 'center',
+                      m: 2,
+                      height: '50px',
+                      '&:hover': { background: 'darkblue', cursor: 'pointer' },
+                    }}
+                    onClick={() => {
+                      setSelectedChatID(chat.id);
+                      setSelectedChatMessages(chat.chats);
+                      setNoChatSelected(false);
+                    }}
+                  >
+                    <Box
+                      component={'img'}
+                      sx={{ width: '40px', height: '40px', borderRadius: '50%', mr: 1 }}
+                      src={ChatAvatar}
+                    />
+                    {chat?.user?.user_profile?.first_name} {chat?.user?.user_profile?.last_name}{' '}
+                  </Grid>
+                );
+              })}
           </Grid>
         </Grid>
         <Grid item md={9} sx={{ p: 0 }}>

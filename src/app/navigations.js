@@ -62,7 +62,6 @@ export const navigations =
           name: 'Pay Roll',
           icon: ' money',
           children: [
-            { name: 'Invoice', iconText: 'invoice', path: '/dashboard/invoice' },
             {
               name: 'Service Providers Payroll',
               iconText: 'payroll',
@@ -80,6 +79,7 @@ export const navigations =
           name: 'Reports',
           icon: 'reports',
           children: [
+            { name: 'Invoice', iconText: 'invoice', path: '/dashboard/invoice' },
             { name: 'Pending Reports ', iconText: 'reports', path: '/dashboard/reports' },
             // {
             // 	name: 'Pending Reports ',

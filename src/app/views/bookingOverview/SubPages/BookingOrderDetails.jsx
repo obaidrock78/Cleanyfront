@@ -196,6 +196,48 @@ function BookingOrderDetails() {
                     borderTop: ' 5px solid #1976d2',
                     padding: ' 1rem 1rem',
                     borderRadius: '4px',
+                    '& .MuiStep-horizontal ': {
+                      '&:nth-child(1)': {
+                        '& svg.Mui-completed': {
+                          color: '#7cbeff',
+                        },
+                        '& svg.Mui-active': {
+                          color: '#7cbeff',
+                        },
+                      },
+                      '&:nth-child(2)': {
+                        '& svg.Mui-completed': {
+                          color: '#2493ff',
+                        },
+                        '& svg.Mui-active': {
+                          color: '#2493ff',
+                        },
+                      },
+                      '&:nth-child(3)': {
+                        '& svg.Mui-completed': {
+                          color: '#0061c0',
+                        },
+                        '& svg.Mui-active': {
+                          color: '#0061c0',
+                        },
+                      },
+                      '&:nth-child(4)': {
+                        '& svg.Mui-completed': {
+                          color: '#00827F',
+                        },
+                        '& svg.Mui-active': {
+                          color: '#00827F',
+                        },
+                      },
+                      '&:nth-child(5)': {
+                        '& svg.Mui-completed': {
+                          color: '#003466',
+                        },
+                        '& svg.Mui-active': {
+                          color: '#003466',
+                        },
+                      },
+                    },
                   }}
                 >
                   <Stepper
@@ -1082,9 +1124,23 @@ function BookingOrderDetails() {
                 <Typography variant="h3" className="headingSubTxt">
                   Fully Charged
                 </Typography>
-                <Button variant="contained" color="inherit" onClick={() => setChargeCustomer(true)}>
-                  Charge Now
-                </Button>
+                {!!bookindDetails && (
+                  <Button
+                    variant="contained"
+                    color={
+                      bookindDetails?.status === 'cancelled'
+                        ? 'error'
+                        : bookindDetails?.outstanding?.status === 'pending'
+                        ? 'inherit'
+                        : bookindDetails?.outstanding?.status === 'completed'
+                        ? 'success'
+                        : 'warning'
+                    }
+                    onClick={() => setChargeCustomer(true)}
+                  >
+                    Charge Now
+                  </Button>
+                )}
               </Box>
             )}
 
