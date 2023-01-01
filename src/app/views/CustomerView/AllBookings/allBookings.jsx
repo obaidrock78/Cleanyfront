@@ -5,13 +5,15 @@ import axios from '../../../../axios';
 import { ADMIN_SIDE_CUSTOMER_BOOKINGS, CUSTOMER_ALL_BOOKINGS } from 'app/api';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
-import AddIcon from '@mui/icons-material/Add';
 import { useLocation, useNavigate } from 'react-router-dom';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import moment from 'moment';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -75,10 +77,15 @@ function AllBookings() {
   const { state } = useLocation();
   const user = JSON.parse(localStorage.getItem('user'));
   const [bookingList, setBookingList] = useState([]);
-  const [dateChange, setDateChange] = useState('month');
+  const [dateChange, setDateChange] = useState('t_month');
   const [statusChange, setStatusChange] = useState('scheduled');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
+  const [toDate, setToDate] = useState(null);
+
+  const handleChangeDate = (newValue) => {
+    setToDate(newValue);
+  };
 
   useEffect(async () => {
     if (user?.role !== 'Customer') {
@@ -97,12 +104,14 @@ function AllBookings() {
     if (user?.role === 'Customer') {
       serviceListAPI();
     }
-  }, [dateChange, statusChange, page, perPage]);
+  }, [dateChange, statusChange, page, perPage, toDate]);
 
   const serviceListAPI = async () => {
     await axios
       .get(
-        `${CUSTOMER_ALL_BOOKINGS}?booking_status=${statusChange}&date_filter=${dateChange}&page=${page}&per_page=${perPage}`,
+        `${CUSTOMER_ALL_BOOKINGS}?to_date=${
+          toDate === null ? '' : moment(toDate?.toString()).format('YYYY-MM-DD HH:mm:ss')
+        }&booking_status=${statusChange}&date_filter=${dateChange}&page=${page}&per_page=${perPage}`,
         {
           headers: { 'Content-Type': 'application/json' },
         }
@@ -260,12 +269,6 @@ function AllBookings() {
         <Breadcrumb routeSegments={[{ name: 'Customer Bookings' }]} />
       </Box>
 
-      {/* <Box display={'flex'} justifyContent={'end'}>
-        <StyledButton startIcon={<AddIcon />} variant="contained" color="primary">
-          Create Booking
-        </StyledButton>
-      </Box> */}
-
       <SimpleCard>
         {user?.role === 'Customer' && (
           <Box
@@ -296,9 +299,35 @@ function AllBookings() {
                   setDateChange(e.target.value);
                 }}
               >
-                <MenuItem value={'week'}>This Week</MenuItem>
-                <MenuItem value={'month'}>This Month</MenuItem>
+                <MenuItem value={'t_week'}>This Week</MenuItem>
+                <MenuItem value={'t_month'}>This Month</MenuItem>
+                <MenuItem value={'t_quarter'}>This Quarter</MenuItem>
+                <MenuItem value={'today'}>Today</MenuItem>
+                <MenuItem value={'yesterday'}>Yesterday</MenuItem>
+                <MenuItem value={'tomorrow'}>Tomorrow</MenuItem>
+                <MenuItem value={'l_week'}>Last Week</MenuItem>
+                <MenuItem value={'l_month'}>Last Month</MenuItem>
+                <MenuItem value={'l_year'}>Last Year</MenuItem>
+                <MenuItem value={'l_quarter'}>Last Quarter</MenuItem>
+                <MenuItem value={'t_week_to_date'}>This Week To Date</MenuItem>
+                <MenuItem value={'t_month_to_date'}>This Month To Date</MenuItem>
+                <MenuItem value={'t_year_to_date'}>This Year To Date</MenuItem>
               </TextField>
+              {(dateChange === 't_week_to_date' ||
+                dateChange === 't_month_to_date' ||
+                dateChange === 't_year_to_date') && (
+                <Box>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateTimePicker
+                      disablePast
+                      label="Select Date"
+                      value={toDate}
+                      onChange={handleChangeDate}
+                      renderInput={(params) => <TextField size="small" {...params} />}
+                    />
+                  </LocalizationProvider>
+                </Box>
+              )}
               <Typography variant="body1">Booking Status</Typography>
               <TextField
                 size="small"
@@ -319,7 +348,13 @@ function AllBookings() {
             </Box>
           </Box>
         )}
-
+        {(dateChange === 't_week_to_date' ||
+          dateChange === 't_month_to_date' ||
+          dateChange === 't_year_to_date') && (
+          <p style={{ margin: 'unset', fontSize: 'small', fontWeight: '300' }}>
+            Select date to fetch bookings!
+          </p>
+        )}
         <DataTableBox>
           <DataGrid
             sx={{

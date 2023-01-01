@@ -5,12 +5,14 @@ import { Breadcrumb } from 'app/components';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from '../../../../axios';
 import {
+  ADMIN_CARD_LIST_BOOKING_DETAILS,
   BOOKING_APPOINTMENT_DETAILS,
   CANCEL_BOOKING,
   CLEANER_LOCATION,
   COMPLETE_BOOKING,
   GET_BOOKING_DATA,
   GET_BOOKING_PROBLEMS,
+  LIST_COMMUNICATION_LOGS,
 } from 'app/api';
 import toast from 'react-hot-toast';
 import Stepper from '@mui/material/Stepper';
@@ -80,6 +82,8 @@ function BookingOrderDetails() {
   const [bookingProblems, setBookingProblems] = useState(null);
   const [bookingData, setBookingData] = useState({});
   const [cleanerLocation, setCleanerLocation] = useState([]);
+  const [communicationData, setCommunicationData] = useState([]);
+  const [adminCardsData, setadminCardsData] = useState([]);
 
   useEffect(() => {
     getEventList();
@@ -100,6 +104,18 @@ function BookingOrderDetails() {
       .get(`${CLEANER_LOCATION}?booking_id=${bookindDetails?.id}`)
       .then((res) => {
         setCleanerLocation(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+    await axios
+      .get(`${LIST_COMMUNICATION_LOGS}?user_id=${bookindDetails?.bod?.user}`)
+      .then((res) => {
+        setCommunicationData(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+    await axios
+      .get(`${ADMIN_CARD_LIST_BOOKING_DETAILS}?user_id=${bookindDetails?.bod?.user}`)
+      .then((res) => {
+        setadminCardsData(res?.data?.data?.data);
       })
       .catch((err) => console.log(err));
   };
@@ -484,20 +500,36 @@ function BookingOrderDetails() {
                         </Grid>
                       </Grid>
                       <Grid container>
-                        <Grid item xs={3}>
-                          Oct. 2, 2022, 11 a.m.
-                        </Grid>
-                        <Grid item xs={3} textAlign="center">
-                          jon
-                        </Grid>
-                        <Grid item xs={3} textAlign="center">
-                          23423423
-                        </Grid>
-                        <Grid item xs={3} textAlign="center">
-                          <Button variant="text">
-                            <ArrowRightAltOutlinedIcon />
-                          </Button>
-                        </Grid>
+                        {!!bookindDetails?.dispatch.length &&
+                          bookindDetails?.dispatch?.map((cleaner, index) => (
+                            <>
+                              <Grid item xs={3}>
+                                {moment.utc(cleaner?.created_at).format('lll')}
+                              </Grid>
+                              <Grid
+                                item
+                                xs={3}
+                                textAlign="center"
+                                sx={{ whiteSpace: 'break-spaces', wordBreak: 'break-all' }}
+                              >
+                                {cleaner?.service_provider?.user_profile?.first_name}{' '}
+                                {cleaner?.service_provider?.user_profile?.last_name}
+                              </Grid>
+                              <Grid
+                                item
+                                xs={3}
+                                textAlign="center"
+                                sx={{ whiteSpace: 'break-spaces', wordBreak: 'break-all' }}
+                              >
+                                {cleaner?.service_provider?.user_profile?.phone_number}
+                              </Grid>
+                              <Grid item xs={3} textAlign="center">
+                                <Button variant="text">
+                                  <ArrowRightAltOutlinedIcon />
+                                </Button>
+                              </Grid>
+                            </>
+                          ))}
                       </Grid>
                     </Box>
                   </Grid>
@@ -934,7 +966,52 @@ function BookingOrderDetails() {
                         <Typography variant="h3" className="headingSubTxt">
                           Payment Information
                         </Typography>
-                        <Box display={'flex'} alignItems="center" justifyContent={'space-between'}>
+                        <Grid container sx={{ marginTop: '0.5rem' }}>
+                          <Grid item xs={4} sx={{ fontWeight: 'bold', textAlign: 'start' }}>
+                            Card No <small>(last 4)</small>
+                          </Grid>
+                          <Grid item xs={4} sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+                            Card Brand
+                          </Grid>
+                          <Grid item xs={4} sx={{ fontWeight: 'bold', textAlign: 'end' }}>
+                            Expiry
+                          </Grid>
+                        </Grid>
+                        <Grid container>
+                          {!!adminCardsData.length &&
+                            adminCardsData?.map((card, index) => (
+                              <>
+                                <Grid item xs={4} sx={{ textAlign: 'start' }}>
+                                  {card?.last4}
+                                </Grid>
+                                <Grid
+                                  item
+                                  xs={4}
+                                  textAlign="center"
+                                  sx={{
+                                    whiteSpace: 'break-spaces',
+                                    wordBreak: 'break-all',
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  {card?.brand}
+                                </Grid>
+                                <Grid
+                                  item
+                                  xs={4}
+                                  textAlign="center"
+                                  sx={{
+                                    whiteSpace: 'break-spaces',
+                                    wordBreak: 'break-all',
+                                    textAlign: 'end',
+                                  }}
+                                >
+                                  {card?.exp_month}/{card?.exp_year}
+                                </Grid>
+                              </>
+                            ))}
+                        </Grid>
+                        {/* <Box display={'flex'} alignItems="center" justifyContent={'space-between'}>
                           <Box display={'flex'} alignItems="center" paddingBottom="10px">
                             <CreditCardOutlinedIcon sx={{ paddingRight: '5px' }} />
                             <p>Preferred Payment Method</p>
@@ -950,7 +1027,7 @@ function BookingOrderDetails() {
                           >
                             Payment Options
                           </Button>
-                        </Box>
+                        </Box> */}
                       </Box>
                     </Grid>
                   )}
@@ -975,10 +1052,14 @@ function BookingOrderDetails() {
                         },
                       }}
                     >
-                      <Typography variant="h3" className="headingSubTxt">
+                      <Typography
+                        variant="h3"
+                        className="headingSubTxt"
+                        style={{ paddingBottom: '0px' }}
+                      >
                         Communications
                       </Typography>
-                      <Box display="flex" justifyContent={'space-between'}>
+                      {/* <Box display="flex" justifyContent={'space-between'}>
                         <Box
                           sx={{
                             '& p': {
@@ -1007,7 +1088,7 @@ function BookingOrderDetails() {
 
                           <p>Yes</p>
                         </Box>
-                      </Box>
+                      </Box> */}
                       <Grid container spacing={2} sx={{ marginTop: '0.5rem', fontSize: '1rem' }}>
                         <Grid item xs={6}>
                           Recipent
@@ -1022,71 +1103,76 @@ function BookingOrderDetails() {
                         columnSpacing={1}
                         sx={{ fontSize: 'x-small', marginTop: '5px' }}
                       >
-                        <Grid item xs={2}>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              backgroundColor: 'blue',
-                              padding: '2px 5px',
-                              color: 'white',
-                              borderRadius: '25px',
-                              '& p': {
-                                padding: 'unset !important',
-                              },
-                            }}
-                          >
-                            <EmailOutlinedIcon sx={{ fontSize: '14px' }} />
-                            <p>SA</p>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={5}>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              flexDirection: 'column',
-                              backgroundColor: 'red',
-                              padding: '2px 5px',
-                              color: 'white',
-                              borderRadius: '25px',
-                              '& p': {
-                                padding: 'unset !important',
-                              },
-                            }}
-                          >
-                            <Box display="flex" alignItems={'center'} justifyContent="center">
-                              <PermIdentityOutlinedIcon sx={{ fontSize: '14px' }} />
-                              <p>Grismary Alejandra</p>
-                            </Box>
-                            grisrivero87@gmail.com
-                          </Box>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              flexDirection: 'column',
-                              backgroundColor: 'green',
-                              padding: '2px 5px',
-                              color: 'white',
-                              borderRadius: '25px',
-                              '& p': {
-                                padding: 'unset !important',
-                              },
-                            }}
-                          >
-                            <p>Sent: Feb 7, 2022</p>
-                            <p>11:23</p>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={1}>
-                          dfg
-                        </Grid>
+                        {!!communicationData?.length &&
+                          communicationData?.map((communication, index) => (
+                            <>
+                              <Grid item xs={3}>
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: 'blue',
+                                    padding: '2px 5px',
+                                    color: 'white',
+                                    borderRadius: '25px',
+                                    '& p': {
+                                      padding: 'unset !important',
+                                    },
+                                  }}
+                                >
+                                  <PermIdentityOutlinedIcon sx={{ fontSize: '14px' }} />
+                                  <p>
+                                    {communication?.customer?.user_profile?.first_name}{' '}
+                                    {communication?.customer?.user_profile?.last_name}
+                                  </p>
+                                </Box>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    backgroundColor: 'red',
+                                    padding: '2px 5px',
+                                    color: 'white',
+                                    borderRadius: '25px',
+                                    '& p': {
+                                      padding: 'unset !important',
+                                    },
+                                  }}
+                                >
+                                  <Box display="flex" alignItems={'center'} justifyContent="center">
+                                    <p>{communication?.title}</p>
+                                  </Box>
+                                </Box>
+                              </Grid>
+                              <Grid item xs={4}>
+                                <Box
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    backgroundColor: 'green',
+                                    padding: '2px 5px',
+                                    color: 'white',
+                                    borderRadius: '25px',
+                                    '& p': {
+                                      padding: '0px 5px !important',
+                                    },
+                                  }}
+                                >
+                                  <p>Sent: {moment.utc(communication?.created_at).format('lll')}</p>
+                                </Box>
+                              </Grid>
+                              <Grid item xs={1}>
+                                dfg
+                              </Grid>
+                            </>
+                          ))}
                       </Grid>
                     </Box>
                   </Grid>

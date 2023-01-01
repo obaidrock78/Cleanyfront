@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import { Grid, styled, Button, responsiveFontSizes } from '@mui/material';
 import StatCards from './tabsPane/StatsCard/StatCards';
@@ -7,8 +7,7 @@ import AddTask from './tabsPane/AddTask';
 import Chat from './tabsPane/Chat';
 import Scheduler from './tabsPane/Scheduler';
 import axios from '../../../axios';
-import { BOOKING_NOTIFICATION } from 'app/api';
-import ReactWeather, { useWeatherBit } from 'react-open-weather';
+import { BOOKING_NOTIFICATION, COMPANY_PROFILE_DATA } from 'app/api';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,6 +16,7 @@ import Avatar from '@mui/material/Avatar';
 import ImageIcon from '@mui/icons-material/Image';
 import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import WeatherComponent from './weather';
 
 const StylesTabsArea = styled(Box)(({ theme }) => ({
   p: 3,
@@ -178,14 +178,20 @@ const easyAccessContentItems = [
 
 const MainDashboard = () => {
   const [bookingNotification, setBookingNotification] = React.useState();
+  const [formData, setformData] = useState(null);
 
-  const { data, isLoading, errorMessage } = useWeatherBit({
-    key: 'ac69bc70043f4c47aec73dfd3a19007e',
-    lat: '27.6648',
-    lon: '81.5158',
-    lang: 'en',
-    unit: 'metric',
-  });
+  useEffect(() => {
+    companyProfileApi();
+  }, []);
+
+  const companyProfileApi = async () => {
+    await axios
+      .get(`${COMPANY_PROFILE_DATA}`, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((res) => setformData(res?.data?.data))
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     const getNotification = async () => {
@@ -294,15 +300,7 @@ const MainDashboard = () => {
           <Weather>
             <WeatherHeading>Weather</WeatherHeading>
             <WeatherContent>
-              <ReactWeather
-                isLoading={isLoading}
-                errorMessage={errorMessage}
-                data={data}
-                lang="en"
-                locationLabel="Munich"
-                unitsLabels={{ temperature: 'C', windSpeed: 'Km/h' }}
-                showForecast
-              />
+              {formData !== null && <WeatherComponent formData={formData} />}
             </WeatherContent>
           </Weather>
         </Grid>

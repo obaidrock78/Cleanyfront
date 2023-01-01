@@ -23,6 +23,9 @@ import StepEight from './Modals/CreateBookingModals/StepEight';
 import StepNine from './Modals/CreateBookingModals/StepNine';
 import StepTen from './Modals/CreateBookingModals/StepTen';
 import CompleteBooking from './Modals/CreateBookingModals/CompleteBooking';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -130,7 +133,7 @@ function BookingOrders() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(initialData);
   const [bookingList, setBookingList] = useState([]);
-  const [dateChange, setDateChange] = useState('month');
+  const [dateChange, setDateChange] = useState('t_month');
   const [statusChange, setStatusChange] = useState('scheduled');
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
@@ -145,6 +148,11 @@ function BookingOrders() {
   const [stepNine, setStepNine] = useState(false);
   const [stepTen, setStepTen] = useState(false);
   const [completeBooking, setCompleteBooking] = useState(false);
+  const [toDate, setToDate] = useState(null);
+
+  const handleChangeDate = (newValue) => {
+    setToDate(newValue);
+  };
 
   const handleFormData = (field, value) => {
     setFormData({
@@ -206,12 +214,14 @@ function BookingOrders() {
 
   useEffect(() => {
     serviceListAPI();
-  }, [dateChange, statusChange, page, perPage]);
+  }, [dateChange, statusChange, page, perPage, toDate]);
 
   const serviceListAPI = async () => {
     await axios
       .get(
-        `${LIST_BOOKING}?booking_status=${statusChange}&date_filter=${dateChange}&page=${page}&per_page=${perPage}`,
+        `${LIST_BOOKING}?to_date=${
+          toDate === null ? '' : moment(toDate?.toString()).format('YYYY-MM-DD HH:mm:ss')
+        }&booking_status=${statusChange}&date_filter=${dateChange}&page=${page}&per_page=${perPage}`,
         {
           headers: { 'Content-Type': 'application/json' },
         }
@@ -412,9 +422,36 @@ function BookingOrders() {
                 setDateChange(e.target.value);
               }}
             >
-              <MenuItem value={'week'}>This Week</MenuItem>
-              <MenuItem value={'month'}>This Month</MenuItem>
+              <MenuItem value={'t_week'}>This Week</MenuItem>
+              <MenuItem value={'t_month'}>This Month</MenuItem>
+              <MenuItem value={'t_quarter'}>This Quarter</MenuItem>
+              <MenuItem value={'today'}>Today</MenuItem>
+              <MenuItem value={'yesterday'}>Yesterday</MenuItem>
+              <MenuItem value={'tomorrow'}>Tomorrow</MenuItem>
+              <MenuItem value={'l_week'}>Last Week</MenuItem>
+              <MenuItem value={'l_month'}>Last Month</MenuItem>
+              <MenuItem value={'l_year'}>Last Year</MenuItem>
+              <MenuItem value={'l_quarter'}>Last Quarter</MenuItem>
+              <MenuItem value={'t_week_to_date'}>This Week To Date</MenuItem>
+              <MenuItem value={'t_month_to_date'}>This Month To Date</MenuItem>
+              <MenuItem value={'t_year_to_date'}>This Year To Date</MenuItem>
             </TextField>
+            {(dateChange === 't_week_to_date' ||
+              dateChange === 't_month_to_date' ||
+              dateChange === 't_year_to_date') && (
+              <Box>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    disablePast
+                    label="Select Date"
+                    value={toDate}
+                    onChange={handleChangeDate}
+                    renderInput={(params) => <TextField size="small" {...params} />}
+                  />
+                </LocalizationProvider>
+              </Box>
+            )}
+
             <Typography variant="body1">Booking Status</Typography>
             <TextField
               size="small"
@@ -434,6 +471,13 @@ function BookingOrders() {
             </TextField>
           </Box>
         </Box>
+        {(dateChange === 't_week_to_date' ||
+          dateChange === 't_month_to_date' ||
+          dateChange === 't_year_to_date') && (
+          <p style={{ margin: 'unset', fontSize: 'small', fontWeight: '300' }}>
+            Select date to fetch bookings!
+          </p>
+        )}
         <DataTableBox>
           <DataGrid
             sx={{

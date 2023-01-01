@@ -66,6 +66,8 @@ export const CLEANER_LOCATION = '/service_provider/cleaner_location';
 export const ADMIN_SIDE_CUSTOMER_BOOKINGS = '/booking/admin_user_booking';
 export const CANCEL_BOOKING = '/booking/cancel_booking';
 export const COMPLETE_BOOKING = '/booking/mark_complete';
+export const LIST_COMMUNICATION_LOGS = '/booking/list_email_logs';
+export const ADMIN_CARD_LIST_BOOKING_DETAILS = '/user_module/admin_card_list';
 
 export const FULL_CALENDAR_EVENTS = '/booking/get_events';
 export const FULL_CALENDAR_RESOURCES = '/booking/get_resources';

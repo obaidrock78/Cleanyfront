@@ -44,7 +44,14 @@ function CompanyAdd({ open, handleClose }) {
     linkedin: Yup.string().url('Url is invalid'),
     twitter: Yup.string().url('Url is invalid'),
     instagram: Yup.string().url('Url is invalid'),
-    weather: Yup.string().required('Weather is required!'),
+    latitude: Yup.number('Latitude is required!')
+      .min(0, 'invalid Latitude')
+      .required('Latitude is required!')
+      .nullable(),
+    longitude: Yup.number('Longitude is required!')
+      .min(0, 'invalid Longitude')
+      .required('Longitude is required!')
+      .nullable(),
   });
   const formik = useFormik({
     initialValues: {
@@ -61,7 +68,8 @@ function CompanyAdd({ open, handleClose }) {
       linkedin: '',
       twitter: '',
       instagram: '',
-      weather: '',
+      latitude: '',
+      longitude: '',
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -223,15 +231,27 @@ function CompanyAdd({ open, handleClose }) {
                     helperText={touched.zip_code && errors.zip_code}
                   />
                 </Grid>
-                <Grid item sm={12} xs={12}>
+
+                <Grid item sm={6} xs={12}>
                   <TextField
                     size="small"
                     fullWidth
-                    type="url"
-                    label="weather"
-                    {...getFieldProps('weather')}
-                    error={Boolean(touched.weather && errors.weather)}
-                    helperText={touched.weather && errors.weather}
+                    type="number"
+                    label="Latitude"
+                    {...getFieldProps('latitude')}
+                    error={Boolean(touched.latitude && errors.latitude)}
+                    helperText={touched.latitude && errors.latitude}
+                  />
+                </Grid>
+                <Grid item sm={6} xs={12}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    type="number"
+                    label="Longitude"
+                    {...getFieldProps('longitude')}
+                    error={Boolean(touched.longitude && errors.longitude)}
+                    helperText={touched.longitude && errors.longitude}
                   />
                 </Grid>
                 <Grid item sm={12} xs={12}>
