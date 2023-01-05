@@ -19,6 +19,7 @@ function StepFive({
   handleReset,
   setStepFive,
   setStepSix,
+  setStepFour,
 }) {
   const [validated, setValidated] = useState(true);
 
@@ -406,7 +407,7 @@ function StepFive({
               color="primary"
               startIcon={<ArrowBackIcon />}
               onClick={() => {
-                setStepFive(true);
+                setStepFour(true);
                 handleClose();
               }}
               sx={{ marginRight: '1rem' }}

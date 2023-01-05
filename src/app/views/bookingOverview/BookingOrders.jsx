@@ -2,7 +2,7 @@ import { Box, Button, Menu, MenuItem, Pagination, TextField, Typography } from '
 import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import axios from '../../../axios';
-import { LIST_BOOKING } from 'app/api';
+import { ADMIN_CREATE_APPOINTMENT_BOOKING, LIST_BOOKING } from 'app/api';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -26,6 +26,7 @@ import CompleteBooking from './Modals/CreateBookingModals/CompleteBooking';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { toast, Toaster } from 'react-hot-toast';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -83,8 +84,13 @@ const TableHeading = styled('p')(() => ({
 }));
 function BookingOrders() {
   const initialData = {
+    selected_customer_id: '',
     email: '',
     service: 'select',
+    service_slug: '',
+    first_name: '',
+    last_name: '',
+    phone_no: '',
     address: '',
     road: '',
     apt_suite: '',
@@ -92,10 +98,13 @@ function BookingOrders() {
     state: '',
     zip_code: '',
     location: '',
-    deep_clean_hours: '2 Hours (1 Cleaner)',
-    rooms: 'Studio',
-    bath_rooms: '1 Bathroom',
-    square_feet: '<1000 Sq Ft',
+    packages_text: '',
+    discounts_text: '',
+    extras_text: '',
+    taxes_text: '',
+    total_text: '',
+    booking_items: null,
+    booking_extras: null,
     switch_component: [
       { title: 'Go Green - Free Upgrade', value: false },
       { title: 'Inside of Fridge', value: false },
@@ -120,7 +129,7 @@ function BookingOrders() {
     schedule_booking: true,
     start_time: '',
     end_time: '',
-    frequency: 'none',
+    frequency: 'biweekly',
     confirmation_email: true,
     allow_rescedule: false,
     allow_cancel: false,
@@ -162,8 +171,13 @@ function BookingOrders() {
   };
   const handleReset = () => {
     const dupData = {
+      selected_customer_id: '',
       email: '',
       service: 'select',
+      service_slug: '',
+      first_name: '',
+      last_name: '',
+      phone_no: '',
       address: '',
       road: '',
       apt_suite: '',
@@ -171,10 +185,13 @@ function BookingOrders() {
       state: '',
       zip_code: '',
       location: '',
-      deep_clean_hours: '2 Hours (1 Cleaner)',
-      rooms: 'Studio',
-      bath_rooms: '1 Bathroom',
-      square_feet: '<1000 Sq Ft',
+      packages_text: '',
+      discounts_text: '',
+      extras_text: '',
+      taxes_text: '',
+      total_text: '',
+      booking_items: null,
+      booking_extras: null,
       switch_component: [
         { title: 'Go Green - Free Upgrade', value: false },
         { title: 'Inside of Fridge', value: false },
@@ -199,7 +216,7 @@ function BookingOrders() {
       schedule_booking: true,
       start_time: '',
       end_time: '',
-      frequency: 'none',
+      frequency: 'biweekly',
       confirmation_email: true,
       allow_rescedule: false,
       allow_cancel: false,
@@ -370,7 +387,57 @@ function BookingOrders() {
       },
     },
   ];
+  const handleSubmitBooking = () => {
+    const objToSend = {
+      contact_info: {
+        first_name: formData?.first_name,
+        last_name: formData?.last_name,
+        email: formData?.email,
+        phone: formData?.phone_no,
+        how_to_enter_on_premise: '',
+      },
+      service_location: {
+        street_address: formData?.road,
+        apt_suite: formData?.apt_suite,
+        city: formData?.city,
+        state: formData?.state,
+        zip_code: formData?.zip_code,
+        let_long: '',
+      },
+      extras: formData?.booking_extras,
+      items: formData?.booking_items,
+      booking_type: formData?.frequency,
+      service_id: formData?.service,
+      start_date: moment(formData?.start_time).format('YYYY-MM-DD'),
+      start_time: moment(formData?.start_time).format('HH:mm'),
+      additional_info: 'null',
+    };
+    toast.promise(
+      axios.post(
+        `https://api-cleany-backend.herokuapp.com${ADMIN_CREATE_APPOINTMENT_BOOKING}/${formData?.service}`,
+        objToSend,
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      ),
+      {
+        loading: () => {
+          return `Creating Booking!`;
+        },
+        success: (res) => {
+          setTimeout(() => {
+            setCompleteBooking(true);
+            setStepSeven(false);
+          }, 500);
 
+          return res?.data?.message;
+        },
+        error: (err) => {
+          return err?.message;
+        },
+      }
+    );
+  };
   return (
     <Container>
       <Box className="breadcrumb">
@@ -535,6 +602,7 @@ function BookingOrders() {
         formData={formData}
         handleReset={handleReset}
         setStepTwo={setStepTwo}
+        setFormData={setFormData}
       />
       <StepTwo
         open={stepTwo}
@@ -544,6 +612,7 @@ function BookingOrders() {
         handleReset={handleReset}
         setStepOne={setStepOne}
         setStepThree={setStepThree}
+        setFormData={setFormData}
       />
       <StepThree
         open={stepThree}
@@ -552,7 +621,8 @@ function BookingOrders() {
         formData={formData}
         handleReset={handleReset}
         setStepTwo={setStepTwo}
-        setStepFour={setStepFour}
+        setStepFour={setStepSix}
+        setFormData={setFormData}
       />
       <StepFour
         open={stepFour}
@@ -581,7 +651,7 @@ function BookingOrders() {
         formData={formData}
         setFormData={setFormData}
         handleReset={handleReset}
-        setStepFive={setStepFive}
+        setStepFive={setStepThree}
         setStepSeven={setStepSeven}
       />
       <StepSeven
@@ -593,6 +663,7 @@ function BookingOrders() {
         setStepSix={setStepSix}
         setStepEight={setStepEight}
         setCompleteBooking={setCompleteBooking}
+        handleSubmitBooking={handleSubmitBooking}
       />
       <StepEight
         open={stepEight}
@@ -634,6 +705,7 @@ function BookingOrders() {
         setFormData={setFormData}
         handleReset={handleReset}
       />
+      <Toaster position="top-right" />
     </Container>
   );
 }

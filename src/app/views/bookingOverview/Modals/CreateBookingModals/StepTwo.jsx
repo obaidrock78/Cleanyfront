@@ -8,7 +8,7 @@ import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import axios from '../../../../../axios';
 import { DialogActions, Grid, TextField, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { GET_SERVICE_LIST } from 'app/api';
+import { GET_CUSTOMER_WITH_ID, GET_SERVICE_LIST } from 'app/api';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
@@ -22,9 +22,27 @@ function StepTwo({
   handleReset,
   setStepOne,
   setStepThree,
+  setFormData,
 }) {
   const [validated, setValidated] = useState(true);
   const [showButtonClick, setShowButtonClick] = useState(false);
+  useEffect(async () => {
+    await axios
+      .get(`${GET_CUSTOMER_WITH_ID}?user_id=${formData?.selected_customer_id?.id}`)
+      .then((res) => {
+        const dupObj = { ...formData };
+        dupObj.address = res?.data?.data?.user_profile?.address;
+        dupObj.road = res?.data?.data?.user_profile?.address;
+        dupObj.city = res?.data?.data?.user_profile?.city;
+        dupObj.state = res?.data?.data?.user_profile?.state;
+        dupObj.zip_code = res?.data?.data?.user_profile?.zip_code;
+        dupObj.first_name = res?.data?.data?.user_profile?.first_name;
+        dupObj.last_name = res?.data?.data?.user_profile?.last_name;
+        dupObj.phone_no = res?.data?.data?.user_profile?.phone_number;
+        setFormData(dupObj);
+      })
+      .catch((err) => console.log(err));
+  }, [open]);
 
   const handleNext = () => {
     setStepThree(true);
@@ -88,7 +106,7 @@ function StepTwo({
             >
               <Typography variant="h1">Create a new Booking</Typography>
               <Typography variant="h1">
-                <span>Step 2 of 6</span> Customer Information
+                <span>Step 2 of 4</span> Customer Information
               </Typography>
             </Box>
           </Box>
@@ -137,30 +155,79 @@ function StepTwo({
             }}
           >
             <h3>Service Location</h3>
-            <TextField
-              size="small"
-              fullWidth
-              type="text"
-              inputProps={{ placeholder: 'Select a Location' }}
-              value={formData.address}
-              name="address"
-              onChange={(e) => handleFormData(e.target.name, e.target.value)}
-              // error={
-              //   !validated &&
-              //   (formData.email == '' || formData.email.match(validEmailRegex) === null)
-              // }
-              // helperText={
-              //   !validated &&
-              //   (formData.email == '' || formData.email.match(validEmailRegex) === null) &&
-              //   'Email is required! and enter valid email!'
-              // }
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  type="text"
+                  label="First Name"
+                  inputProps={{ placeholder: 'First Name' }}
+                  value={formData?.first_name}
+                  name="first_name"
+                  onChange={(e) => handleFormData(e.target.name, e.target.value)}
+                  // error={
+                  //   !validated &&
+                  //   (formData.email == '' || formData.email.match(validEmailRegex) === null)
+                  // }
+                  // helperText={
+                  //   !validated &&
+                  //   (formData.email == '' || formData.email.match(validEmailRegex) === null) &&
+                  //   'Email is required! and enter valid email!'
+                  // }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  type="text"
+                  label="Last Name"
+                  inputProps={{ placeholder: 'Last Name' }}
+                  value={formData?.last_name}
+                  name="last_name"
+                  onChange={(e) => handleFormData(e.target.name, e.target.value)}
+                  // error={
+                  //   !validated &&
+                  //   (formData.email == '' || formData.email.match(validEmailRegex) === null)
+                  // }
+                  // helperText={
+                  //   !validated &&
+                  //   (formData.email == '' || formData.email.match(validEmailRegex) === null) &&
+                  //   'Email is required! and enter valid email!'
+                  // }
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  type="text"
+                  label="Phone No"
+                  inputProps={{ placeholder: 'Phone no' }}
+                  value={formData?.phone_no}
+                  name="phone_no"
+                  onChange={(e) => handleFormData(e.target.name, e.target.value)}
+                  // error={
+                  //   !validated &&
+                  //   (formData.email == '' || formData.email.match(validEmailRegex) === null)
+                  // }
+                  // helperText={
+                  //   !validated &&
+                  //   (formData.email == '' || formData.email.match(validEmailRegex) === null) &&
+                  //   'Email is required! and enter valid email!'
+                  // }
+                />
+              </Grid>
+            </Grid>
+
             <p>(The service address can be changed for this Booking)</p>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <TextField
                   size="small"
                   fullWidth
+                  label="Address"
                   type="text"
                   inputProps={{ placeholder: 'Road' }}
                   value={formData.road}
@@ -173,6 +240,7 @@ function StepTwo({
                   size="small"
                   fullWidth
                   type="text"
+                  label="Apt # (optional)"
                   inputProps={{ placeholder: 'Unit/Apt/Suite#' }}
                   value={formData.apt_suite}
                   name="apt_suite"
@@ -184,6 +252,7 @@ function StepTwo({
                   size="small"
                   fullWidth
                   type="text"
+                  label="City"
                   inputProps={{ placeholder: 'City' }}
                   value={formData.city}
                   name="city"
@@ -195,6 +264,7 @@ function StepTwo({
                   size="small"
                   fullWidth
                   type="text"
+                  label="State"
                   inputProps={{ placeholder: 'State' }}
                   value={formData.state}
                   name="state"
@@ -206,6 +276,7 @@ function StepTwo({
                   size="small"
                   fullWidth
                   type="number"
+                  label="Zip Code"
                   inputProps={{ placeholder: 'Zip Code', min: 0 }}
                   value={formData.zip_code}
                   name="zip_code"

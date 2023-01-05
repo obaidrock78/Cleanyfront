@@ -18,6 +18,7 @@ function StepSeven({
   setStepSix,
   setStepEight,
   setCompleteBooking,
+  handleSubmitBooking,
 }) {
   const [validated, setValidated] = useState(true);
 
@@ -205,8 +206,7 @@ function StepSeven({
               variant="contained"
               color="primary"
               onClick={() => {
-                setCompleteBooking(true);
-                handleClose();
+                handleSubmitBooking();
               }}
             >
               Create Booking Now
