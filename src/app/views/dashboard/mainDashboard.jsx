@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
 import Box from '@mui/material/Box';
 import { Grid, styled, Button, responsiveFontSizes } from '@mui/material';
 import StatCards from './tabsPane/StatsCard/StatCards';
@@ -207,6 +208,12 @@ const MainDashboard = () => {
     getNotification();
   }, []);
 
+  const editorRef = useRef(null);
+  const log = () => {
+    if (editorRef.current) {
+      console.log(editorRef.current.getContent());
+    }
+  };
   return (
     <Box sx={{ p: 4 }}>
       <Grid container spacing={3} rowSpacing={2}>
@@ -308,6 +315,167 @@ const MainDashboard = () => {
         <Grid item md={12}>
           <ChatArea>
             <Chat />
+          </ChatArea>
+        </Grid>
+        <Grid item md={12}>
+          <ChatArea>
+            <Editor
+              onInit={(evt, editor) => editorRef.current = editor}
+              initialValue='<table role=" presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate;width:100%">
+            <tbody><tr>
+              <td style="font-family:sans-serif;font-size:14px;vertical-align:top;box-sizing:border-box;background:#ffffff;padding:10px 20px;border-radius:3px 3px 0 0;border-bottom:none;border-top:3px solid #347efb">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate;width:100%">
+                  <tbody><tr>
+                    <td width="NaN" height="32" id="m_-7908327151059634069m_-7421923159361587435logo" style="font-family:sans-serif;font-size:14px;vertical-align:top;color:#ffffff;text-align:right">
+                      <table role="presentation" width="100%" height="32" border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate;width:100%">
+                        <tbody><tr>
+                          <td width="NaN" height="32" style="font-family:sans-serif;font-size:14px;vertical-align:top;color:#ffffff;text-align:center">
+                            <img width="0" height="32" src="https://ci5.googleusercontent.com/proxy/XJSpzDcEwi51lj8m40J4gXS2GiZMnn3o1YkgHHcrudIgvjgS1B2U0IW_ZBIhkf2vUNOJZO1WPKvbsf5yhlXqhAf-gjoqLAVhfzXhikcbWvoKDF_AF2MsWElUIxm3dmd5p2VPoApqVP61nw=s0-d-e1-ft#https://storage.podiumio.com/06dee2ae-30ab-4acf-9189-6ed124ca6a72/images/logo_64x64.jpg" style="border:none;max-width:100%;vertical-align:middle" class="CToWUd" data-bit="iit" jslog="138226; u014N:xr6bB; 53:W2ZhbHNlLDJd">
+                          </td>
+                        </tr>
+                        </tbody></table>
+                    </td>
+                    <td id="m_-7908327151059634069m_-7421923159361587435company" style="font-family:sans-serif;font-size:18px;vertical-align:top;color:#333333;text-align:left;padding-left:10px;line-height:32px;font-weight:bold;margin:0">Cleany Miami</td>
+                    <td id="m_-7908327151059634069m_-7421923159361587435type" style="font-family:sans-serif;font-size:14px;vertical-align:top;color:#000000;text-align:right;line-height:32px">Confirmation</td>
+                  </tr>
+                  </tbody></table>
+              </td>
+            </tr>
+
+              <tr>
+                <td style="font-family:sans-serif;font-size:14px;vertical-align:top;box-sizing:border-box;background:#e9e9e9;padding:15px 20px;border-top:1px solid #e6e6e6">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate;width:100%">
+                    <tbody><tr>
+                      <td style="font-family:sans-serif;font-size:16px;vertical-align:top;color:#ffffff"><h3 style="color:#000000;font-family:sans-serif;font-weight:400;line-height:1.4;margin:0;text-align:center">Cleany Miami - Deep Clean</h3>
+
+                        <h2 style="color:#000000;font-family:sans-serif;font-weight:bold;line-height:1.4;margin:0;text-align:center">Thursday, July 7, 2022 2:00 AM</h2>
+                      </td>
+                    </tr>
+                    </tbody></table>
+                </td>
+              </tr>
+
+
+              <tr>
+                <td style="font-family:sans-serif;font-size:14px;vertical-align:top;box-sizing:border-box;padding:20px;background:#ffffff;border-radius:0 0 3px 3px;border-top:1px solid #e6e6e6">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate;width:100%">
+                    <tbody><tr>
+                      <td style="font-family:sans-serif;font-size:14px;vertical-align:top"><p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;margin-bottom:15px">Hello Obed Rehman,</p><p style="font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;margin-bottom:15px">Thank you for your booking! Your booking number is 0000-0462.</p>                                <hr style="border:0;border-bottom:1px solid #f6f6f6;Margin:20px 0"><h4 style="color:#000000;font-family:sans-serif;font-weight:400;line-height:1.4;margin:0;text-align:center"><b>Your Information</b></h4><table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:separate;width:100%">    <tbody><tr>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Name</td>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">Obed Rehman</td>    </tr>    <tr>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Email</td>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right"><a href="mailto:obaidrock78@gmail.com" target="_blank">obaidrock78@gmail.com</a></td>    </tr>    <tr>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Phone</td>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">+923034142927</td>    </tr>    <tr>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Address</td>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">2 - assa, 54999</td>    </tr>    <tr>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top">City</td>        <td style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">sasaas</td>    </tr>    </tbody></table><hr style="border:0;border-bottom:1px solid #f6f6f6;Margin:20px 0"><h4 style="color:#000000;font-family:sans-serif;font-weight:400;line-height:1.4;margin:0;text-align:center"><b>Booking Details</b></h4><div><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:separate;width:100%">
+                        <tbody><tr>
+                          <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Bedrooms</td>
+                          <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">Studio Deep Clean (&lt;500 Sq Ft)</td>
+                        </tr>
+                          <tr>
+                            <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Bathrooms</td>
+                            <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">1 Bathroom</td>
+                          </tr>
+                          <tr>
+                            <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Do You Have Any Pets?</td>
+                            <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">No Pets</td>
+                          </tr>
+                          <tr>
+                            <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Dropdown Option</td>
+                            <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">Ill be home</td>
+                          </tr>
+                          <tr>
+                            <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Frequency</td>
+                            <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">Daily</td>
+                          </tr>
+                          <tr>
+                            <td style="font-family:sans-serif;font-size:14px;vertical-align:top">Frequency</td>
+                            <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right">Daily</td>
+                          </tr>
+
+                        </tbody></table></div><div></div><hr style="border:0;border-bottom:1px solid #f6f6f6;Margin:20px 0"><div><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:separate;width:100%">
+                          <tbody><tr>
+                            <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right;font-weight:bold">Subtotal</td>
+                            <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right"> $219.00</td>
+                          </tr>
+
+
+
+                            <tr>
+                              <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right;font-weight:bold">Tax</td>
+                              <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right"> $15.33</td>
+                            </tr>
+
+                            <tr>
+                              <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right;font-weight:bold">Total</td>
+                              <td align="right" style="font-family:sans-serif;font-size:14px;vertical-align:top;text-align:right"> $234.33</td>
+                            </tr>
+
+                          </tbody></table>
+
+
+                        </tbody></table>
+                      </td>
+                      </tr>
+
+
+                      </tbody></table>'
+
+
+              init={{
+                height: 600,
+                menubar: true,
+                branding: false,
+                plugins: [
+                  'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                  'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                  'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                ],
+
+                toolbar1:
+                  'print |template' +
+                  'undo redo | formatselect | ' +
+                  'bold italic backcolor | alignleft aligncenter ' +
+                  'alignright alignjustify | bullist numlist outdent indent | ' +
+                  'removeformat | help | template   ',
+
+                template_preview_replace_values: {
+                  preview_userfirstname: 'participant First Name',
+                  preview_userlastname: 'participant Last Name',
+                  preview_useraddress: 'participant Address',
+                  preview_nationality: 'participant nationality ',
+                  preview_gender: ' participant gender',
+                },
+                templates: [
+                  // {
+                  //   title: "Date modified example",
+                  //   description:
+                  //     "Adds a timestamp indicating the last time the document modified.",
+                  //   content:
+                  //     "<p>Last Modified: <time class="mdate">This will be replaced with the date modified.</time></p>",
+                  // },
+                  {
+                    title: 'Participant first  name',
+                    description: '',
+                    content: '<span> {{userfirstname}} </span>',
+                  },
+                  {
+                    title: 'Participant last name',
+                    description: '',
+                    content: '<span> {{userlastname}} </span>',
+                  },
+                  {
+                    title: 'Participant address',
+                    description: '',
+                    content: '<span> {{useraddress}} </span>',
+                  },
+                  {
+                    title: 'Participant nationality',
+                    description: '',
+                    content: '<span> {{nationality}} </span>',
+                  },
+                  {
+                    title: 'Participant gender',
+                    description: '',
+                    content: '<span> {{nationality}} </span>',
+                  },
+                ],
+              }}
+            />
+            <button onClick={log}>Log editor content</button>
           </ChatArea>
         </Grid>
       </Grid>
