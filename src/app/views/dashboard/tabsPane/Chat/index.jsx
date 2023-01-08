@@ -36,7 +36,7 @@ const Chat = () => {
   };
   React.useEffect(() => {
     getAdminChats();
-  }, [setGettingChats]);
+  }, []);
 
   const customerID = selectedChat?.filter((customer) => {
     return customer?.user?.user_profile?.role === 'Customer' && customer?.user;

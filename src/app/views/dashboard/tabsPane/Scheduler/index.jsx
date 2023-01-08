@@ -31,7 +31,7 @@ const SchedulerHeading = styled('h3')(({ theme }) => ({
 }))
 function Scheduler() {
   const [events, setEvents] = useState()
-  const currentDate = new Date().toJSON().slice(0, 10) 
+  const currentDate = new Date().toJSON().slice(0, 10)
   React.useEffect(() => { getEvents() }, [])
   const getEvents = async () => {
     await axios
@@ -47,7 +47,9 @@ function Scheduler() {
     let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let d = new Date(date);
     let dayName = days[d.getDay()];
-    return date === currentDate ? "Today" : dayName
+    var month = d.toLocaleString('default', { month: 'short' });
+    console.log(month)
+    return { day: date === currentDate ? "Today" : dayName, month: month  ,date:d.getDate()}
   }
   return (
     <Box>
@@ -59,9 +61,13 @@ function Scheduler() {
           return (
             <Grid item md={2.4} textAlign="center">
               <Typography component={'h2'} variant="h3" color='darkgray' sx={{ fontWeight: 900, fontSize: '29px' }}>
-                {GetDayFormDate(ele.value)}
+
+
+                {GetDayFormDate(ele.value).day}
               </Typography>
               <Box>
+                {GetDayFormDate(ele.value).date} {''}
+                {GetDayFormDate(ele.value).month}
                 {ele.data.length > 0 ? <>  <p>{ele.data.length} Bookings </p>  </> : <p>No Bookings</p>}
               </Box>
               {ele?.data?.map((e) => {
