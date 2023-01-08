@@ -265,7 +265,7 @@ function ServiceProvider() {
               variant="outlined"
               onClick={() => {
                 closeDropdown(index);
-                navigate('/dashboard/service-providers/update', { state: obj });
+                navigate(`/dashboard/service-providers/${obj?.id}/update`, { state: obj });
               }}
             >
               View
@@ -303,7 +303,9 @@ function ServiceProvider() {
                 <MenuItem
                   onClick={() => {
                     closeDropdown(index);
-                    navigate('/dashboard/service-providers/update', { state: item?.row });
+                    navigate(`/dashboard/service-providers/${obj?.id}/update`, {
+                      state: item?.row,
+                    });
                   }}
                 >
                   Update

@@ -52,7 +52,9 @@ const ForgotPassword = () => {
         },
         success: (res) => {
           setLoading(false);
-          setTimeout(() => {}, 500);
+          setTimeout(() => {
+            navigate(`/session/reset-password?email=${email}`);
+          }, 500);
 
           return res?.data?.message;
         },

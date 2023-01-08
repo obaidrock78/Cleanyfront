@@ -90,10 +90,10 @@ const JwtLogin = () => {
         },
         error: (err) => {
           setLoading(false);
-          if (err.status_code === 400) {
-            return err?.message.non_field_errors[0];
+          if (err?.status_code === 400) {
+            return err?.message?.non_field_errors[0];
           } else {
-            return err?.message.non_field_errors[0];
+            return err?.message?.non_field_errors[0];
           }
         },
       }

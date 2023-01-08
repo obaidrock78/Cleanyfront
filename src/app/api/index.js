@@ -1,5 +1,6 @@
 export const USER_REGISTRATION = '/user_module/user_email_signup';
 export const FORGET_PASSWORD = '/user_module/forget_password';
+export const RESET_PASSWORD = '/user_module/reset_password';
 export const USER_SIGNUP_PROFILE = '/user_module/user_information_signup';
 export const USER_LOGIN = '/user_module/user_login';
 export const MAKE_COMPANY_PROFILE = '/booking/create_company';

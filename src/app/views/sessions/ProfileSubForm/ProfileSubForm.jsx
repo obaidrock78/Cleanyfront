@@ -47,7 +47,7 @@ function ProfileSubForm({ setSecondForm, formData }) {
       .nullable(),
     state: Yup.string().required('State is required!'),
     phone_number: Yup.string()
-      .matches(/^\+[0-9]+$/, 'Must be only digits')
+      .matches(/^\+[0-9]+$/, 'Must be only digits with (+) in start!')
       .required('Phone no is required!'),
     country: Yup.string().required('Country is required!'),
   });
