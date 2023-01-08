@@ -82,3 +82,4 @@ export const UPDATE_CUSTOMER_PROFILE = '/user_module/update_profile';
 export const CHARGE_TIP_FROM_CUSTOMER = '/booking/charge_tip';
 export const USER_SIDE_GET_CARDS = '/user_module/user_card_list';
 export const USER_SIDE_ADD_CARDS = '/user_module/add_user_card';
+export const  EMAIL_TEMPLATE ='/booking/create_email_type'
