@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
 import Box from '@mui/material/Box';
 import { Grid, styled, Button, responsiveFontSizes } from '@mui/material';
 import StatCards from './tabsPane/StatsCard/StatCards';
@@ -7,7 +8,7 @@ import AddTask from './tabsPane/AddTask';
 import Chat from './tabsPane/Chat';
 import Scheduler from './tabsPane/Scheduler';
 import axios from '../../../axios';
-import { BOOKING_NOTIFICATION, COMPANY_PROFILE_DATA } from 'app/api';
+import { BOOKING_NOTIFICATION, COMPANY_PROFILE_DATA, EMAIL_TEMPLATE } from 'app/api';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,6 +18,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import WeatherComponent from './weather';
+
 
 const StylesTabsArea = styled(Box)(({ theme }) => ({
   p: 3,
@@ -207,6 +209,23 @@ const MainDashboard = () => {
     getNotification();
   }, []);
 
+  const editorRef = useRef(null);
+
+
+
+  const post_email_template_type = async (data) => {
+    await axios.post(`${EMAIL_TEMPLATE}`, {
+      "subject": "string",
+      "body": data,
+      "email_type": "Confirmation"
+    })
+  }
+  const log = () => {
+    if (editorRef.current) {
+      console.log(editorRef.current.getContent());
+      post_email_template_type(editorRef.current.getContent())
+    }
+  };
   return (
     <Box sx={{ p: 4 }}>
       <Grid container spacing={3} rowSpacing={2}>
@@ -308,6 +327,80 @@ const MainDashboard = () => {
         <Grid item md={12}>
           <ChatArea>
             <Chat />
+          </ChatArea>
+        </Grid>
+        <Grid item md={12}>
+          <ChatArea>
+            <Editor
+              onInit={(evt, editor) => editorRef.current = editor}
+              initialValue={''}
+
+              init={{
+                height: 600,
+                menubar: true,
+                branding: false,
+                plugins: [
+                  'template', 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                  'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                  'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                ],
+
+                toolbar1:
+                  'print |template' +
+                  'undo redo | formatselect | ' +
+                  'bold italic backcolor | alignleft aligncenter ' +
+                  'alignright alignjustify | bullist numlist outdent indent | ' +
+                  'removeformat | help | template   ',
+
+                template_preview_replace_values: {
+                  preview_userfirstname: 'participant First Name',
+                  preview_userlastname: 'participant Last Name',
+                  preview_useraddress: 'participant Address',
+                  preview_nationality: 'participant nationality ',
+                  preview_gender: ' participant gender',
+                },
+                templates: [
+                  // {
+                  //   title: "Date modified example",
+                  //   description:
+                  //     "Adds a timestamp indicating the last time the document modified.",
+                  //   content:
+                  //     "<p>Last Modified: <time class="mdate">This will be replaced with the date modified.</time></p>",
+                  // },
+                  {
+                    title: 'Participant first  name',
+                    description: '',
+                    content: '<span> {{userfirstname}} </span>',
+                  },
+                  {
+                    title: 'Participant last name',
+                    description: '',
+                    content: '<span> {{userlastname}} </span>',
+                  },
+                  {
+                    title: 'Participant address',
+                    description: '',
+                    content: '<span> {{useraddress}} </span>',
+                  },
+                  {
+                    title: 'Participant nationality',
+                    description: '',
+                    content: '<span> {{nationality}} </span>',
+                  },
+                  {
+                    title: 'Participant gender',
+                    description: '',
+                    content: '<span> {{nationality}} </span>',
+                  },
+                  {
+                    title: 'Participant bill',
+                    description: '',
+                    content: '<span> {{bill}} </span>',
+                  },
+                ],
+              }}
+            />
+            <button onClick={log}>Log editor content</button>
           </ChatArea>
         </Grid>
       </Grid>
