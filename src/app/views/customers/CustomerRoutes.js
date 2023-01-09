@@ -14,7 +14,7 @@ const customerRoutes = [
     auth: authRoles.admin,
   },
   {
-    path: '/dashboard/customers/update',
+    path: '/dashboard/customers/:id/update',
     element: <UpdateCustomer />,
     auth: authRoles.admin,
   },

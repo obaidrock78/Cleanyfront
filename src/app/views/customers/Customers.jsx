@@ -269,7 +269,7 @@ function Customers() {
               variant="outlined"
               onClick={() => {
                 closeDropdown(index);
-                navigate('/dashboard/customers/update', { state: obj });
+                navigate(`/dashboard/customers/${obj?.id}/update`, { state: obj });
               }}
             >
               View
@@ -278,7 +278,9 @@ function Customers() {
               variant="outlined"
               onClick={() => {
                 closeDropdown(index);
-                navigate('/dashboard/customers/update', { state: item?.row });
+                navigate(`/dashboard/customers/${obj?.id}/update`, {
+                  state: item?.row,
+                });
               }}
             >
               Edit

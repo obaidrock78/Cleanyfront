@@ -1,4 +1,6 @@
 export const USER_REGISTRATION = '/user_module/user_email_signup';
+export const FORGET_PASSWORD = '/user_module/forget_password';
+export const RESET_PASSWORD = '/user_module/reset_password';
 export const USER_SIGNUP_PROFILE = '/user_module/user_information_signup';
 export const USER_LOGIN = '/user_module/user_login';
 export const MAKE_COMPANY_PROFILE = '/booking/create_company';
@@ -68,6 +70,8 @@ export const CANCEL_BOOKING = '/booking/cancel_booking';
 export const COMPLETE_BOOKING = '/booking/mark_complete';
 export const LIST_COMMUNICATION_LOGS = '/booking/list_email_logs';
 export const ADMIN_CARD_LIST_BOOKING_DETAILS = '/user_module/admin_card_list';
+export const GET_CUSTOMER_WITH_ID = '/booking/get_customer';
+export const ADMIN_CREATE_APPOINTMENT_BOOKING = '/booking/admin_create_booking';
 
 export const FULL_CALENDAR_EVENTS = '/booking/get_events';
 export const FULL_CALENDAR_RESOURCES = '/booking/get_resources';

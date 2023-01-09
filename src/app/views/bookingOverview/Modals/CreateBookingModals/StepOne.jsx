@@ -17,12 +17,21 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { GET_SERVICE_LIST } from 'app/api';
+import { ADMIN_SIDE_CUSTOMER_LIST, GET_SERVICE_LIST } from 'app/api';
 
-function StepOne({ open, handleClose, handleFormData, formData, handleReset, setStepTwo }) {
+function StepOne({
+  open,
+  handleClose,
+  handleFormData,
+  formData,
+  handleReset,
+  setStepTwo,
+  setFormData,
+}) {
   const [validated, setValidated] = useState(true);
   const [alignment, setAlignment] = React.useState('custom');
   const [serviceList, setServiceList] = useState([]);
+  const [customerList, setCustomerList] = useState([]);
 
   useEffect(() => {
     serviceListAPI();
@@ -33,7 +42,17 @@ function StepOne({ open, handleClose, handleFormData, formData, handleReset, set
       .get(`${GET_SERVICE_LIST}`, {
         headers: { 'Content-Type': 'application/json' },
       })
-      .then((res) => setServiceList(res?.data?.data))
+      .then((res) => {
+        setServiceList(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+    await axios
+      .get(`${ADMIN_SIDE_CUSTOMER_LIST}`, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((res) => {
+        setCustomerList(res?.data?.data);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -51,13 +70,21 @@ function StepOne({ open, handleClose, handleFormData, formData, handleReset, set
   var validEmailRegex =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   const validateVendorForm = () => {
-    if (formData.email == '' || formData.email.match(validEmailRegex) == null) {
+    if (
+      formData.email == '' ||
+      formData.email.match(validEmailRegex) == null ||
+      formData?.service == '' ||
+      formData?.service === 'select' ||
+      formData?.service === null ||
+      formData?.service === undefined
+    ) {
       setValidated(false);
       return false;
     }
     setValidated(true);
     return true;
   };
+
   return (
     <>
       <Dialog
@@ -103,7 +130,7 @@ function StepOne({ open, handleClose, handleFormData, formData, handleReset, set
             >
               <Typography variant="h1">Create a new Booking</Typography>
               <Typography variant="h1">
-                <span>Step 1 of 6</span> Initial Information
+                <span>Step 1 of 4</span> Initial Information
               </Typography>
             </Box>
           </Box>
@@ -130,9 +157,18 @@ function StepOne({ open, handleClose, handleFormData, formData, handleReset, set
             fullWidth
             type="email"
             inputProps={{ placeholder: 'Email' }}
+            select
+            defaultValue="select"
             value={formData.email}
             name="email"
-            onChange={(e) => handleFormData(e.target.name, e.target.value)}
+            onChange={(e) => {
+              const dupObj = { ...formData };
+              dupObj.email = e.target.value;
+              const id = customerList?.find((data) => data.email === e.target.value);
+              dupObj.selected_customer_id = id;
+
+              setFormData(dupObj);
+            }}
             error={
               !validated && (formData.email == '' || formData.email.match(validEmailRegex) === null)
             }
@@ -141,7 +177,14 @@ function StepOne({ open, handleClose, handleFormData, formData, handleReset, set
               (formData.email == '' || formData.email.match(validEmailRegex) === null) &&
               'Email is required! and enter valid email!'
             }
-          />
+          >
+            {!!customerList?.length &&
+              customerList?.map((customer) => (
+                <MenuItem key={customer?.id} value={customer?.email}>
+                  {customer?.email}
+                </MenuItem>
+              ))}
+          </TextField>
           <Divider sx={{ marginBottom: '2rem', marginTop: '2rem' }} />
           <Box
             sx={{
@@ -168,7 +211,7 @@ function StepOne({ open, handleClose, handleFormData, formData, handleReset, set
               aria-label="Platform"
             >
               <ToggleButton value="existing">Use an Existing Booking Page</ToggleButton>
-              <ToggleButton value="custom">Create a Custom Booking</ToggleButton>
+              {/* <ToggleButton value="custom">Create a Custom Booking</ToggleButton> */}
             </ToggleButtonGroup>
           </Box>
           {/* {alignment !== 'custom' && ( */}
@@ -181,14 +224,36 @@ function StepOne({ open, handleClose, handleFormData, formData, handleReset, set
                 id="outlined-select-currency"
                 select
                 fullWidth
+                defaultValue={'select'}
                 name="service"
                 inputProps={{ placeholder: '--Select a Service Booking Page--' }}
                 value={formData?.service}
-                onChange={(e) => handleFormData(e.target.name, e.target.value)}
+                onChange={(e) => {
+                  const dupObj = { ...formData };
+                  dupObj.service = e.target.value;
+                  const id = serviceList?.find((data) => data.id === e.target.value);
+                  dupObj.service_slug = id?.slug;
+                  setFormData(dupObj);
+                }}
+                error={
+                  !validated &&
+                  (formData?.service == '' ||
+                    formData?.service === 'select' ||
+                    formData?.service === null ||
+                    formData?.service === undefined)
+                }
+                helperText={
+                  !validated &&
+                  (formData?.service == '' ||
+                    formData?.service === 'select' ||
+                    formData?.service === null ||
+                    formData?.service === undefined) &&
+                  'Service is required!'
+                }
               >
                 <MenuItem value={'select'}>--Select a Service Booking Page--</MenuItem>
                 {serviceList.map((option) => (
-                  <MenuItem key={option.id} value={option}>
+                  <MenuItem key={option.id} value={option.id}>
                     {option.title}
                   </MenuItem>
                 ))}

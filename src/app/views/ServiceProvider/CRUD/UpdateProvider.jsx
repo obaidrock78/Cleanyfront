@@ -7,10 +7,10 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import axios from '../../../../axios';
-import { UPDATE_SERVICE_PROVIDER } from 'app/api';
+import { GET_CUSTOMER_WITH_ID, UPDATE_SERVICE_PROVIDER } from 'app/api';
 import { ImageUpload } from 'app/components/DropZone/ImageUpload';
 import createNFTUpload from '../../../../assets/createNFTUpload.png';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { MuiColorInput } from 'mui-color-input';
 
 const Container = styled('div')(({ theme }) => ({
@@ -32,9 +32,20 @@ const Container = styled('div')(({ theme }) => ({
 
 function UpdateProvider() {
   const navigate = useNavigate();
+  const params = useParams();
   const { state } = useLocation();
   let formData = new FormData();
   const [loading, setLoading] = useState(false);
+  const [customerData, setCustomerData] = useState(null);
+
+  useEffect(async () => {
+    await axios
+      .get(`${GET_CUSTOMER_WITH_ID}?user_id=${params?.id}`)
+      .then((res) => {
+        setCustomerData(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+  }, [params?.id]);
 
   const schema = Yup.object().shape({
     first_name: Yup.string().required('First name is required!'),
@@ -112,8 +123,8 @@ function UpdateProvider() {
       }
 
       formData.append('time_zone', values?.time_zone);
-      formData.append('id', state?.user_profile?.id);
-      formData.append('user', state?.user_profile?.user);
+      formData.append('id', customerData?.user_profile?.id);
+      formData.append('user', customerData?.user_profile?.user);
       setLoading(true);
       toast.promise(
         axios.put(`${UPDATE_SERVICE_PROVIDER}`, formData, {
@@ -151,24 +162,24 @@ function UpdateProvider() {
   } = formik;
 
   useEffect(() => {
-    setFieldValue('first_name', state?.user_profile?.first_name);
-    setFieldValue('last_name', state?.user_profile?.last_name);
-    setFieldValue('email', state?.email);
-    setFieldValue('phone', state?.user_profile?.phone_number);
-    setFieldValue('address', state?.user_profile?.address);
-    setFieldValue('city', state?.user_profile?.city);
-    setFieldValue('state', state?.user_profile?.state);
-    setFieldValue('zip_code', state?.user_profile?.zip_code);
-    setFieldValue('gender', state?.user_profile?.gender);
-    setFieldValue('language', state?.user_profile?.language);
-    setFieldValue('hourly_rate', state?.user_profile?.hourly_rate);
-    setFieldValue('color', state?.user_profile?.color);
+    setFieldValue('first_name', customerData?.user_profile?.first_name);
+    setFieldValue('last_name', customerData?.user_profile?.last_name);
+    setFieldValue('email', customerData?.email);
+    setFieldValue('phone', customerData?.user_profile?.phone_number);
+    setFieldValue('address', customerData?.user_profile?.address);
+    setFieldValue('city', customerData?.user_profile?.city);
+    setFieldValue('state', customerData?.user_profile?.state);
+    setFieldValue('zip_code', customerData?.user_profile?.zip_code);
+    setFieldValue('gender', customerData?.user_profile?.gender);
+    setFieldValue('language', customerData?.user_profile?.language);
+    setFieldValue('hourly_rate', customerData?.user_profile?.hourly_rate);
+    setFieldValue('color', customerData?.user_profile?.color);
     setFieldValue(
       'profile_picture',
-      `https://api-cleany-backend.herokuapp.com${state?.user_profile?.profile_picture}`
+      `https://api-cleany-backend.herokuapp.com${customerData?.user_profile?.profile_picture}`
     );
-    setFieldValue('time_zone', state?.user_profile?.time_zone);
-  }, []);
+    setFieldValue('time_zone', customerData?.user_profile?.time_zone);
+  }, [customerData]);
 
   return (
     <Container>

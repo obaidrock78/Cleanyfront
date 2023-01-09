@@ -15,7 +15,7 @@ const servicesProviderRoutes = [
     auth: authRoles.admin,
   },
   {
-    path: '/dashboard/service-providers/update',
+    path: '/dashboard/service-providers/:id/update',
     element: <UpdateProvider />,
     auth: authRoles.admin,
   },

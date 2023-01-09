@@ -99,7 +99,7 @@ function StepSix({
             >
               <Typography variant="h1">Create a new Booking</Typography>
               <Typography variant="h1">
-                <span>Step 6 of 6</span> Date and Time
+                <span>Step 4 of 4</span> Date and Time
               </Typography>
             </Box>
           </Box>
@@ -180,7 +180,10 @@ function StepSix({
                 value={formData?.frequency}
                 onChange={(e) => handleFormData(e.target.name, e.target.value)}
               >
-                <MenuItem value={'none'}>--Select a Booking Frequency--</MenuItem>
+                <MenuItem value={'daily'}>Onetime</MenuItem>
+                <MenuItem value={'weekly'}>Weekly - 20% Off</MenuItem>
+                <MenuItem value={'biweekly'}>Biweekly - 15% Off</MenuItem>
+                <MenuItem value={'monthly'}>Monthly - 10% Off</MenuItem>
               </TextField>
             </Grid>
           </Grid>
@@ -278,11 +281,11 @@ function StepSix({
                   <p>Total:</p>
                 </Grid>
                 <Grid item xs={2}>
-                  <p>$279.0</p>
-                  <p>$0.00</p>
-                  <p>$0.00</p>
-                  <p>$19.53</p>
-                  <p>$298.53</p>
+                  <p>${formData?.packages_text}</p>
+                  <p>${formData?.discounts_text}</p>
+                  <p>${formData?.extras_text}</p>
+                  <p>${formData?.taxes_text}</p>
+                  <p>${formData?.total_text}</p>
                 </Grid>
               </Grid>
               <Divider sx={{ borderColor: 'white', marginTop: '0.5rem', marginBottom: '0.5rem' }} />

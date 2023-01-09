@@ -1,6 +1,10 @@
+import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, styled, TextField } from '@mui/material';
 import { useState } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../../axios';
+import { FORGET_PASSWORD } from 'app/api';
 
 const FlexBox = styled(Box)(() => ({
   display: 'flex',
@@ -28,10 +32,38 @@ const ForgotPasswordRoot = styled(JustifyBox)(() => ({
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('admin@example.com');
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = () => {
-    console.log(email);
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    toast.promise(
+      axios.post(
+        `${FORGET_PASSWORD}`,
+        { email: email },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      ),
+      {
+        loading: () => {
+          return `Sending Email!`;
+        },
+        success: (res) => {
+          setLoading(false);
+          setTimeout(() => {
+            navigate(`/session/reset-password?email=${email}`);
+          }, 500);
+
+          return res?.data?.message;
+        },
+        error: (err) => {
+          setLoading(false);
+          return err?.message;
+        },
+      }
+    );
   };
 
   return (
@@ -48,32 +80,40 @@ const ForgotPassword = () => {
                 <TextField
                   type="email"
                   name="email"
-                  size="small"
                   label="Email"
                   value={email}
+                  inputProps={{ placeholder: 'user@example.com' }}
                   variant="outlined"
                   onChange={(e) => setEmail(e.target.value)}
                   sx={{ mb: 3, width: '100%' }}
                 />
 
-                <Button fullWidth variant="contained" color="primary" type="submit">
-                  Reset Password
-                </Button>
-
-                <Button
-                  fullWidth
+                <LoadingButton
+                  type="submit"
+                  size="large"
                   color="primary"
-                  variant="outlined"
-                  onClick={() => navigate(-1)}
-                  sx={{ mt: 2 }}
+                  loading={loading}
+                  variant="contained"
+                  sx={{}}
+                  fullWidth
                 >
-                  Go Back
-                </Button>
+                  Send PIN
+                </LoadingButton>
               </form>
+              <Button
+                fullWidth
+                color="primary"
+                variant="outlined"
+                onClick={() => navigate(-1)}
+                sx={{ mt: 2 }}
+              >
+                Go Back
+              </Button>
             </ContentBox>
           </Grid>
         </Grid>
       </Card>
+      <Toaster position="top-right" />
     </ForgotPasswordRoot>
   );
 };

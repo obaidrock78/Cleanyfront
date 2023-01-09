@@ -49,6 +49,9 @@ import CustomerChat from 'app/components/Chat/customerChat';
 import ChargeCustomerModal from '../Modals/ChargeCustomer';
 import ChargeTipModal from '../Modals/ChargeTip';
 import GenerateInvoice from '../Modals/GenerateInvoice';
+import PersonIcon from '@mui/icons-material/Person';
+import BookingMarkComplete from '../Modals/BookingMarkComplete';
+import BookingMarkCancel from '../Modals/BookingMarkCancel';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -84,6 +87,8 @@ function BookingOrderDetails() {
   const [cleanerLocation, setCleanerLocation] = useState([]);
   const [communicationData, setCommunicationData] = useState([]);
   const [adminCardsData, setadminCardsData] = useState([]);
+  const [completeBookingModal, setCompleteBookingModal] = useState(false);
+  const [cancelBookingModal, setCancelBookingModal] = useState(false);
 
   useEffect(() => {
     getEventList();
@@ -138,53 +143,6 @@ function BookingOrderDetails() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleCancelBooking = () => {
-    toast.promise(
-      axios.post(
-        `${CANCEL_BOOKING}`,
-        { booking_id: bookindDetails?.id },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      ),
-      {
-        loading: () => {
-          return `Cancelling Booking`;
-        },
-        success: (res) => {
-          getEventList();
-          return res?.data?.message;
-        },
-        error: (err) => {
-          return err?.message;
-        },
-      }
-    );
-  };
-  const handleCompleteBooking = () => {
-    toast.promise(
-      axios.post(
-        `${COMPLETE_BOOKING}`,
-        { booking_id: bookindDetails?.id },
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      ),
-      {
-        loading: () => {
-          return `Marking Booking Complete!`;
-        },
-        success: (res) => {
-          getEventList();
-          return res?.data?.message;
-        },
-        error: (err) => {
-          return err?.message;
-        },
-      }
-    );
   };
 
   return (
@@ -524,7 +482,14 @@ function BookingOrderDetails() {
                                 {cleaner?.service_provider?.user_profile?.phone_number}
                               </Grid>
                               <Grid item xs={3} textAlign="center">
-                                <Button variant="text">
+                                <Button
+                                  variant="text"
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/service-providers/${cleaner?.service_provider?.id}/update`
+                                    )
+                                  }
+                                >
                                   <ArrowRightAltOutlinedIcon />
                                 </Button>
                               </Grid>
@@ -677,7 +642,6 @@ function BookingOrderDetails() {
                         '& .headingSubTxt': {
                           fontSize: '1rem',
                           fontWeight: 'bold',
-                          paddingBottom: '1rem',
                         },
                         '& p': {
                           margin: 'unset',
@@ -685,74 +649,87 @@ function BookingOrderDetails() {
                         },
                       }}
                     >
-                      <Typography variant="h3" className="headingSubTxt">
-                        Customer
-                      </Typography>
                       <Box
-                        display={'flex'}
-                        alignItems="center"
-                        paddingBottom="5px"
-                        fontWeight={'bold'}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          paddingBottom: '1rem',
+                        }}
                       >
-                        <AccountCircleOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p style={{ fontSize: '1.25rem' }}>
-                          {bookindDetails?.bod?.bod_contact_info?.first_name}{' '}
-                          {bookindDetails?.bod?.bod_contact_info?.last_name}
-                        </p>
+                        <Typography variant="h3" className="headingSubTxt">
+                          Customer
+                        </Typography>
+                        <Box
+                          display={'flex'}
+                          alignItems="center"
+                          paddingBottom="5px"
+                          fontWeight={'bold'}
+                        >
+                          <EventOutlinedIcon sx={{ paddingRight: '5px' }} />
+                          <p>
+                            Since:{' '}
+                            {moment
+                              .utc(bookindDetails?.bod?.bod_contact_info?.created_at)
+                              .format('MMM DD, YYYY')}
+                          </p>
+                        </Box>
                       </Box>
-                      <Box
-                        display={'flex'}
-                        alignItems="center"
-                        paddingBottom="5px"
-                        fontWeight={'bold'}
-                      >
-                        <EmailOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>{bookindDetails?.bod?.bod_contact_info?.email}</p>
-                      </Box>
-                      <Box
-                        display={'flex'}
-                        alignItems="center"
-                        paddingBottom="5px"
-                        fontWeight={'bold'}
-                      >
-                        <LocalPhoneOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>{bookindDetails?.bod?.bod_contact_info?.phone}</p>
-                      </Box>
-                      <Box
-                        display={'flex'}
-                        alignItems="center"
-                        paddingBottom="5px"
-                        fontWeight={'bold'}
-                      >
-                        <HomeOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>{bookindDetails?.bod?.bod_service_location?.street_address}</p>
-                      </Box>
-                      <Box
-                        display={'flex'}
-                        alignItems="center"
-                        paddingBottom="5px"
-                        fontWeight={'bold'}
-                      >
-                        <LocationOnOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>
-                          From: {bookindDetails?.bod?.bod_service_location?.city},{' '}
-                          {bookindDetails?.bod?.bod_service_location?.state}
-                        </p>
-                      </Box>
-                      <Box
-                        display={'flex'}
-                        alignItems="center"
-                        paddingBottom="5px"
-                        fontWeight={'bold'}
-                      >
-                        <EventOutlinedIcon sx={{ paddingRight: '5px' }} />
-                        <p>
-                          Since:{' '}
-                          {moment
-                            .utc(bookindDetails?.bod?.bod_contact_info?.created_at)
-                            .format('MMM DD YYYY, h:mm a')}
-                        </p>
-                      </Box>
+
+                      <Grid container>
+                        <Grid item xs={3}>
+                          <PersonIcon sx={{ fontSize: '5rem' }} />
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Box
+                            display={'flex'}
+                            alignItems="center"
+                            paddingBottom="5px"
+                            fontWeight={'bold'}
+                          >
+                            <p style={{ fontSize: '1.4rem', textTransform: 'capitalize' }}>
+                              {bookindDetails?.bod?.bod_contact_info?.first_name}{' '}
+                              {bookindDetails?.bod?.bod_contact_info?.last_name}
+                            </p>
+                          </Box>
+                          <Box display={'flex'} alignItems="center" paddingBottom="5px">
+                            <EmailOutlinedIcon sx={{ paddingRight: '5px' }} />
+                            <p>{bookindDetails?.bod?.bod_contact_info?.email}</p>
+                          </Box>
+                          <Box display={'flex'} alignItems="center" paddingBottom="5px">
+                            <LocalPhoneOutlinedIcon sx={{ paddingRight: '5px' }} />
+                            <p>{bookindDetails?.bod?.bod_contact_info?.phone}</p>
+                          </Box>
+                          <Box display={'flex'} alignItems="center" paddingBottom="5px">
+                            <HomeOutlinedIcon sx={{ paddingRight: '5px' }} />
+                            <p>{bookindDetails?.bod?.bod_service_location?.street_address}</p>
+                          </Box>
+                          <Box display={'flex'} alignItems="center" paddingBottom="5px">
+                            <LocationOnOutlinedIcon sx={{ paddingRight: '5px' }} />
+                            <p>
+                              From: {bookindDetails?.bod?.bod_service_location?.city},{' '}
+                              {bookindDetails?.bod?.bod_service_location?.state}
+                            </p>
+                          </Box>
+                          <Box
+                            display={'flex'}
+                            alignItems="center"
+                            justifyContent={'end'}
+                            paddingBottom="5px"
+                          >
+                            <Button
+                              variant="text"
+                              startIcon={<PersonIcon />}
+                              endIcon={<ArrowRightAltOutlinedIcon />}
+                              onClick={() =>
+                                navigate(`/dashboard/customers/${bookindDetails?.bod?.user}/update`)
+                              }
+                            >
+                              View Customer
+                            </Button>
+                          </Box>
+                        </Grid>
+                      </Grid>
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={12}>
@@ -1208,7 +1185,13 @@ function BookingOrderDetails() {
                 }}
               >
                 <Typography variant="h3" className="headingSubTxt">
-                  Fully Charged
+                  {bookindDetails?.status === 'cancelled'
+                    ? 'Cancelled'
+                    : bookindDetails?.outstanding?.status === 'pending'
+                    ? 'Not Charged'
+                    : bookindDetails?.outstanding?.status === 'completed'
+                    ? 'Fully Charged'
+                    : 'Partially Charged'}
                 </Typography>
                 {!!bookindDetails && (
                   <Button
@@ -1223,6 +1206,10 @@ function BookingOrderDetails() {
                         : 'warning'
                     }
                     onClick={() => setChargeCustomer(true)}
+                    disabled={
+                      bookindDetails?.status === 'cancelled' ||
+                      bookindDetails?.outstanding?.status === 'completed'
+                    }
                   >
                     Charge Now
                   </Button>
@@ -1297,7 +1284,11 @@ function BookingOrderDetails() {
                   </Button>
                 )}
                 {role !== 'Customer' && (
-                  <Button fullWidth variant="contained" onClick={handleCompleteBooking}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={() => setCompleteBookingModal(true)}
+                  >
                     Mark Complete
                   </Button>
                 )}
@@ -1316,7 +1307,7 @@ function BookingOrderDetails() {
                   fullWidth
                   variant="contained"
                   color="warning"
-                  onClick={handleCancelBooking}
+                  onClick={() => setCancelBookingModal(true)}
                   disabled={bookindDetails?.is_cancelled}
                 >
                   Cancel Booking
@@ -1390,47 +1381,114 @@ function BookingOrderDetails() {
                 </Typography>
               </Box>
             </Box>
-            {role !== 'Customer' && (
+
+            <Box
+              sx={{
+                boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                border: ' 1px solid rgba(98,105,118,.16)',
+                background: '#fff',
+                borderTop: ' 5px solid #1976d2',
+                padding: ' 1rem 1rem',
+                borderRadius: '4px',
+                '& .headingSubTxt': {
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  margin: 'unset',
+                  paddingBottom: '0.5rem',
+                },
+                '& p': {
+                  margin: 'unset',
+                },
+                '& button': {
+                  fontWeight: 'bold',
+                },
+              }}
+            >
+              <Typography variant="h3" className="headingSubTxt">
+                Location
+              </Typography>
               <Box
                 sx={{
-                  boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
-                  border: ' 1px solid rgba(98,105,118,.16)',
-                  background: '#fff',
-                  borderTop: ' 5px solid #1976d2',
-                  padding: ' 1rem 1rem',
-                  borderRadius: '4px',
-                  '& .headingSubTxt': {
-                    fontSize: '1rem',
-                    fontWeight: 'bold',
-                    margin: 'unset',
-                    paddingTop: '1rem',
-                  },
+                  display: 'flex',
+                  gap: '1',
                   '& p': {
                     margin: 'unset',
                   },
-                  '& button': {
-                    fontWeight: 'bold',
-                  },
                 }}
               >
-                <Box
-                  display={'flex'}
-                  alignItems={'center'}
-                  justifyContent="center"
-                  flexDirection={'column'}
-                >
-                  <Box
-                    sx={{ width: '5rem', height: '5rem', borderRadius: '50%', background: 'gray' }}
-                  ></Box>
-                  <h4 className="headingSubTxt">Buyer test</h4>
-                  <p>Customer</p>
-                  <Divider sx={{ paddingTop: '1rem', marginBottom: '0.5rem', width: '100%' }} />
-                  <Button fullWidth variant="text">
-                    Edit Profile
-                  </Button>
-                </Box>
+                <LocationOnIcon sx={{ fontSize: '1rem', marginTop: '3px' }} />
+                <p>{bookindDetails?.bod?.bod_service_location?.street_address}</p>
               </Box>
-            )}
+              <Box display={'flex'} alignItems="center" justifyContent={'end'} paddingBottom="5px">
+                <Button
+                  variant="text"
+                  startIcon={<LocationOnIcon />}
+                  endIcon={<ArrowRightAltOutlinedIcon />}
+                  sx={{ fontSize: '0.8rem' }}
+                  href={`http://maps.google.com/?q=${bookindDetails?.bod?.bod_service_location?.street_address} ${bookindDetails?.bod?.bod_service_location?.city} 
+                  ${bookindDetails?.bod?.bod_service_location?.state}`}
+                  target="_blank"
+                >
+                  See on Google Map
+                </Button>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                boxShadow: 'rgb(30 41 59 / 4%) 0 2px 4px 0',
+                border: ' 1px solid rgba(98,105,118,.16)',
+                background: '#fff',
+                borderTop: ' 5px solid #1976d2',
+                padding: ' 1rem 1rem',
+                borderRadius: '4px',
+                '& .headingSubTxt': {
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                  margin: 'unset',
+                  paddingBottom: '0.5rem',
+                },
+                '& p': {
+                  margin: 'unset',
+                },
+                '& button': {
+                  fontWeight: 'bold',
+                },
+              }}
+            >
+              <Grid container>
+                <Grid item xs={6}>
+                  <p style={{ margin: 'unset', fontSize: 'small' }}>Creation Date</p>
+                </Grid>
+                <Grid item xs={6}>
+                  <p
+                    style={{
+                      margin: 'unset',
+                      fontSize: 'small',
+                      fontWeight: 'bold',
+                      textAlign: 'right',
+                    }}
+                  >
+                    {moment.utc(bookindDetails?.created_at).format('lll')}
+                  </p>
+                </Grid>
+                <Grid item xs={6}>
+                  <p style={{ margin: 'unset', fontSize: 'small' }}>Last Modified Date</p>
+                </Grid>
+                <Grid item xs={6}>
+                  <p
+                    style={{
+                      margin: 'unset',
+                      fontSize: 'small',
+                      fontWeight: 'bold',
+                      textAlign: 'right',
+                    }}
+                  >
+                    {moment.utc(bookindDetails?.updated_at).format('lll')}
+                  </p>
+                </Grid>
+              </Grid>
+            </Box>
+
             {role === 'Customer' ? (
               <CustomerChat bookindDetails={bookindDetails} />
             ) : (
@@ -1477,6 +1535,18 @@ function BookingOrderDetails() {
         open={invoiceModal}
         handleClose={() => setInvoiceModal(false)}
         bookindDetails={bookindDetails}
+      />
+      <BookingMarkComplete
+        open={completeBookingModal}
+        handleClose={() => setCompleteBookingModal(false)}
+        bookindDetails={bookindDetails}
+        getEventList={getEventList}
+      />
+      <BookingMarkCancel
+        open={cancelBookingModal}
+        handleClose={() => setCancelBookingModal(false)}
+        bookindDetails={bookindDetails}
+        getEventList={getEventList}
       />
     </>
   );

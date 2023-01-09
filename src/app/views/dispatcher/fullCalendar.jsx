@@ -13,8 +13,10 @@ import $ from 'jquery';
 import interactionPlugin from '@fullcalendar/interaction';
 import { toast, Toaster } from 'react-hot-toast';
 import { Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function DemoApp({ setDrawerState, setSelectedBooking }) {
+  const navigate = useNavigate();
   const [resources, setResources] = useState([]);
   const [events, setEvents] = useState([]);
 
@@ -47,15 +49,19 @@ function DemoApp({ setDrawerState, setSelectedBooking }) {
   const resourceContent = (arg) => {
     const color = arg?.resource?._resource?.extendedProps?.color;
     return (
-      <span>
+      <span
+        style={{ cursor: 'pointer' }}
+        onClick={() => navigate(`/dashboard/service-providers/${arg.resource.id}/update`)}
+      >
         {arg.resource.title !== 'Unassigned' && (
           <>
             <img
-              style={{ marginBottom: '-5px', width: '24px', height: '24px' }}
+              style={{ cursor: 'pointer', marginBottom: '-5px', width: '24px', height: '24px' }}
               src="https://cdn.podiumio.com/platform/entities/entity-employee-blue-100.png"
             />
             <span
               style={{
+                cursor: 'pointer',
                 borderRadius: '10px',
                 padding: '5px 10px',
                 background: color === undefined ? '' : color,
