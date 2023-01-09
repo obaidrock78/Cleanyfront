@@ -62,6 +62,7 @@ export const GET_BOOKING_INVOICES = '/booking/invoices';
 export const GET_BOOKING_PAYROLL = '/booking/payroll';
 export const CHARGE_CUSTOMER = '/booking/charge_booking';
 export const ADMIN_SIDE_CUSTOMER_LIST = '/service_provider/customer_list';
+export const MANAGER_LIST = '/booking/get_managers';
 export const ADMIN_SIDE_ADD_CUSTOMER = '/service_provider/create_customer';
 export const ADMIN_SIDE_Update_CUSTOMER = '/service_provider/update_customer';
 export const CLEANER_LOCATION = '/service_provider/cleaner_location';

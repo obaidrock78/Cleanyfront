@@ -49,6 +49,11 @@ export const navigations =
             { name: 'All Service Providers', iconText: 'CP', path: '/dashboard/service-providers' },
           ],
         },
+        {
+          name: 'Managers',
+          icon: ' account_box_outlined_icon',
+          children: [{ name: 'All Managers', iconText: 'CP', path: '/dashboard/managers' }],
+        },
         { name: 'Services', path: '/dashboard/services', icon: 'widgets_outlined_icon' },
         {
           name: 'Settings',
