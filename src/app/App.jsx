@@ -25,6 +25,7 @@ import customerViewRoutes from './views/CustomerView/customerViewRoutes';
 import ReportsRoutes from './views/Reports/ReportsRoutes';
 import CustomerBooking from './views/CustomerView/customerBooking';
 import managerRoutes from './views/Managers/CustomerRoutes';
+import calendarRoutes from './views/calendar/calendarRoutes';
 
 const App = () => {
   const token = localStorage.getItem('accessToken');
@@ -47,6 +48,7 @@ const App = () => {
         ...customerViewRoutes,
         ...ReportsRoutes,
         ...managerRoutes,
+        ...calendarRoutes,
       ],
     },
     { path: '/booking/:slug', element: <Booking /> },

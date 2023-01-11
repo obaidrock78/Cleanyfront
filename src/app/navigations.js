@@ -110,6 +110,11 @@ export const navigations =
           icon: 'format_list_bulleted_outlined_icon',
         },
         {
+          name: 'Calendar',
+          path: '/dashboard/calendar',
+          icon: 'insert_invitation_icon',
+        },
+        {
           name: 'Customers',
           icon: 'sensor_occupied_outlined_icon',
           children: [{ name: 'All Customers', iconText: 'CP', path: '/dashboard/customers' }],

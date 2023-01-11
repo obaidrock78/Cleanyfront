@@ -19,7 +19,6 @@ import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import WeatherComponent from './weather';
 
-
 const StylesTabsArea = styled(Box)(({ theme }) => ({
   p: 3,
   width: '100%',
@@ -71,6 +70,8 @@ const EasyAccess = styled(Box)(({ theme }) => ({
 }));
 
 const EasyAccessHeading = styled('h3')(({ theme }) => ({
+  marginTop: 'unset',
+  paddingBottom: '10px',
   typography: 'body1',
   color: 'black',
   borderBottom: '1px solid',
@@ -99,6 +100,8 @@ const Notifications = styled(Box)(({ theme }) => ({
 }));
 
 const NotificationsHeading = styled('h3')(({ theme }) => ({
+  marginTop: 'unset',
+  paddingBottom: '10px',
   typography: 'body1',
   color: 'black',
   borderBottom: '1px solid',
@@ -127,6 +130,8 @@ const Weather = styled(Box)(({ theme }) => ({
 }));
 
 const WeatherHeading = styled('h3')(({ theme }) => ({
+  marginTop: 'unset',
+  paddingBottom: '10px',
   typography: 'body1',
   color: 'black',
   borderBottom: '1px solid',
@@ -153,6 +158,8 @@ const StatsArea = styled(Box)(({ theme }) => ({
   borderTop: '5px solid purple',
 }));
 const StatHeading = styled('h3')(({ theme }) => ({
+  marginTop: 'unset',
+  paddingBottom: '10px',
   typography: 'body1',
   color: 'black',
   borderBottom: '1px solid',
@@ -211,19 +218,17 @@ const MainDashboard = () => {
 
   const editorRef = useRef(null);
 
-
-
   const post_email_template_type = async (data) => {
     await axios.post(`${EMAIL_TEMPLATE}`, {
-      "subject": "string",
-      "body": data,
-      "email_type": "Confirmation"
-    })
-  }
+      subject: 'string',
+      body: data,
+      email_type: 'Confirmation',
+    });
+  };
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
-      post_email_template_type(editorRef.current.getContent())
+      post_email_template_type(editorRef.current.getContent());
     }
   };
   return (
@@ -260,7 +265,7 @@ const MainDashboard = () => {
                         href={`https://cleany-app.netlify.app/dashboard/booking-appointments/${items.booking_id}/details/`}
                       >
                         <ListItemText
-                          primary={items.title}
+                          primary={`${items.title} (Obaid)`}
                           secondary={new Date(items.created_at).toJSON().slice(0, 10)}
                         />
                       </a>
@@ -332,17 +337,32 @@ const MainDashboard = () => {
         <Grid item md={12}>
           <ChatArea>
             <Editor
-              onInit={(evt, editor) => editorRef.current = editor}
+              onInit={(evt, editor) => (editorRef.current = editor)}
               initialValue={''}
-
               init={{
                 height: 600,
                 menubar: true,
                 branding: false,
                 plugins: [
-                  'template', 'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                  'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                  'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                  'template',
+                  'advlist',
+                  'autolink',
+                  'lists',
+                  'link',
+                  'image',
+                  'charmap',
+                  'preview',
+                  'anchor',
+                  'searchreplace',
+                  'visualblocks',
+                  'code',
+                  'fullscreen',
+                  'insertdatetime',
+                  'media',
+                  'table',
+                  'code',
+                  'help',
+                  'wordcount',
                 ],
 
                 toolbar1:

@@ -38,6 +38,8 @@ const columns = [
 ];
 
 const TaskHeading = styled('h3')(({ theme }) => ({
+  marginTop: 'unset',
+  paddingBottom: '10px',
   typography: 'body1',
   color: 'black',
   borderBottom: '1px solid',

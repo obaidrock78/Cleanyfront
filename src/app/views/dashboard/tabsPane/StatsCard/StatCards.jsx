@@ -111,9 +111,9 @@ const StatCards = () => {
                   right: '10px',
                   top: '0px',
                   '& .MuiSelect-outlined': {
-                    fontSize: '11px',
-                    paddingTop: '5px',
-                    paddingBottom: '5px',
+                    fontSize: '10px',
+                    paddingTop: '3px',
+                    paddingBottom: '3px',
                   },
                 }}
               >
@@ -135,7 +135,7 @@ const StatCards = () => {
             <ContentBox>
               <Icon className="icon">{item.icon}</Icon>
               <Box ml="12px">
-                <Small>{item.name}</Small>
+                <Small style={{ fontWeight: 'bold' }}>{item.name}</Small>
                 <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '4px' }} gap={1}>
                   {index === 3 ? (
                     <>

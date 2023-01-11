@@ -6,6 +6,8 @@ import axios from '../../../../../axios';
 import ChatAvatar from '../../../../../assets/chat-avatar.png';
 
 const ChatHeading = styled('h3')(({ theme }) => ({
+  marginTop: 'unset',
+  paddingBottom: '10px',
   typography: 'body1',
   color: 'black',
   borderBottom: '1px solid',
