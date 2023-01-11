@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -8,9 +8,10 @@ import {
   TextField,
   Stack,
   Typography,
+  MenuItem,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { GET_PROVIDER_LIST_TASK, CREATE_PROVIDER_LIST_TASK } from 'app/api';
+import { GET_PROVIDER_LIST_TASK, CREATE_PROVIDER_LIST_TASK, MANAGER_LIST } from 'app/api';
 import axios from '../../../../../axios';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
@@ -51,6 +52,8 @@ const AddTask = () => {
   const [data, setData] = React.useState([]);
   const [tasks, setTasks] = React.useState('');
   const [date, setDate] = React.useState(dayjs('2014-08-18T21:11:54'));
+  const [managerList, setManagerList] = useState([]);
+  const [selectedManager, setSelectedManager] = useState(null);
 
   React.useEffect(() => {
     const getEventList = async () => {
@@ -65,6 +68,20 @@ const AddTask = () => {
 
     getEventList();
   }, []);
+  useEffect(() => {
+    managerListAPI();
+  }, []);
+
+  const managerListAPI = async () => {
+    await axios
+      .get(`${MANAGER_LIST}`, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then((res) => {
+        setManagerList(res?.data?.data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -84,7 +101,7 @@ const AddTask = () => {
     let values = {
       tasks: tasks,
       due_date: date,
-      service_provider: 1,
+      manager: selectedManager,
     };
     toast.promise(
       axios.post(`${CREATE_PROVIDER_LIST_TASK}`, values, {
@@ -120,6 +137,25 @@ const AddTask = () => {
               <form onSubmit={handleSubmit}>
                 <Stack spacing={3}>
                   <TextField
+                    size="small"
+                    value={selectedManager}
+                    onChange={(e) => setSelectedManager(e.target.value)}
+                    margin="dense"
+                    id="task_name"
+                    select
+                    label="Select Manager"
+                    fullWidth
+                    variant="outlined"
+                  >
+                    {!!managerList?.length &&
+                      managerList?.map((item, index) => (
+                        <MenuItem key={index} value={item?.id}>
+                          {item?.user_profile?.first_name} {item?.user_profile?.last_name}
+                        </MenuItem>
+                      ))}
+                  </TextField>
+                  <TextField
+                    size="small"
                     value={tasks}
                     onChange={handleChange}
                     margin="dense"
@@ -127,13 +163,13 @@ const AddTask = () => {
                     label="Type Task"
                     type="text"
                     fullWidth
-                    variant="standard"
+                    variant="outlined"
                   />
                   <DateTimePicker
                     id="task_date"
                     label="Due Date"
                     onChange={handleDateChange}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField size="small" {...params} />}
                   />
                   <LoadingButton type="submit" variant="contained">
                     Create Task

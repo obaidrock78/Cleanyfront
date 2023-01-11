@@ -3,12 +3,15 @@ import { Breadcrumb, SimpleCard } from 'app/components';
 import React, { useEffect, useState } from 'react';
 import axios from '../../../axios';
 import { ADMIN_SIDE_CUSTOMER_LIST } from 'app/api';
-import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import moment from 'moment';
 
 const Container = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -157,19 +160,54 @@ function Customers() {
       minWidth: 180,
       renderCell: (item) => {
         return (
-          <TableHeading
-            sx={{
-              cursor: 'pointer',
-              '&:hover': {
-                textDecoration: 'underline',
-              },
-            }}
-            onClick={() => {
-              navigate('/dashboard/customer-booking', { state: item?.row });
-            }}
-          >
-            View
-          </TableHeading>
+          <>
+            {item?.row?.bookings?.appointment_date_time === null ? (
+              <Box
+                sx={{
+                  background: 'orange',
+                  borderRadius: '10px',
+                  padding: '5px 5px',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  lineHeight: '15px',
+                }}
+              >
+                No Upcoming Bookings
+              </Box>
+            ) : (
+              <Box>
+                <Box display={'flex'} alignItems="center">
+                  <CalendarMonthOutlinedIcon sx={{ paddingRight: '5px' }} />
+                  <TableHeading>
+                    {moment.utc(item?.row?.bookings?.appointment_date_time).format('YYYY-MM-DD')}
+                  </TableHeading>
+                </Box>
+
+                <Box display={'flex'} alignItems="center">
+                  <AccessTimeOutlinedIcon sx={{ paddingRight: '5px' }} />
+                  <TableHeading>
+                    {item?.row?.bookings?.bod?.start_time} - (
+                    {item?.row?.bookings?.bod?.total_hours}
+                    hrs)
+                  </TableHeading>
+                </Box>
+
+                <TableHeading>B-{item?.row?.bookings?.id}</TableHeading>
+              </Box>
+            )}
+          </>
+
+          // <TableHeading
+          //   sx={{
+          //     cursor: 'pointer',
+          //     '&:hover': {
+          //       textDecoration: 'underline',
+          //     },
+          //   }}
+
+          // >
+          //   View
+          // </TableHeading>
         );
       },
     },
